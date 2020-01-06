@@ -1,5 +1,5 @@
 <template>
-  <article>
+  <div>
     <div class="owl-carousel hero-slide owl-style">
       <div class="intro-section container" style="background-image: url('/assets/images/hero_1.jpg');">
         <div class="row justify-content-center text-center align-items-center">
@@ -34,8 +34,12 @@
           </div>
         </div>
         <div class="row">
-          
-          <div class="col-lg-4 mb-5 col-md-6">
+          <Item/>
+          <Item/>
+          <Item/>
+          <Item/>
+          <Item/>
+          <!-- <div class="col-lg-4 mb-5 col-md-6">
 
             <div class="wine_v_1 text-center pb-4">
               <a href="shop-single.html" class="thumbnail d-block mb-4"><img src="/assets/images/wine_2.png" alt="Image" class="img-fluid"></a>
@@ -89,9 +93,9 @@
                 <a href="#" class="btn add"><span class="icon-shopping-bag mr-3"></span> Add to Cart</a>
               </div>
             </div>
-          </div>
+          </div> -->
 
-          <div class="col-lg-4 mb-5 col-md-6">
+          <!-- <div class="col-lg-4 mb-5 col-md-6">
             <div class="wine_v_1 text-center pb-4">
               <a href="shop-single.html" class="thumbnail d-block mb-4"><img src="/assets/images/wine_1.png" alt="Image" class="img-fluid"></a>
               <div>
@@ -116,7 +120,7 @@
                 <a href="#" class="btn add"><span class="icon-shopping-bag mr-3"></span> Add to Cart</a>
               </div>
             </div>
-          </div>
+          </div> -->
 
           
 
@@ -210,12 +214,17 @@
     </div>
     
 
-  </article>
+  </div>
 </template>
 
 <script>
+import Item from './items/Item.vue'
+
 export default {
   name: 'Main',
+  components:{
+    Item
+  }
 }
 </script>
 
