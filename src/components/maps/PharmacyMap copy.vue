@@ -13,7 +13,6 @@
         </div>
     </div>
         <input type="button" value="변경" v-on:click="change" style="height: 300px;">
-        <input type="button" value="변경" v-on:click="change2" style="height: 300px;">
     </div>
 
 </template>
@@ -26,22 +25,18 @@
         name: 'PharmacyMap',
         data(){
             return {
-                lat:37.566826, // 위도
-                lon:126.9786567, // 경도
+                map:{},
+                wi:37.566826,
+                lon:126.9786567
             }
         },
         methods:{
-            change(){
-              this.lat=37.356826  
-              this.createMap()
-            },
-            change2(){
-                this.lat=37.156826  
-                this.createMap()
-            },
-        
-          createMap(){
-               // 마커를 클릭했을 때 해당 장소의 상세정보를 보여줄 커스텀오버레이입니다
+          change(){
+             this.wi = 35.566826
+          }  
+        },
+        mounted: function () {
+            // 마커를 클릭했을 때 해당 장소의 상세정보를 보여줄 커스텀오버레이입니다
             var placeOverlay = new kakao.maps.CustomOverlay({ zIndex: 1 }),
                 contentNode = document.createElement('div'), // 커스텀 오버레이의 컨텐츠 엘리먼트 입니다 
                 markers = [], // 마커를 담을 배열입니다
@@ -50,7 +45,7 @@
 
             var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
                 mapOption = {
-                    center: new kakao.maps.LatLng(this.lat,this.lon), // 지도의 중심좌표
+                    center: new kakao.maps.LatLng(this.wi,this.lon), // 지도의 중심좌표
                     level: 5 // 지도의 확대 레벨
                 };
 
@@ -104,10 +99,9 @@
             }
              // 페이지가 처음 로딩되었을 때 약국이 표시되도록 호출
              searchPlaces();
-             this.test = searchPlaces()
-
-
-
+             this.change(
+                searchPlaces()
+             )
 
             // 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
             function placesSearchCB(data, status, pagination) {
@@ -243,16 +237,9 @@
                     el.className = 'on';
                 }
 
-            }
-              
-          }
-          
+            }// mounted end
 
-        },
-        mounted: function () {
-           this.createMap()
-
-        }// mounted end
+        }
     }
 
 </script>
