@@ -20,9 +20,6 @@
       </div>
 
     </div>
-    
-    <p> {{message}}</p>
-    <input type="button" value="클릭" v-on:click="change">
 
     <div class="site-section mt-5">
       <div class="container">

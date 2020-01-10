@@ -17,9 +17,9 @@
               <div class="container">
                 <div class="row align-items-center">
                   <div class="col-12 text-center">
-                    <a href="index.html" class="site-logo">
+                    <router-link to="/" class="site-logo">
                       <img src="/assets/images/logo.png" alt="Image" class="img-fluid">
-                    </a>
+                    </router-link>
                   </div>
                   <a href="#" class="mx-auto d-inline-block d-lg-none site-menu-toggle js-menu-toggle text-black"><span
                         class="icon-menu h3"></span></a>
@@ -38,7 +38,7 @@
                       <!-- 변경 -->
                     <nav class="site-navigation position-relative text-left" role="navigation">
                       <ul class="site-menu main-menu js-clone-nav mx-auto d-none pl-0 d-lg-block border-none">
-                        <li class="active"><a href="index.html" class="nav-link text-left">Home</a></li>
+                        <li class="active"><router-link to="/" class="nav-link text-left">Home</router-link></li>
                         <!-- 부트스트랩 드랍다운  -->
                         <!-- <li role="presentation" class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">
@@ -62,10 +62,10 @@
                         </li>
 
                         <!-- 커스텀 드랍다운 끝 -->
-                        <li><router-link to="Header" class="nav-link text-left">의약품</router-link></li>
-                        <li><router-link to="Header" class="nav-link text-left">약국찾기</router-link></li> 
-                        <li><router-link to="Header" class="nav-link text-left">의학상식</router-link></li> 
-                        <li><router-link to="Header" class="nav-link text-left">게시판</router-link></li> 
+                        <li><router-link to="/" class="nav-link text-left">의약품</router-link></li>
+                        <li><router-link to="map" class="nav-link text-left">약국찾기</router-link></li> 
+                        <li><router-link to="/" class="nav-link text-left">의학상식</router-link></li> 
+                        <li><router-link to="/" class="nav-link text-left">게시판</router-link></li> 
                       </ul>                                                                                                                                                                                                                                                                                         
                     </nav>
         

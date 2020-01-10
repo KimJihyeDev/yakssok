@@ -1,0 +1,6 @@
+<template>
+    <div>
+        <img src="/assets/images/404.png">
+    </div>
+
+</template>
