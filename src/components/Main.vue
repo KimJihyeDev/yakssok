@@ -1,80 +1,70 @@
 <template>
-  <div>
-    <div class="owl-carousel hero-slide owl-style">
-      <div class="intro-section container" style="background-image: url('/assets/images/hero_1.jpg');">
-        <div class="row justify-content-center text-center align-items-center">
-          <div class="col-md-8">
-            <span class="sub-title">Royal Wine</span>
-            <h1>Grape Wine</h1>
-          </div>
-        </div>
-      </div>
-
-      <div class="intro-section container" style="background-image: url('/assets/images/hero_2.jpg');">
-        <div class="row justify-content-center text-center align-items-center">
-          <div class="col-md-8">
-            <span class="sub-title">Welcome</span>
-            <h1>Wines For Everyone</h1>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
+  <div class="container">
     <div class="site-section mt-5">
       <div class="container">
 
-        <div class="row mb-5">
+        <!-- <div class="row mb-5">
           <div class="col-12 section-title text-center mb-5">
             <h2 class="d-block">Our Products</h2>
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Commodi, perspiciatis!</p>
             <p><a href="#">View All Products <span class="icon-long-arrow-right"></span></a></p>
           </div>
-        </div>
-        <div class="row">
-          <Item/>
-          <Item/>
-          <Item/>
-          <Item/>
-          <Item/>
+        </div> -->
+        <!-- 문제1. router-link로 이동했을 시에 carousel이 뜨지 않는 문제 발생  -->
+        <!-- 문제2. js 파일을 읽어와도 처음 로딩시 정상적으로 출력되지 않음  -->
+        <!-- 해결: 직접 만든 carousel로 대체 & vue로 carousel 제어 -->
 
+        <!-- carousel start -->
+        <div class="owl-style">
+          <img class="mySlides intro-section container" src="/assets/images/hero_2.jpg">
+          <img class="mySlides intro-section container " src="/assets/images/hero_1.jpg">
+          <img class="mySlides intro-section container" src="/assets/images/img_1.jpg">
+          <a class="slide-pointer" id="left-pointer" v-on:click="plusDivs(-1)">❮</a>
+          <a class="slide-pointer" id="right-pointer" v-on:click="plusDivs(1)">❯</a>
         </div>
+        <!-- carousel end -->
+        <div class="row">
+          <Item v-for="list in 6" v-bind:key="list" />
+        </div>
+        
       </div>
     </div>
-
   </div>
 </template>
 
 <script>
-import Item from './items/Item.vue'
-
-export default {
-  name: 'Main',
-  data:function(){
-    return{
-      message:'초기값',
-
-    }
-  },
-  components:{
-    Item
-  },
-  methods:{
-    change(){
-      this.message = '변경된 메시지'
-    }
-  },
-  mounted:function(){
-  },
-  created:function(){
-  },
-
-}
+  /*eslint no-unused-vars: "error"*/
+  import Item from './items/Item.vue'
+  export default {
+    name: 'Main',
+    data: function () {
+      return {
+        slideIndex: 1,
+      }
+    },
+    components: {
+      Item
+    },
+    methods: {
+      plusDivs(n) {
+        this.showDivs(this.slideIndex += n);
+      },
+      showDivs(n) {
+        let i;
+        const x = document.getElementsByClassName("mySlides");
+        if (n > x.length) { this.slideIndex = 1 }
+        if (n < 1) { this.slideIndex = x.length }
+        for (i = 0; i < x.length; i++) {
+          x[i].style.display = "none";
+        }
+        x[this.slideIndex - 1].style.display = "block"
+      },
+    },
+    mounted: function () {
+      this.showDivs(1);
+      // this.$parent.kakaomap();
+    },
+    created: function () {
+    },
+  }
 </script>
-
-<!-- <script>
-  alert('script after');
-</script> -->
-
-<style scoped>
-</style>

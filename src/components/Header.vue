@@ -2,7 +2,7 @@
     <header>
         <div class="site-wrap">
 
-            <div class="site-mobile-menu site-navbar-target">
+            <div class="site-mobile-menu site-navbar-target"  style="height: 20%;">
               <div class="site-mobile-menu-header">
                 <div class="site-mobile-menu-close mt-3">
                   <span class="icon-close2 js-menu-toggle"></span>
@@ -14,21 +14,30 @@
         
             
             <div class="header-top">
-              <div class="container">
+              <div class="container" >
                 <div class="row align-items-center">
-                  <div class="col-12 text-center">
+                  <!-- <div class="col-12 text-center"> -->
+                    <!-- 네비게이션 높이 조절 -->
+                  <div class="col-12" style="height:30px;">
                     <router-link to="/" class="site-logo">
                       <img src="/assets/images/logo.png" alt="Image" class="img-fluid">
+                      <!--  -->
+                      <div class="col-lg-6 layer" style="display: inline-block;">
+                      <!-- <div class="col-lg-6 row text-center" style="display: inline-block;margin-left: 180px;"> -->
+                        <div class="input-group">
+                          <input type="text" class="form-control" placeholder="Search for..." style="margin-right:0px ;">
+                          <!-- <span class="input-group-btn"> -->
+                            <input class="btn btn-default" type="button" value="go">
+                          <!-- </span> -->
+                        </div><!-- /input-group -->
+                      </div><!-- /.col-lg-6 -->
                     </router-link>
                   </div>
                   <a href="#" class="mx-auto d-inline-block d-lg-none site-menu-toggle js-menu-toggle text-black"><span
                         class="icon-menu h3"></span></a>
                 </div>
               </div>
-              
-        
-        
-              
+             
               <div class="site-navbar py-2 js-sticky-header site-navbar-target d-none pl-0 d-lg-block" role="banner">
         
               <div class="container">
@@ -52,12 +61,12 @@
                         <!-- 부트스트랩 끝  -->
                         
                         <!-- 커스텀 부트스트랩 드랍다운 시작 -->
-                        <li class="custom-dropdown">
-                            <a class="droptbtn">영양제</a>
+                        <li class="custom-dropdown" style="translate: 1;">
+                            <router-link  to="/" class="droptbtn">영양제</router-link>
                             <div class="dropdown_content">
-                                <router-link to="Header">비타민</router-link>
-                                <router-link to="Header">비타민</router-link>
-                                <router-link to="Header">비타민</router-link>
+                                <router-link to="/">비타민</router-link>
+                                <router-link to="/">비타민</router-link>
+                                <router-link to="/">비타민</router-link>
                             </div>
                         </li>
 
@@ -115,5 +124,11 @@ export default{
     font-weight: 400;
 }
 
-
+/*  */
+.layer{
+  position:absolute;
+  top:100%;
+  left:50%;
+  transform:translate(-50%, -50%)
+}
 </style>
