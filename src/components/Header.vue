@@ -21,16 +21,18 @@
                   <div class="col-12" style="height:30px;">
                     <router-link to="/" class="site-logo">
                       <img src="/assets/images/logo.png" alt="Image" class="img-fluid">
-                      <!--  -->
-                      <div class="col-lg-6 layer" style="display: inline-block;">
-                      <!-- <div class="col-lg-6 row text-center" style="display: inline-block;margin-left: 180px;"> -->
-                        <div class="input-group">
+
+                      <div class="col-lg-6 layer" style="display: inline;">
+                        <div class="input-group row text-center">
                           <input type="text" class="form-control" placeholder="Search for..." style="margin-right:0px ;">
-                          <!-- <span class="input-group-btn"> -->
                             <input class="btn btn-default" type="button" value="go">
-                          <!-- </span> -->
-                        </div><!-- /input-group -->
-                      </div><!-- /.col-lg-6 -->
+                        </div>
+                      </div>
+
+                      <div style="display:inline-block;float:right">
+                        <input class="btn btn-default" type="button"  value="로그인">
+                        <input class="btn btn-default" type="button" style="margin-left:0.5em;" value="마이페이지">                      
+                      </div> 
                     </router-link>
                   </div>
                   <a href="#" class="mx-auto d-inline-block d-lg-none site-menu-toggle js-menu-toggle text-black"><span
@@ -45,20 +47,9 @@
                   
                   <div class="mx-auto">
                       <!-- 변경 -->
-                    <nav class="site-navigation position-relative text-left" role="navigation">
-                      <ul class="site-menu main-menu js-clone-nav mx-auto d-none pl-0 d-lg-block border-none">
+                    <nav class="site-navigation position-relative text-right" role="navigation">
+                      <ul class="site-menu main-menu js-clone-nav mx-auto d-none pl-0 d-lg-block border-none" style="inline-block">
                         <li class="active"><router-link to="/" class="nav-link text-left">Home</router-link></li>
-                        <!-- 부트스트랩 드랍다운  -->
-                        <!-- <li role="presentation" class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-expanded="false">
-                              Dropdown <span class="caret"></span>
-                            </a>
-                            <ul class="dropdown-menu" role="menu">
-                                <a>add</a>
-                            </ul> 
-                        </li> -->
-
-                        <!-- 부트스트랩 끝  -->
                         
                         <!-- 커스텀 부트스트랩 드랍다운 시작 -->
                         <li class="custom-dropdown" style="translate: 1;">
@@ -75,9 +66,11 @@
                         <li><router-link to="map" class="nav-link text-left">약국찾기</router-link></li> 
                         <li><router-link to="/" class="nav-link text-left">의학상식</router-link></li> 
                         <li><router-link to="/" class="nav-link text-left">게시판</router-link></li> 
-                      </ul>                                                                                                                                                                                                                                                                                         
+                      </ul>   
+                      <!--  -->
+                     
                     </nav>
-        
+                    
                   </div>
                  
                 </div>
