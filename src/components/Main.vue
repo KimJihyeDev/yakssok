@@ -32,6 +32,7 @@
   </div>
 </template>
 
+
 <script>
   /*eslint no-unused-vars: "error"*/
   import Item from './items/Item.vue'
