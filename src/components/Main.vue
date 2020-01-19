@@ -24,7 +24,7 @@
         </div>
         <!-- carousel end -->
         <div class="row">
-          <Item v-for="list in 6" v-bind:key="list" />
+          <Product v-for="list in 6" v-bind:key="list" />
         </div>
         
       </div>
@@ -35,7 +35,7 @@
 
 <script>
   /*eslint no-unused-vars: "error"*/
-  import Item from './items/Item.vue'
+  import Product from './products/Product.vue'
   export default {
     name: 'Main',
     data: function () {
@@ -44,7 +44,7 @@
       }
     },
     components: {
-      Item
+      Product
     },
     methods: {
       plusDivs(n) {

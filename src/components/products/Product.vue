@@ -1,7 +1,7 @@
 <template>
-    <div class="col-lg-3 mb-5 col-md-6">
+    <div class="col-lg-3 mb-5 col-md-6" style="margin-top:0px;">
         <div class="wine_v_1 text-center pb-4">
-          <a href="shop-single.html" class="thumbnail d-block mb-4"><img src="/assets/items/vitamin_a.png" alt="Image" class="img-fluid custom-img"></a>
+          <router-link to="/detail" class="thumbnail d-block mb-4"><img v-bind:src="this.img_path" alt="Image" class="img-fluid custom-img"></router-link>
           <div>
             <h3 class="heading mb-1"><a href="#">Trius Cabernet France 2011</a></h3>
             <span class="price">$629.00</span>
@@ -31,7 +31,12 @@
 
 <script>
 export default{
-    name:'Item'
+    name:'Product',
+    data:function(){
+      return {
+        img_path: process.env.VUE_APP_IMAGEPATH  +'/vitamin_a.png' // 이미지 경로
+      }
+    }
 }
 </script>
 
