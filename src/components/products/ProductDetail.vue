@@ -1,22 +1,21 @@
 <template>
-    <div>
-       <div style="margin:70px;">
-            <p style="top:0px; margin:0px;"> categories  >  영양제 > 비타민 </p>
-        </div> 
-    <div class="site-section mt-5">
+  <div>
+    <div style="margin:70px 70px 0px 70px;">
+      <p style="top:0px; margin:0px;"> categories > 영양제 > 비타민 </p>
+    </div>
+    <!-- <div class="site-section mt-5" style="margin-top:0px !important;"> -->
+    <div class="site-section mt-5 product">
       <div class="container">
         <div class="row">
           <div class="col-lg-6">
             <div class="owl-style" style="text-align:center">
               <img src="/assets/images/items/vitamin_a.png" alt="Image" class="img-fluid" style="width:60%;height:60%;">
-              <!-- <img src="/assets/images/wine_2.png" alt="Image" class="img-fluid"> -->
-              <!-- <img src="images/wine_3.png" alt="Image" class="img-fluid"> -->
             </div>
           </div>
           <div class="col-lg-5 ml-auto">
             <h2 class="text-primary">Now Foods, Super Omega 3-6-9, 1200 mg, 180 Softgel</h2>
             <p>제조사: Now Foods</p>
-
+            <!-- <h6>해시태그 위치</h6> -->
             <div class="mb-5">
               <div class="input-group mb-3" style="max-width: 200px;">
                 <div class="input-group-prepend">
@@ -28,33 +27,132 @@
                   <button class="btn btn-outline-primary js-btn-plus" type="button">&plus;</button>
                 </div>
               </div>
-    
+
             </div>
             <p><a href="cart.html" class="buy-now btn btn-sm height-auto px-4 py-3 btn-primary">Add To Cart</a></p>
           </div>
         </div>
         <!-- 추가 -->
         <hr>
-        <div style="border:solid black 1px; height:700px;">
-          <strong style="text-align:center">제품 상세</strong>
+        <div class="border">
+          <div style="margin-left:1em; margin-top:1em;">
+            <strong>제품 상세</strong>
+          </div>
           <hr>
-          <div class="col-lg-5">Description
-Cardiovascular Health
-From Borage, Flax Seed & Fish Oils
-Non-GMO
-Kosher - Contains Gelatin
-A Dietary Supplement
-Nutritional Oils
-Family Owned Since 1968
-GMP Quality Assured
-Super Omega 3-6-9 is a blend of Fish, Borage and Flax Seed Oils. This combination of well-known nutritional oils has a unique balance of Omega-3 and Omega-6 Essential Fatty Acids plus Omega-9, a non-essential, but useful fatty acid. The Omega-3's, Alpha Linolenic Acid, EPA and DHA, and the Omega-6, GLA, are necessary for the maintenance of healthy skin, normal immune system balance, and proper nervous system function.
-
+          <!-- 왼쪽 정렬 시작 -->
+          <div class="row "> 
+          <div class="col-lg-5">
+            <strong>제품설명</strong>
+            <p>From Borage, Flax Seed & Fish Oils
+              Non-GMO
+              Kosher - Contains Gelatin
+              A Dietary Supplement
+              Nutritional Oils
+              Family Owned Since 1968
+              GMP Quality Assured
+              Super Omega 3-6-9 is a blend of Fish, Borage and Flax Seed Oils. This combination of well-known
+              nutritional oils has a unique balance of Omega-3 and Omega-6 Essential Fatty Acids plus Omega-9, a
+              non-essential, but useful fatty acid. The Omega-3's, Alpha Linolenic Acid, EPA and DHA, and the Omega-6,
+              GLA, are necessary for the maintenance of healthy skin, normal immune system balance, and proper nervous
+              system function.
+            </p>
 
           </div>
+<!--오른쪽 테이블시작 -->
+<div class="panel panel-default col-lg-5 ml-auto">
+  <div class="panel-heading">
+    <h3 class="panel-title">Panel title</h3>
+  </div>
+  <div class="panel-body">
+    Panel content
+  </div>
+  <!-- Table -->
+  <table class="table con-log-5">
+    <tr>
+      <td>ddd</td>
+      <td>ddd</td>
+      <td>ddd</td>
+    </tr>  
+    <tr>
+      <td>ddd</td>
+      <td>ddd</td>
+      <td>ddd</td>
+    </tr>  
+    <tr>
+      <td>&nbsp;</td> 
+      <td>&nbsp;</td> 
+      <td>&nbsp;</td> 
+      </tr>
+
+  </table>
+<!-- 테이블 끝 -->
+</div>
+
+  <!-- 테이블 끝 -->
           <!-- 정보에 따라 div 나누기. sugested user, warnings ... -->
-        </div> 
-        
+          <div class="col-lg-5" style=" margin-top:1em;">
+            <strong>Suggested Use</strong>
+            <p>Take 1 softgel twice daily with food.</p>
+          </div>
+          <div class="col-lg-5" style=" margin-top:1em; margin-botom:0px;">
+            <strong>Other Ingredients</strong>
+            <p style="margin-top:0px;">Take 1 softgel twice daily with food.</p>
+          </div>
+          <div class="col-lg-5" style=" margin-top:1em; margin-botom:0px;">
+            <strong>warnings</strong>
+            <p style="margin-top:0px;">Warnings
+              Caution: For adults only. Consult physician if pregnant/nursing, taking medication, or have a medical
+              condition. Keep out of reach of children.
+
+              Natural color variation may occur in this product.
+
+              Store in a cool, dry place after opening.</p>
+          </div>
+          <div class="col-lg-5" style=" margin-top:1em; margin-botom:0px;">
+            <strong>warnings</strong>
+            <p style="margin-top:0px;">Caution
+              : For adults only. Consult physician if pregnant/nursing, taking medication, or have a medical condition.
+              Keep out of reach of children.
+
+              Natural color variation may occur in this product.
+
+              Store in a cool, dry place after opening.</p>
+          </div>
+          <div class="col-lg-5" style=" margin-top:1em; margin-botom:0px;">
+            <strong>warnings</strong>
+            <p style="margin-top:0px;">Caution
+              : For adults only. Consult physician if pregnant/nursing, taking medication, or have a medical condition.
+              Keep out of reach of children.
+
+              Natural color variation may occur in this product.
+
+              Store in a cool, dry place after opening.</p>
+          </div>
+          <div  style=" margin-top:1em; margin-botom:0px;">
+            <strong>warnings</strong>
+            <p style="margin-top:0px;">Caution
+              : For adults only. Consult physician if pregnant/nursing, taking medication, or have a medical condition.
+              Keep out of reach of children.
+
+              Natural color variation may occur in this product.
+
+              Store in a cool, dry place after opening.</p>
+          </div>
+          <!-- 픽토그램 추가 -->
+          </div>
+<!-- 왼쪽 정렬 끝 -->
+        </div>
+
       </div>
     </div>
-    </div>
+  </div>
 </template>
+
+<style>
+  .product {
+    margin-top: 0px !important;
+  }
+  .table td {
+   padding:0.2rem; 
+  }
+</style>
