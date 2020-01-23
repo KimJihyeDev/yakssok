@@ -53,7 +53,7 @@
                         
                         <!-- 커스텀 부트스트랩 드랍다운 시작 -->
                         <li class="custom-dropdown" style="translate: 1;">
-                            <router-link  to="/" class="droptbtn">영양제</router-link>
+                            <router-link  to="/" class="droptbtn">로컬환경</router-link>
                             <div class="dropdown_content">
                                 <router-link to="/">비타민</router-link>
                                 <router-link to="/">비타민</router-link>

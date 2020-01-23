@@ -1,18 +1,11 @@
 <template>
     <div class="container" style="width:100%;height:900px;margin-top: 100px;">
         <div>
-            
             <select class="form-control">
                 <option>d</option>
                 <option>d</option>
                 <option>d</option>
             </select>
-            <input value="시" v-model="si" >
-            <input value="구" v-model="gu">
-            <input value="동" v-model="dong" >
-            <input type="button" v-on:click="searchPlace" value="변경">
-            <input type="button" v-on:click="change" value="변경확인">
-            
             <div class="map_wrap">
                 <div id="map" style="width:100%;height:150%;position:relative;overflow:scroll;"></div>
                 <!-- 카테고리 선택 마커(보이지 않도록 처리) -->
@@ -31,7 +24,6 @@
 </template>
 
 <script>
-// bounds = new kakao.maps.LatLngBounds() 카카오맵에서 사용할 코드
     // 아래 코드를 사용하여 eslint를 해당 파일에서 사용 불능으로 만들 수 있다. 
     // 반드시 script 코드 맨 위에 작성할 것.
     /* eslint-disable */
@@ -41,27 +33,12 @@
             return {
                 lat: 37.566826, // 위도
                 lon: 126.9786567, // 경도
-                si:'서울시',
-                gu:'서대문구',
-                dong:'연희동',
-                newlat:0,
-                newlon:0
-
-
             }
         },
         methods: {
             change() {
-                console.log('newlat'+this.newlat);
-                console.log('newlon'+this.newlon);
-                console.log('lat'+this.lat);
-                console.log('lon'+this.lon);
-                
-                this.lat = this.newlat;
-                this.lon = this.newlon;
-                console.log('대입후lat'+this.lat);
-                console.log('대입후lon'+this.lon);
-                this.createMap();
+                this.lat = 37.356826
+                this.createMap()
             },
             change2() {
                 this.lat = 37.156826
@@ -84,6 +61,8 @@
 
                 // 지도를 생성합니다    
                 var map = new kakao.maps.Map(mapContainer, mapOption);
+                // 지도 객체 대입
+                this.map = map;
 
                 // 장소 검색 객체를 생성합니다
                 var ps = new kakao.maps.services.Places(map);
@@ -130,6 +109,7 @@
                 }
                 // 페이지가 처음 로딩되었을 때 약국이 표시되도록 호출
                 searchPlaces();
+                this.test = searchPlaces()
 
 
 
@@ -268,71 +248,6 @@
                         el.className = 'on';
                     }
                 }
-            },
-            searchPlace(){
-              
-                var component = this;
-                console.log(component);
-                console.log(component.lat);
-
-                var geocoder = new kakao.maps.services.Geocoder();
-                // 경도와 위도를 담을 변수
-                var lat; // 경도
-                var lon; // 위도
-
-                    // 주소에 해당하는 좌표를 검색
-                    // 실행될 코드1:addressSearch , 실행될 코드2 : addressSearch의 콜백
-                    geocoder.addressSearch(this.si + this.gu + this.dong, function(result, status){
-                        
-                        function callback(){
-                             if (status === kakao.maps.services.Status.OK) {
-                            console.log(result);
-                            console.log('x='+result[0].x)
-                            console.log('y='+result[0].y)
-                            // 주의할 점 x=위도, y=경도
-                            lat = result[0].y; 
-                            lon = result[0].x; 
-
-                            return new Promise(function (resolve, reject) {
-                                    resolve(lat,lon);
-                                });
-                         }
-
-                        }
-                        // 실행될 코드3:callback().then
-                        callback().then(function(result){
-                            console.log(result)
-                            component.newlat = lat;
-                            component.newlon = lon;
-                        })
-
-                         
-// 버튼을 클릭하면 아래 배열의 좌표들이 모두 보이게 지도 범위를 재설정합니다 
-var points = [
-    new kakao.maps.LatLng(lat,lon)
-   
-];
-
-// 지도를 재설정할 범위정보를 가지고 있을 LatLngBounds 객체를 생성합니다
-var bounds = new kakao.maps.LatLngBounds();    
-
-var i, marker;
-for (i = 0; i < points.length; i++) {
-    // 배열의 좌표들이 잘 보이게 마커를 지도에 추가합니다
-    marker =     new kakao.maps.Marker({ position : points[i] });
-    // marker.setMap(map);
-    
-    // LatLngBounds 객체에 좌표를 추가합니다
-    bounds.extend(points[i]);
-}
-
-function setBounds() {
-    // LatLngBounds 객체에 추가된 좌표들을 기준으로 지도의 범위를 재설정합니다
-    // 이때 지도의 중심좌표와 레벨이 변경될 수 있습니다
-    map.setBounds(bounds);
-    // component.setBounds(bounds);
-}
-                    });
             }
         },
         mounted: function () {
