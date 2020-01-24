@@ -39,17 +39,30 @@
             return {
                 lat: 37.566826, // 위도
                 lon: 126.9786567, // 경도
-                si: '서울시',  // 지역설정(시)
-                gu: '서대문구',  // 지역설정(구)
-                dong: '연희동', // 지역설정(동)
-                newlat: 0, // 변경할 위치값
-                newlon: 0, // 
-                map: {},  
-                center: (0.0), // 지도 중심 좌료
-                level: 5  // 지도 확대 레벨
+                si: '서울시',
+                gu: '서대문구',
+                dong: '연희동',
+                newlat: 0,
+                newlon: 0,
+                map: {},
+                center: (0.0),
+                level: 5
             }
         },
         methods: {
+            temp() {
+                var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
+                    mapOption = {
+                        center: new kakao.maps.LatLng(this.lat, this.lon), // 지도의 중심좌표
+                        level: this.level // 지도의 확대 레벨
+                    };
+                // 
+                this.center = mapOption.center;
+                // 지도를 생성합니다    
+                var map = new kakao.maps.Map(mapContainer, mapOption);
+                this.map = map;
+
+            },
             createMap() {
                 // 마커를 클릭했을 때 해당 장소의 상세정보를 보여줄 커스텀오버레이입니다
                 var placeOverlay = new kakao.maps.CustomOverlay({ zIndex: 1 }),
@@ -58,16 +71,8 @@
                     // 약국의 카테고리(PM9)로 고정
                     currCategory = 'PM9'; // 현재 선택된 카테고리를 가지고 있을 변수입니다
 
-                var mapContainer = document.getElementById('map'), // 지도를 표시할 div 
-                    mapOption = {
-                        center: new kakao.maps.LatLng(this.lat, this.lon), // 지도의 중심좌표
-                        level: this.level // 지도의 확대 레벨
-                    };
-                this.center = mapOption.center;
-                // 지도를 생성합니다    
-                var map = new kakao.maps.Map(mapContainer, mapOption);
-                this.map = map;
-
+                // 
+                var map = this.map;
                 // 장소 검색 객체를 생성합니다
                 var ps = new kakao.maps.services.Places(map);
                 // 지도에 idle 이벤트를 등록합니다
@@ -196,6 +201,11 @@
                         searchPlaces();
                     }
                 }
+                // 지도를 재설정할 범위정보를 가지고 있을 LatLngBounds 객체를 생성합니다
+                var bounds = new kakao.maps.LatLngBounds();
+
+                bounds.extend(this.newlat, this.newlon);
+
                 // 클릭된 카테고리에만 클릭된 스타일을 적용하는 함수입니다
                 function changeCategoryClass(el) {
                     var category = document.getElementById('category'),
@@ -271,6 +281,7 @@
             }
         },
         mounted: function () {
+            this.temp()
             this.createMap()
         }// mounted end
     }
