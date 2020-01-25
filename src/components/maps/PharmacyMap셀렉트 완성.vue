@@ -9,13 +9,13 @@
                 <!-- **case.1 ** -->
                 <option v-for="(one,idx) in city.si" :key="idx" :value="one.value">{{one.value}}</option>
             </select>
-            <select class="form-control col-lg-3 mb-5 col-md-6" v-model="gu" @change="select_dong" >
+            <select class="form-control" v-model="gu" @change="select_dong" >
                 <option disabled value="">Please select one</option>
                   <!-- (gu,index) 로 표현하면 gu=배열의 요소,idx= 배열 인덱스를 가리킴 -->
                   <!-- key를 유니크한 값으로 표현하라는 에러메시지를 막기 위해서 index를 key로 사용하길 권장  -->
                 <option v-for="(gu,idx) in optionGu"  v-bind:key="idx" :value="gu.value">{{gu.value}}</option>
             </select>
-            <select class="form-control col-lg-3 mb-5 col-md-6" v-model="dong">
+            <select class="form-control" v-model="dong">
                 <option disabled value="">Please select one</option>
                 <option v-for="(dong,idx) in optionDong" v-bind:key="idx">{{dong.value}}</option>
             </select>
