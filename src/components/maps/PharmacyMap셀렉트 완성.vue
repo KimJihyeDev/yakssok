@@ -1,4 +1,5 @@
 <template>
+<!-- 수정 전 파일  -->
     <div class="container" style="width:100%;height:900px;margin-top: 100px;">
         <div>
 
@@ -73,7 +74,7 @@
                 dong: '', // 지역설정(동)
                 optionGu:[],
                 optionDong:[],
-                newlat: 0, // 변경할 위치값
+                newlat: 0, // 변경할 위치값 -> 불필요한 요소. 
                 newlon: 0, // 
                 map: {},  
                 center: (0.0), // 지도 중심 좌료
@@ -280,6 +281,11 @@
                             });
                         }
                     }
+                    // *************************************
+                    // 콜백으로 지정할 필요 없었음
+                    // 검색해서 받아온 좌표를 this.newlat에 대입하느라 
+                    // 코드가 더 복잡해짐. 대입할 필요가 없었음
+                    // Kakao API를 이해 못 해서 바보짓 했음. 
                     // 실행될 코드3:callback().then
                     callback().then(function (result) {
                         component.newlat = lat;
