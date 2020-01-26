@@ -3,26 +3,28 @@
         <div>
 
             <!-- change 이벤트는 요소의 값(value)가 변경되면 발생 -->
-            <select class="form-control col-lg-3 mb-5 col-md-6"  v-model="si" @change="select_gu" >
-                <option disabled value="">선택</option>
-                <!-- 파일 맨 아래 주석 참고  -->
-                <!-- **case.1 ** -->
-                <option v-for="(one,idx) in city.si" :key="idx" :value="one.value">{{one.value}}</option>
-            </select>
-            <select class="form-control col-lg-3 mb-5 col-md-6" v-model="gu" @change="select_dong" >
-                <option disabled value="">Please select one</option>
-                  <!-- (gu,index) 로 표현하면 gu=배열의 요소,idx= 배열 인덱스를 가리킴 -->
-                  <!-- key를 유니크한 값으로 표현하라는 에러메시지를 막기 위해서 index를 key로 사용하길 권장  -->
-                <option v-for="(gu,idx) in optionGu"  v-bind:key="idx" :value="gu.value">{{gu.value}}</option>
-            </select>
-            <select class="form-control col-lg-3 mb-5 col-md-6" v-model="dong">
-                <option disabled value="">Please select one</option>
-                <option v-for="(dong,idx) in optionDong" v-bind:key="idx">{{dong.value}}</option>
-            </select>
+            <div class="form-group row">
+                <select class="form-control col-md-3" v-model="si" @change="select_gu">
+                    <option disabled value="">선택</option>
+                    <!-- 파일 맨 아래 주석 참고  -->
+                    <!-- **case.1 ** -->
+                    <option v-for="(one,idx) in lacation.si" :key="idx" :value="one.value">{{one.value}}</option>
+                </select>
+                <select class="form-control col-md-3" v-model="gu" @change="select_dong">
+                    <option disabled value="">선택</option>
+                    <!-- (gu,index) 로 표현하면 gu=배열의 요소,idx= 배열 인덱스를 가리킴 -->
+                    <!-- key를 유니크한 값으로 표현하라는 에러메시지를 막기 위해서 index를 key로 사용하길 권장  -->
+                    <option v-for="(gu,idx) in optionGu" v-bind:key="idx" :value="gu.value">{{gu.value}}</option>
+                </select>
+                <select class="form-control col-md-3" v-model="dong" @change="searchPlace">
+                    <option disabled value="">선택</option>
+                    <option v-for="(dong,idx) in optionDong" v-bind:key="idx">{{dong.value}}</option>
+                </select>
+            </div>
             <!-- <input type="text" v-model="si">
             <input type="text" v-model="gu">
             <input type="text" v-model="dong"> -->
-            <input type="button" v-on:click="searchPlace" value="변경">
+            <!-- <input type="button" v-on:click="searchPlace" value="변경"> -->
 
             <div class="map_wrap">
                 <div id="map" style="width:100%;height:150%;position:relative;overflow:scroll;"></div>
@@ -50,48 +52,46 @@
             return {
                 lat: 37.566826, // 위도
                 lon: 126.9786567, // 경도
-                city: {
-                    si:[{value:'서울시'},{value:'강원도'}],
-                    gu:{
-                         Seoul_si_gu:[{value:'중구'},{value:'용산구'}],
-                         GangwonDo_gu:['속초','강릉'],
+                lacation: {
+                    si: [{ value: '서울시' }, { value: '강원도' }],
+                    gu: {
+                        Seoul_si_gu: [{ value: '중구' }, { value: '용산구' }],
+                        GangwonDo_gu: ['속초', '강릉'],
                     },
                     // 소공동 · 회현동 · 명동 · 필동 · 장충동 · 광희동 · 을지로동 · 신당동 · 다산동 · 약수동 · 청구동 · 신당5동 · 동화동 · 황학동 · 중림동
-                    dong:{
-                        Jung_gu_dong:[
-                    {value:'광희동 1가'},
-                    {value:'광희동 2가'},
-                    {value:'다산동'},
-                    {value:'명동'},
-                    {value:'회현동'},
+                    dong: {
+                        Jung_gu_dong: [
+                            { value: '광희동 1가' },
+                            { value: '광희동 2가' },
+                            { value: '다산동' },
+                            { value: '명동' },
+                            { value: '회현동' },
                         ]
                     }
-                
-                },  
-                si:'', // 지역설정(시) -> 검색에 사용 & 
+
+                },
+                si: '', // 지역설정(시) -> 검색에 사용 & 
                 gu: '',  // 지역설정(구)
                 dong: '', // 지역설정(동)
-                optionGu:[],
-                optionDong:[],
-                newlat: 0, // 변경할 위치값
-                newlon: 0, // 
-                map: {},  
-                center: (0.0), // 지도 중심 좌료
+                optionGu: [],
+                optionDong: [],
+                map: {},
+                center: (0.0), // 지도 중심 좌표
                 level: 5  // 지도 확대 레벨
             }
         },
         methods: {
-            select_gu(){
-                if(this.si === '서울시'){
-                    this.optionGu = this.city.gu.Seoul_si_gu
-                } else if(this.si === '강원도') {
-                    this.optionGu = this.city.gu.Gangwondo_gu
-                } 
+            select_gu() {
+                if (this.si === '서울시') {
+                    this.optionGu = this.lacation.gu.Seoul_si_gu
+                } else if (this.si === '강원도') {
+                    this.optionGu = this.lacation.gu.Gangwondo_gu
+                }
             },
-            select_dong(){
-                if(this.gu === '중구'){
-                    this.optionDong = this.city.dong.Jung_gu_dong;
-                }else if(this.gu === '마포구') {
+            select_dong() {
+                if (this.gu === '중구') {
+                    this.optionDong = this.lacation.dong.Jung_gu_dong;
+                } else if (this.gu === '마포구') {
 
                 }
             },
@@ -112,7 +112,6 @@
                 // 지도를 생성합니다    
                 var map = new kakao.maps.Map(mapContainer, mapOption);
                 this.map = map;
-
                 // 장소 검색 객체를 생성합니다
                 var ps = new kakao.maps.services.Places(map);
                 // 지도에 idle 이벤트를 등록합니다
@@ -148,7 +147,7 @@
                 }
                 // 페이지가 처음 로딩되었을 때 약국이 표시되도록 호출
                 searchPlaces();
-               
+
                 // 장소검색이 완료됐을 때 호출되는 콜백함수 입니다
                 function placesSearchCB(data, status, pagination) {
                     if (status === kakao.maps.services.Status.OK) {
@@ -257,38 +256,22 @@
             },
             searchPlace() {
                 var component = this;
-                console.log(component);
-                console.log(component.lat);
                 var geocoder = new kakao.maps.services.Geocoder();
-                // 경도와 위도를 담을 변수
-                var lat; 
-                var lon; 
+                
                 // 주소에 해당하는 좌표를 검색
-                // 실행될 코드1:addressSearch , 실행될 코드2 : addressSearch의 콜백
                 geocoder.addressSearch(this.si + this.gu + this.dong, function (result, status) {
 
-                    function callback() {
-                        if (status === kakao.maps.services.Status.OK) {
-                            console.log(result);
-                            console.log('x=' + result[0].x)
-                            console.log('y=' + result[0].y)
-                            // 주의할 점 x=위도, y=경도
-                            lat = result[0].y;
-                            lon = result[0].x;
-                            return new Promise(function (resolve, reject) {
-                                resolve(lat, lon);
-                            });
-                        }
-                    }
-                    // 실행될 코드3:callback().then
-                    callback().then(function (result) {
-                        component.newlat = lat;
-                        component.newlon = lon;
+                    if (status === kakao.maps.services.Status.OK) {
+                        console.log(result);
+                        console.log('x=' + result[0].x)
+                        console.log('y=' + result[0].y)
+                        // x=위도, y=경도
+                        let lat = result[0].y;
+                        let lon = result[0].x;
 
                         // 버튼을 클릭하면 아래 배열의 좌표들이 모두 보이게 지도 범위를 재설정합니다 
                         var points = [
-                            new kakao.maps.LatLng(component.newlat, component.newlon),
-
+                            new kakao.maps.LatLng(lat, lon),
                         ];
 
                         // 지도를 재설정할 범위정보를 가지고 있을 LatLngBounds 객체를 생성합니다
@@ -299,21 +282,18 @@
                             // LatLngBounds 객체에 좌표를 추가합니다
                             bounds.extend(points[i]);
                         }
+                        // function setBounds() {
+                        // LatLngBounds 객체에 추가된 좌표들을 기준으로 지도의 범위를 재설정합니다
+                        // 이때 지도의 중심좌표와 레벨이 변경될 수 있습니다
+                        component.map.setBounds(bounds);
+                        // 검색 후 지도의 레벨이 카카오에서 설정한 초기 레벨(2)로 변경되므로
+                        // 지도의 레벨을 현재 지도의 레벨과 같게 재설정해준다.
+                        component.map.setLevel(component.level);
+                        // }
+                        // setBounds();
 
-                        function setBounds() {
-                            // LatLngBounds 객체에 추가된 좌표들을 기준으로 지도의 범위를 재설정합니다
-                            // 이때 지도의 중심좌표와 레벨이 변경될 수 있습니다
-                            console.log('옮기기')
-                            component.map.setBounds(bounds);
-                            component.map.setBounds(bounds);
-                            // 검색 후 지도의 레벨이 카카오에서 설정한 초기 레벨(2)로 변경되므로
-                            // 지도의 레벨을 재설정해준다.
-                            var level = component.map.getLevel();
-                            component.map.setLevel(component.level);
-                        }
-                        setBounds();
-                    })
-                });
+                    }
+                })
             }
         },
         mounted: function () {
