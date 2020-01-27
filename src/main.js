@@ -11,7 +11,9 @@ const router = new VueRouter({
 
 
 Vue.config.productionTip = false
-Vue.config.vuecomponent;
+// API 서버의 url
+Vue.prototype.$url = 'http://localhost:4000';
+// Vue.prototype.$test = 'vue 전역변수 테스트'
 
 new Vue({
   router,
