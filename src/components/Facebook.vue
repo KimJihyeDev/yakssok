@@ -98,7 +98,7 @@
                 }
             
             });
-            // 코드 위치 수정 테스트
+            // 코드 위치 수정 테스트: 삭제하기
                FB.getLoginStatus(function(response) {
             console.log(response);
         });
@@ -106,7 +106,7 @@
           }
       },
 
-      mounted: function() {
+      created: function() {
         // 페이스북 인증 초기설정  
         window.fbAsyncInit = function() {
         FB.init({
@@ -123,6 +123,8 @@
 
         (function(d, s, id){
         var js, fjs = d.getElementsByTagName(s)[0];
+        alert('js='+js);
+        console.log('fjs='+fjs);
         if (d.getElementById(id)) {return;}
         js = d.createElement(s); js.id = id;
         js.src = "//connect.facebook.net/en_US/sdk.js";

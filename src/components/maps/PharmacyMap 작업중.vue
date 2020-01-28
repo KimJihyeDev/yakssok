@@ -52,28 +52,28 @@ import location from '@/assets/location.json'
             return {
                 lat: 37.566826, // 위도
                 lon: 126.9786567, // 경도
-                si: '', // 검색할 지역설정(시) 
-                gu: '',  // 검색할 지역설정(구)
-                dong: '', // 검색할 지역설정(동)
-                location:location, // 행정지역목록
-                optionGu: [], // 시를 선택했을 시 보여질 구의 배열
-                optionDong: [], // 구를 선택했을 시 보여질 동의 배열
-                map: {}, // 카카오 맵 객체
+                si: '', // 지역설정(시) -> 검색에 사용 & 
+                gu: '',  // 지역설정(구)
+                dong: '', // 지역설정(동)
+                location:location,
+                optionGu: [],
+                optionDong: [],
+                map: {},
                 center: (0.0), // 지도 중심 좌표
                 level: 5  // 지도 확대 레벨
             }
         },
         methods: {
             select_gu() {
-                if (this.si === "서울특별시") {
+                if (this.si === "서울시") {
                     this.optionGu = location.region.gu.inSeoul_gu
                 } else if (this.si === '강원도') {
                     this.optionGu = location.region.gu.Gangwondo_gu
                 }
             },
             select_dong() {
-                if (this.gu === '강남구') {
-                    this.optionDong = location.region.dong.inGangnam_dong;
+                if (this.gu === '중구') {
+                    this.optionDong = location.region.dong.Jung_gu_dong;
                 } else if (this.gu === '마포구') {
 
                 }

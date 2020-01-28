@@ -8,7 +8,7 @@
                     <option disabled value="">선택</option>
                     <!-- 파일 맨 아래 주석 참고  -->
                     <!-- **case.1 ** -->
-                    <option v-for="(one,idx) in location.region.si" :key="idx" :value="one.value">{{one.value}}</option>
+                    <option v-for="(one,idx) in location.si" :key="idx" :value="one.value">{{one.value}}</option>
                 </select>
                 <select class="form-control col-md-3" v-model="gu" @change="select_dong">
                     <option disabled value="">선택</option>
@@ -25,6 +25,7 @@
             <input type="text" v-model="gu">
             <input type="text" v-model="dong"> -->
             <!-- <input type="button" v-on:click="searchPlace" value="변경"> -->
+
             <div class="map_wrap">
                 <div id="map" style="width:100%;height:150%;position:relative;overflow:scroll;"></div>
                 <!-- 카테고리 선택 마커(보이지 않도록 처리) -->
@@ -41,7 +42,6 @@
 </template>
 
 <script>
-import location from '@/assets/location.json'
     // bounds = new kakao.maps.LatLngBounds() 카카오맵에서 사용할 코드
     // 아래 코드를 사용하여 eslint를 해당 파일에서 사용 불능으로 만들 수 있다. 
     // 반드시 script 코드 맨 위에 작성할 것.
@@ -52,28 +52,45 @@ import location from '@/assets/location.json'
             return {
                 lat: 37.566826, // 위도
                 lon: 126.9786567, // 경도
-                si: '', // 검색할 지역설정(시) 
-                gu: '',  // 검색할 지역설정(구)
-                dong: '', // 검색할 지역설정(동)
-                location:location, // 행정지역목록
-                optionGu: [], // 시를 선택했을 시 보여질 구의 배열
-                optionDong: [], // 구를 선택했을 시 보여질 동의 배열
-                map: {}, // 카카오 맵 객체
+                location: {
+                    si: [{ value: '서울시' }, { value: '강원도' }],
+                    gu: {
+                        Seoul_si_gu: [{ value: '중구' }, { value: '용산구' }],
+                        GangwonDo_gu: ['속초', '강릉'],
+                    },
+                    // 소공동 · 회현동 · 명동 · 필동 · 장충동 · 광희동 · 을지로동 · 신당동 · 다산동 · 약수동 · 청구동 · 신당5동 · 동화동 · 황학동 · 중림동
+                    dong: {
+                        Jung_gu_dong: [
+                            { value: '광희동 1가' },
+                            { value: '광희동 2가' },
+                            { value: '다산동' },
+                            { value: '명동' },
+                            { value: '회현동' },
+                        ]
+                    }
+
+                },
+                si: '', // 지역설정(시) -> 검색에 사용 & 
+                gu: '',  // 지역설정(구)
+                dong: '', // 지역설정(동)
+                optionGu: [],
+                optionDong: [],
+                map: {},
                 center: (0.0), // 지도 중심 좌표
                 level: 5  // 지도 확대 레벨
             }
         },
         methods: {
             select_gu() {
-                if (this.si === "서울특별시") {
-                    this.optionGu = location.region.gu.inSeoul_gu
+                if (this.si === '서울시') {
+                    this.optionGu = this.location.gu.Seoul_si_gu
                 } else if (this.si === '강원도') {
-                    this.optionGu = location.region.gu.Gangwondo_gu
+                    this.optionGu = this.location.gu.Gangwondo_gu
                 }
             },
             select_dong() {
-                if (this.gu === '강남구') {
-                    this.optionDong = location.region.dong.inGangnam_dong;
+                if (this.gu === '중구') {
+                    this.optionDong = this.location.dong.Jung_gu_dong;
                 } else if (this.gu === '마포구') {
 
                 }
