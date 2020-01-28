@@ -24,6 +24,9 @@
         </div>
         <!-- carousel end -->
         <div class="row">
+          <!-- 이미지 가져오기 테스트 -->
+          <!-- <img v-bind:src="this.path"> -->
+          <!-- {{this.path}} -->
           <Product v-for="list in 6" v-bind:key="list" />
         </div>
         
@@ -41,6 +44,7 @@
     data: function () {
       return {
         slideIndex: 1,
+        path:this.$url + '/images/' + "vue-https.PNG"
       }
     },
     components: {
@@ -66,6 +70,10 @@
       // this.$parent.kakaomap();
     },
     created: function () {
+      // this.$axios(this.$url+'/users')
+      //   .then((result)=>{
+
+      //   })
     },
   }
 </script>
