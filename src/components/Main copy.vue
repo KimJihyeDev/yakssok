@@ -39,12 +39,10 @@
 <script>
   /*eslint no-unused-vars: "error"*/
   import Product from './products/Product.vue'
-
   export default {
     name: 'Main',
     data: function () {
       return {
-        test:this.$store.state.count,
         slideIndex: 1,
         result:{},
         users:[],
@@ -56,10 +54,6 @@
       Product
     },
     methods: {
-      // increment(){  // store 테스트
-      //   this.$store.commit('increment');
-      //   console.log(this.$store.state.count);
-      // },
       plusDivs(n) {
         this.showDivs(this.slideIndex += n);
       },
@@ -85,7 +79,7 @@
       //       console.log(result.data);
       //       this.users = result.data;
       //   })
-     console.log('store='+this.$store.state.count);
+     
      (async ()=>{ 
         this.result = await this.$axios(this.$url + '/users');
         this.users = this.result.data;
