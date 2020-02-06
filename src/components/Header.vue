@@ -1,127 +1,122 @@
 <template>
-    <header>
-        <div class="site-wrap">
+  <header>
+    <div class="site-wrap">
 
-            <div class="site-mobile-menu site-navbar-target"  style="height: 20%;">
-              <div class="site-mobile-menu-header">
-                <div class="site-mobile-menu-close mt-3">
-                  <span class="icon-close2 js-menu-toggle"></span>
-                </div>
+      <div class="site-mobile-menu site-navbar-target">
+        <div class="site-mobile-menu-header">
+          <div class="site-mobile-menu-close mt-3">
+            <span class="icon-close2 js-menu-toggle"></span>
+          </div>
+        </div>
+        <div class="site-mobile-menu-body"></div>
+      </div>
+
+      <div class="header-top">
+        <div class="container padding-control">
+          <div class="row align-items-center">
+            <div class="col-12 text-center">
+              <a href="index.html" class="site-logo">
+                <img src="/assets/images/logo.png" alt="Image" class="img-fluid">
+              </a>
+            </div>
+            <div class="col-12">
+              <div class="pull-right">
+                <button class="btn btn-white btn-sm text-right">로그인</button>
+                <button class="btn btn-white btn-sm text-right" style="margin-left:3px;">마이페이지</button>
               </div>
-              <div class="site-mobile-menu-body"></div>
             </div>
-        
-        
-            
-            <div class="header-top">
-              <div class="container" >
-                <div class="row align-items-center">
-                  <!-- <div class="col-12 text-center"> -->
-                    <!-- 네비게이션 높이 조절 -->
-                  <div class="col-12 site-logo" style="height:30px;">
-                    <router-link to="/" class="site-logo">
-                      <img src="/assets/images/logo.png" alt="Image" class="img-fluid">
-                    </router-link>
-                      <div class="col-lg-6 layer" style="display: inline;">
-                        <div class="input-group row text-center">
-                          <input type="text" class="form-control" placeholder="Search for..." style="margin-right:0px ;">
-                            <input class="btn btn-default" type="button" value="go">
-                        </div>
-                      </div>
-
-                      <div style="display:inline-block;float:right">
-                        <input class="btn btn-default" type="button"  value="로그인">
-                        <input class="btn btn-default" type="button" style="margin-left:0.5em;" value="마이페이지">                      
-                      </div> 
-                  </div>
-                  <a href="#" class="mx-auto d-inline-block d-lg-none site-menu-toggle js-menu-toggle text-black"><span
-                        class="icon-menu h3"></span></a>
-                </div>
+            <!-- 모바일 화면으로 전환시 네이게이션바 설정 -->
+            <a href="#" class="mx-auto d-inline-block d-lg-none site-menu-toggle js-menu-toggle text-black"><span
+                class="icon-menu h3 navbar-position"></span></a>
+          </div>
+        </div>
+        <!-- searchform start  -->
+        <div class="row col-lg-12">
+          <div class="col-lg-6 center-block">
+            <div class="input-group">
+              <input type="text" class="form-control margin-control" placeholder="Search for...">
+              <span class="input-group-btn">
+                <button class="btn btn-default" type="button">검색</button>
+              </span>
+            </div><!-- /input-group -->
+          </div><!-- /.col-lg-6 -->
+        </div><!-- /.row -->
+        <!-- searchform end -->
+        <div class="site-navbar py-2 js-sticky-header site-navbar-target d-none pl-0 d-lg-block" role="banner">
+          <div class="container">
+            <div class="d-flex align-items-center">
+              <div class="mx-auto">
+                <nav class="site-navigation position-relative text-left" role="navigation">
+                  <ul class="site-menu main-menu js-clone-nav mx-auto d-none pl-0 d-lg-block border-none">
+                    <li class="active"><router-link to="/" class="nav-link text-left">Home</router-link></li>
+                    <!-- dropdown start -->
+                    <div class="btn-group">
+                      <li class="btn btn-default nav-link" data-toggle="dropdown" aria-expanded="false">
+                        <span class="caret" style="font-weight:900;color:black;"> 영양제</span>
+                      </li>
+                      <ul class="dropdown-menu" role="menu">
+                        <li><router-link to="/" class="nav-style">비타민</router-link></li>
+                        <li><router-link to="/" class="nav-style">비타민2</router-link></li>
+                        <li class="divider"></li>
+                        <li><a href="#" class="nav-style">Separated link</a></li>
+                      </ul>
+                    </div>
+                    <!-- dropdown end -->
+                    <li><router-link to="/" class="nav-link text-left">동물영양제</router-link></li>
+                    <li><router-link to="map" class="nav-link text-left">약국찾기</router-link></li>
+                  </ul>
+                </nav>
               </div>
-             
-              <div class="site-navbar py-2 js-sticky-header site-navbar-target d-none pl-0 d-lg-block" role="banner">
-        
-              <div class="container">
-                <div class="d-flex align-items-center">
-                  
-                  <div class="mx-auto">
-                      <!-- 변경 -->
-                    <nav class="site-navigation position-relative text-right" role="navigation">
-                      <ul class="site-menu main-menu js-clone-nav mx-auto d-none pl-0 d-lg-block border-none" style="inline-block">
-                        <li class="active"><router-link to="/" class="nav-link text-left">Home</router-link></li>
-                        
-                        <!-- 커스텀 부트스트랩 드랍다운 시작 -->
-                        <!-- <li class="custom-dropdown" style="translate: 1;"> -->
-                        <li class="custom-dropdown nav-link">
-                            <router-link  to="/" class="droptbtn ">로컬환경</router-link>
-                            <div class="dropdown_content">
-                                <router-link to="/">비타민</router-link>
-                                <router-link to="/">비타민</router-link>
-                                <router-link to="/">비타민</router-link>
-                            </div>
-                        </li>
-
-                        <!-- 커스텀 드랍다운 끝 -->
-                        <li><router-link to="/" class="nav-link text-left">의약품</router-link></li>
-                        <li><router-link to="map" class="nav-link text-left">약국찾기</router-link></li> 
-                        <li><router-link to="/" class="nav-link text-left">의학상식</router-link></li> 
-                        <li><router-link to="/" class="nav-link text-left">게시판</router-link></li> 
-                      </ul>   
-                      <!--  -->
-                     
-                    </nav>
-                    
-                  </div>
-                 
-                </div>
-              </div>
-        
             </div>
-            
-            </div>
-            </div>
-
-
-
-    </header>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
 </template>
 
 <script>
-export default{
+  export default {
     name: 'Header'
-}
-
+  }
 
 </script>
 
 <style scoped>
-  /* 드랍다운 스타일 설정 */
-.dropdown_content
-{
-    display: none;
-    position: absolute;
-    background-color: #f9f9f9;
-    min-width: 160px;
-    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
-    z-index: 2;
-}
-.custom-dropdown:hover .dropdown_content{
-    display: block;
-}
-.dropdown_content a{
-    color: black;
-    padding: 12px 16px;
-    text-decoration: none;
-    display: block;
-    text-align: left;
-    font-weight: 400;
-}
+  /* 드롭다운 폰트 조절 */
+  .nav-style {
+    font-size: .8rem;
+    letter-spacing: .05rem;
+    font-weight: 900;
+    text-decoration: none !important;
+    color: #000;
+  }
 
-/*  */
-.layer{
-  position:absolute;
-  top:100%;
-  left:50%;
-  transform:translate(-50%, -50%)
-}
+  /* 검색창 화면 중아 정렬 */
+  .center-block {
+    float: none;
+    margin: 0 auto
+  }
+
+  /* 검색버튼 마진 조절 */
+  .margin-control {
+    margin-right: 0;
+  }
+
+  /* 모바일 버전에서의 네이게이션바 위치 조절 */
+  .navbar-position {
+    position: absolute;
+    right: 80% !important;
+    top: 40px !important;
+  }
+
+  /* 로그인 버튼 위치 조절 */
+  .pull-right {
+    float: right !important;
+  }
+
+  /* 헤더 요소들의 패딩 조절:네이게이션과 검색창간의 거리 조절 효과*/
+  .padding-control {
+    padding-bottom: 2px;
+  }
 </style>
