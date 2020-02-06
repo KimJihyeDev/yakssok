@@ -1,19 +1,13 @@
 <template>
-    <div class="container" style="width:100%;height:900px;margin-top: 100px;">
+    <div class="container" style="width:100%;height:900px;margin-top: 70px;">
         <div>
-
-            <!-- change 이벤트는 요소의 값(value)가 변경되면 발생 -->
             <div class="form-group row">
                 <select class="form-control col-md-3" v-model="si" @change="select_gu">
                     <option disabled value="">선택</option>
-                    <!-- 파일 맨 아래 주석 참고  -->
-                    <!-- **case.1 ** -->
-                    <option v-for="(one,idx) in lacation.si" :key="idx" :value="one.value">{{one.value}}</option>
+                    <option v-for="(one,idx) in location.region.si" :key="idx" :value="one.value">{{one.value}}</option>
                 </select>
                 <select class="form-control col-md-3" v-model="gu" @change="select_dong">
                     <option disabled value="">선택</option>
-                    <!-- (gu,index) 로 표현하면 gu=배열의 요소,idx= 배열 인덱스를 가리킴 -->
-                    <!-- key를 유니크한 값으로 표현하라는 에러메시지를 막기 위해서 index를 key로 사용하길 권장  -->
                     <option v-for="(gu,idx) in optionGu" v-bind:key="idx" :value="gu.value">{{gu.value}}</option>
                 </select>
                 <select class="form-control col-md-3" v-model="dong" @change="searchPlace">
@@ -21,11 +15,6 @@
                     <option v-for="(dong,idx) in optionDong" v-bind:key="idx">{{dong.value}}</option>
                 </select>
             </div>
-            <!-- <input type="text" v-model="si">
-            <input type="text" v-model="gu">
-            <input type="text" v-model="dong"> -->
-            <!-- <input type="button" v-on:click="searchPlace" value="변경"> -->
-
             <div class="map_wrap">
                 <div id="map" style="width:100%;height:150%;position:relative;overflow:scroll;"></div>
                 <!-- 카테고리 선택 마커(보이지 않도록 처리) -->
@@ -38,11 +27,10 @@
             </div>
         </div>
     </div>
-
 </template>
 
 <script>
-    // bounds = new kakao.maps.LatLngBounds() 카카오맵에서 사용할 코드
+    import location from '@/assets/location.json'
     // 아래 코드를 사용하여 eslint를 해당 파일에서 사용 불능으로 만들 수 있다. 
     // 반드시 script 코드 맨 위에 작성할 것.
     /* eslint-disable */
@@ -52,49 +40,18 @@
             return {
                 lat: 37.566826, // 위도
                 lon: 126.9786567, // 경도
-                lacation: {
-                    si: [{ value: '서울시' }, { value: '강원도' }],
-                    gu: {
-                        Seoul_si_gu: [{ value: '중구' }, { value: '용산구' }],
-                        GangwonDo_gu: ['속초', '강릉'],
-                    },
-                    // 소공동 · 회현동 · 명동 · 필동 · 장충동 · 광희동 · 을지로동 · 신당동 · 다산동 · 약수동 · 청구동 · 신당5동 · 동화동 · 황학동 · 중림동
-                    dong: {
-                        Jung_gu_dong: [
-                            { value: '광희동 1가' },
-                            { value: '광희동 2가' },
-                            { value: '다산동' },
-                            { value: '명동' },
-                            { value: '회현동' },
-                        ]
-                    }
-
-                },
-                si: '', // 지역설정(시) -> 검색에 사용 & 
-                gu: '',  // 지역설정(구)
-                dong: '', // 지역설정(동)
-                optionGu: [],
-                optionDong: [],
-                map: {},
+                si: '', // 검색할 지역설정(시) 
+                gu: '',  // 검색할 지역설정(구)
+                dong: '', // 검색할 지역설정(동)
+                location: location, // 행정지역목록
+                optionGu: [], // 시를 선택했을 시 보여질 구의 배열
+                optionDong: [], // 구를 선택했을 시 보여질 동의 배열
+                map: {}, // 카카오 맵 객체
                 center: (0.0), // 지도 중심 좌표
                 level: 5  // 지도 확대 레벨
             }
         },
         methods: {
-            select_gu() {
-                if (this.si === '서울시') {
-                    this.optionGu = this.lacation.gu.Seoul_si_gu
-                } else if (this.si === '강원도') {
-                    this.optionGu = this.lacation.gu.Gangwondo_gu
-                }
-            },
-            select_dong() {
-                if (this.gu === '중구') {
-                    this.optionDong = this.lacation.dong.Jung_gu_dong;
-                } else if (this.gu === '마포구') {
-
-                }
-            },
             createMap() {
                 // 마커를 클릭했을 때 해당 장소의 상세정보를 보여줄 커스텀오버레이입니다
                 var placeOverlay = new kakao.maps.CustomOverlay({ zIndex: 1 }),
@@ -257,7 +214,7 @@
             searchPlace() {
                 var component = this;
                 var geocoder = new kakao.maps.services.Geocoder();
-                
+
                 // 주소에 해당하는 좌표를 검색
                 geocoder.addressSearch(this.si + this.gu + this.dong, function (result, status) {
 
@@ -291,10 +248,23 @@
                         component.map.setLevel(component.level);
                         // }
                         // setBounds();
-
                     }
                 })
-            }
+            },
+            select_gu() {
+                if (this.si === "서울특별시") {
+                    this.optionGu = location.region.gu.inSeoul_gu
+                } else if (this.si === '강원도') {
+                    this.optionGu = location.region.gu.Gangwondo_gu
+                }
+            },
+            select_dong() {
+                if (this.gu === '강남구') {
+                    this.optionDong = location.region.dong.inGangnam_dong;
+                } else if (this.gu === '마포구') {
+
+                }
+            },
         },
         mounted: function () {
             this.createMap()

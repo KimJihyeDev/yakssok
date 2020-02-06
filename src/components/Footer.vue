@@ -27,13 +27,13 @@
                 </div>
             </div>
         </div>
-
         <!-- .site-wrap -->
     </footer>
 </template>
 
 <script>
 export default {
-    name: 'Footer'
+    name: 'Footer',
+   
 }
 </script>
