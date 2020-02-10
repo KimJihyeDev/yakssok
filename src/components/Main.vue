@@ -48,7 +48,7 @@
                 users: [],
                 path: `${this.$store.state.url}/images/products/`, // 이미지 가져오기 테스트
                 products: [],
-                imagePath: 'images/pictograms' // 이미지 경로
+                imagePath: 'images/pictograms', // 이미지 경로
             }
         },
         components: {

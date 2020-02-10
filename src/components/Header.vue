@@ -15,15 +15,14 @@
         <div class="container padding-control">
           <div class="row align-items-center">
             <div class="col-12 text-center">
-              <!-- routerlink로 변경시 로고가 출력x -->
-              <a href="#" class="site-logo click-event">
+              <a :href="`/`" class="site-logo">
                 <img src="/assets/images/logo.png" alt="Image" class="img-fluid" >
               </a>
             </div>
             <div class="col-12">
               <div class="pull-right">
-                <button class="btn btn-white btn-sm text-right">로그인</button>
-                <button class="btn btn-white btn-sm text-right" style="margin-left:3px;">마이페이지</button>
+                <button class="btn btn-white btn-sm text-right" type="button" @click="login">로그인</button>
+                <button class="btn btn-white btn-sm text-right" type="button" style="margin-left:3px;">마이페이지</button>
               </div>
             </div>
             <!-- 모바일 화면으로 전환시 네이게이션바 설정 -->
@@ -32,7 +31,7 @@
           </div>
         </div>
         <!-- searchform start  -->
-        <div class="row col-lg-12">
+        <div class="row col-lg-12 mx-auto">
           <div class="col-lg-6 center-block">
             <div class="input-group">
               <input type="text" class="form-control margin-control" placeholder="Search for...">
@@ -64,7 +63,7 @@
                     </div>
                     <!-- dropdown end -->
                     <li><router-link to="/" class="nav-link text-left" style="font-size:20px;font-weight:600;color:#212529;">동물영양제</router-link></li>
-                    <li><router-link to="map" class="nav-link text-left" style="font-size:20px;font-weight:600;color:#212529;">약국찾기</router-link></li>
+                    <li><router-link :to="`/map`" class="nav-link text-left" style="font-size:20px;font-weight:600;color:#212529;">약국찾기</router-link></li>
                   </ul>
                 </nav>
               </div>
@@ -78,13 +77,18 @@
 
 <script>
   export default {
-    name: 'Header'
+    name: 'Header',
+    methods:{
+      login(){
+        this.$router.push('/users/login');
+      }
+    }
   }
 
 </script>
 
 <style scoped>
-  /* 검색창 화면 중아 정렬 */
+  /* 검색창 화면 중앙 정렬 */
   .center-block {
     float: none;
     margin: 0 auto
@@ -106,9 +110,5 @@
   /* 헤더 요소들의 패딩 조절:네이게이션과 검색창간의 거리 조절 */
   .padding-control {
     padding-bottom: 2px;
-  }
-  /* 로고의 클릭 이벤트 방지 */
-  .click-event{
-    pointer-events: none;
   }
 </style>

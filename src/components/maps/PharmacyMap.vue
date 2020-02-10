@@ -1,5 +1,5 @@
 <template>
-    <div class="container" style="width:100%;height:900px;margin-top: 70px;">
+    <div class="container" style="width:100%;height:100%;margin-top: 80px;">
         <div>
             <div class="form-group row">
                 <select class="form-control col-md-3" v-model="si" @change="select_gu">
@@ -239,15 +239,12 @@
                             // LatLngBounds 객체에 좌표를 추가합니다
                             bounds.extend(points[i]);
                         }
-                        // function setBounds() {
                         // LatLngBounds 객체에 추가된 좌표들을 기준으로 지도의 범위를 재설정합니다
                         // 이때 지도의 중심좌표와 레벨이 변경될 수 있습니다
                         component.map.setBounds(bounds);
                         // 검색 후 지도의 레벨이 카카오에서 설정한 초기 레벨(2)로 변경되므로
                         // 지도의 레벨을 현재 지도의 레벨과 같게 재설정해준다.
                         component.map.setLevel(component.level);
-                        // }
-                        // setBounds();
                     }
                 })
             },
