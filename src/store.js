@@ -10,8 +10,16 @@ const store = new Vuex.Store({
     // data옵션에 해당하는 state
     state: {
         url:'http://localhost:4000',
+        token: '',
         count:0,
+        tokenState: ''
 
+    },
+    getters: {
+        isLoggedIn(state){
+            return state.token;
+        },
+        
     },
     // setter에 해당하는 mutations
     // **mutations 이외에서 state의 값을 변경해서는 안 된다**
@@ -20,6 +28,19 @@ const store = new Vuex.Store({
         increment(state){
             state.count++
         },
+        logIn(state){
+            state.token = localStorage.getItem('YAKSSOK-TOKEN');
+        },
+        logOut(state){
+            localStorage.removeItem('YAKSSOK-TOKEN');
+            state.token = '';
+            // location.reload();
+            this.$route.go('/');
+        },
+        validateToken(){
+            // 서버의 응답을 처리한다.
+            // 서버로부터 에러를 받은 경우, 토큰이 
+        }
     }
 
 })

@@ -126,7 +126,7 @@ export default {
   name:'ProductDetail',
   data(){
     return {
-      id:this.$route.params.id,
+      // id:this.$route.params.id,
       product_ingredients:[],  // 상품, 성분 정보
       pictograms:[],  // 픽토그램 정보
       imagePath:'images/products', // 상품 이미지 경로
@@ -136,7 +136,7 @@ export default {
   created(){
     // 경로를 직접 입력하여 들어간 경우 생명주기가 작동하지 않는걸로 보인다.
     // 동일한 컴포넌트 인스턴스가 재사용 되기 때문으로 보임.
-    // alert('created');
+    alert('created');
    (async() => {
      try{
         const result = await this.$axios.get(`${this.$store.state.url}/products/${this.$route.params.id}`)
@@ -171,9 +171,14 @@ export default {
     // react to route changes...
     // don't forget to call next()
     // 찾고자 하는 페이지가 없을 경우의 처리도 필요
+    alert('update')
    next(this.$router.go(to.path));
       
   }, 
+  beforeRouteEnter(to, from, next) {
+    alert('beforerouterenter')
+    next()
+  },
   filters:{
     parent_category(val){
       if(val === 1){

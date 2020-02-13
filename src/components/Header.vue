@@ -21,7 +21,7 @@
             </div>
             <div class="col-12">
               <div class="pull-right">
-                <button class="btn btn-white btn-sm text-right" type="button" @click="login">로그인</button>
+                <button class="btn btn-white btn-sm text-right" type="button" @click="loginLogout">{{ isLoggedIn }}</button>
                 <button class="btn btn-white btn-sm text-right" type="button" style="margin-left:3px;">마이페이지</button>
               </div>
             </div>
@@ -78,10 +78,30 @@
 <script>
   export default {
     name: 'Header',
-    methods:{
-      login(){
-        this.$router.push('/users/login');
+    data(){
+      return {
+        loginState: this.$store.getters.isLoggedIn
       }
+    },
+    methods:{
+      loginLogout(){
+        this.loginState === ''
+          ? this.$router.push('/login')
+          : this.$store.commit('logOut')
+      },
+    },
+    computed:{
+      isLoggedIn(){
+        var result;
+        this.loginState === ''  
+          ? result = '로그인' 
+          : result = '로그아웃';
+
+        return result;
+      }
+    },
+    watch:{
+
     }
   }
 
