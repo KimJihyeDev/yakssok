@@ -13,7 +13,7 @@
             <button type="button" class="btn btn-primary" @click="login">로그인</button>
         </form>
         <div class="dropdown-divider"></div>
-        <button class="btn btn-default" href="#" type="button" @click="entry" style="margin-right:3px;">회원가입</button>
+        <button class="btn btn-default" href="#" type="button" @click="register" style="margin-right:3px;">회원가입</button>
         <button class="btn btn-default" href="#" type="button">비밀번호 찾기</button>
     
     </div>
@@ -21,7 +21,7 @@
 
 <script>
 import store from '@/store.js'
-// import axios from 'axios' 
+import axios from 'axios' 
     export default {
         name: 'login',
         data(){
@@ -33,8 +33,8 @@ import store from '@/store.js'
             }
         },
         methods: {
-            entry() {
-                this.$router.push('/entry');
+            register() {
+                this.$router.push('/register');
             },
             login() {
                 (async () => {
@@ -58,8 +58,10 @@ import store from '@/store.js'
                         console.log(token)
                         localStorage.setItem('YAKSSOK-TOKEN', token);
 
-                        this.$store.commit('logIn');
-                        // console.log(this.$store.state.token)
+                        store.commit('logIn');
+                        this.$router.push('/');
+                        // location.reload();
+                        // console.log(store.state.token)
 
                     }catch(err){
                         console.log(err);
@@ -71,18 +73,23 @@ import store from '@/store.js'
         },
         beforeRouteEnter(to, from, next){
             // beforeRouterEnter는 Vue객체가 생성되기 전에 실행되므로
-            // this !== Vue
+            // this !== Vue. this 키워드 사용에 주의
             // alert('beforeenter')
-            // const token = localStorage.getItem('YAKSSOK-TOKEN');
-            // (async () => {
-            //     try{
-            //         const result = await axios.post(`${ store.state.url }/users/token`,{ headers: { authorization: token }});
-            //         console.log(result);
-            //         next();
-            //     }catch(err){
-            //          console.log(err);
-            //     }
-            // })();
+            const token = localStorage.getItem('YAKSSOK-TOKEN');
+            // /users/token을 login에 맞춰서 변경하기
+            if(store.getters.isLoggedIn !== ''){
+                (async () => {
+                    try{
+                        const result = await axios.get(`${ store.state.url }/users/token`,{ headers: { authorization: token }});
+                        console.log(result);
+                        const payload = result.data.code;
+                        store.commit('validateToken', payload);
+                        next();
+                    }catch(err){
+                        console.log(err);
+                    }
+                 })();
+            }
             next();
         }
     }

@@ -15,13 +15,14 @@
         <div class="container padding-control">
           <div class="row align-items-center">
             <div class="col-12 text-center">
+            <!-- router-link로 교체시 로고가 출력되지 않으므로 변경 금지 -->
               <a :href="`/`" class="site-logo">
                 <img src="/assets/images/logo.png" alt="Image" class="img-fluid" >
               </a>
             </div>
             <div class="col-12">
               <div class="pull-right">
-                <button class="btn btn-white btn-sm text-right" type="button" @click="loginLogout">{{ isLoggedIn }}</button>
+                <button class="btn btn-white btn-sm text-right" type="button" @click="loginLogout">{{ Login }}</button>
                 <button class="btn btn-white btn-sm text-right" type="button" style="margin-left:3px;">마이페이지</button>
               </div>
             </div>
@@ -55,15 +56,16 @@
                         <a href="#" class="nav-link nav-style" style="padding-left:8px;font-size:20px;font-weight:600;color:#212529;"> 영양제</a>
                       </li>
                       <ul class="dropdown-menu" role="menu">
-                        <li><router-link to="/map" class="nav-style">비타민</router-link></li>
-                        <li><router-link to="/" class="nav-style">비타민2</router-link></li>
+                        <!-- <li><router-link :to="{ name: 'category', params: { parent_id: 1, child_id: 1 }}" class="nav-style">비타민</router-link></li> -->
+                        <li><router-link :to="{ name: 'category', params: { parent_id: 1, child_id: 1 }}" class="nav-style">비타민</router-link></li>
+                        <li><router-link :to="{ name: 'category', params: { parent_id: 1, child_id: 2 }}" class="nav-style">프로바이오틱스</router-link></li>
                         <li class="divider"></li>
                         <li><a href="#" class="nav-style">Separated link</a></li>
                       </ul>
                     </div>
                     <!-- dropdown end -->
-                    <li><router-link to="/" class="nav-link text-left" style="font-size:20px;font-weight:600;color:#212529;">동물영양제</router-link></li>
-                    <li><router-link :to="`/map`" class="nav-link text-left" style="font-size:20px;font-weight:600;color:#212529;">약국찾기</router-link></li>
+                    <li><router-link :to="{ name: 'category', params: { parent_id: 2, child_id: 1}}" class="nav-link text-left" style="font-size:20px;font-weight:600;color:#212529;">동물영양제</router-link></li>
+                    <li><router-link :to="{ name: 'map' }" class="nav-link text-left" style="font-size:20px;font-weight:600;color:#212529;">약국찾기</router-link></li>
                   </ul>
                 </nav>
               </div>
@@ -76,33 +78,43 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
   export default {
     name: 'Header',
     data(){
       return {
-        loginState: this.$store.getters.isLoggedIn
+        loginState: this.$store.getters.isLoggedIn // loginState는 '' 또는 토큰을 갖는다
       }
     },
     methods:{
       loginLogout(){
-        this.loginState === ''
-          ? this.$router.push('/login')
-          : this.$store.commit('logOut')
+        this.loginState === true
+          ? this.$store.commit('logOut')
+          : this.$router.push('/login')
       },
     },
     computed:{
-      isLoggedIn(){
+      ...mapState(['isLoggedIn', 'url']),
+      Login(){
         var result;
-        this.loginState === ''  
-          ? result = '로그인' 
-          : result = '로그아웃';
+        this.loginState === true  
+          ? result = '로그아웃'
+          : result = '로그인' 
 
         return result;
       }
     },
     watch:{
-
-    }
+      'isLoggedIn': function(newVal){
+        if(newVal === false){
+          // console.log('토큰없음')
+          this.loginState = ''; 
+        }else if(newVal === true){
+          console.log(newVal);
+          this.loginState = this.isLoggedIn; 
+        }
+      }
+    },
   }
 
 </script>

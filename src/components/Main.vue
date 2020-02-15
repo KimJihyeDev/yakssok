@@ -15,18 +15,20 @@
                     <!-- 상품리스트 시작 -->
                     <div class="col-lg-3 mb-5 col-md-6" style="margin-top:0px;" v-for="(item,idx) in products"
                         :key="idx">
+                        <!-- `/product/detail/${ item.id }` -->
                         <div class="wine_v_1 text-center pb-4">
-                            <router-link :to="`/detail/${item.id}`" class="thumbnail d-block mb-4"><img
-                                    :src="`${path}/${item.product_image}`" alt="Image" class="img-fluid custom-img">
+                            <router-link :to=" { name: 'detail', params: { id: item.id } }" class="thumbnail d-block mb-4"><img
+                                    :src="`${ path }/${ item.product_image }`" alt="Image" class="img-fluid custom-img">
                             </router-link>
                             <div>
-                                <h3 class="heading mb-1"><a href="#">{{item.product_name}}</a></h3>
+                                <h3 class="heading mb-1"><a href="#">{{ item.product_name }}</a></h3>
                             </div>
                             <div class="wine-actions">
-                                <h3 class="heading-2"><a href="#">{{item.product_name}}</a></h3>
-                                <a class="btn add" type="button" style="background-color:rgb(252,252,252);"><img
-                                        src="/assets/images/items/like.png"></a>
-                                <span class="price">0</span>
+                                <h3 class="heading-2"><a href="#">{{ item.product_name }}</a></h3>
+                                <a href="#" onclick="return false;"><i class="fa fa-thumbs-up" aria-hidden="true" style="color:lightgray"></i></a>
+                                <span class="price" style="margin-left:0.3rem">0</span>
+                                <a href="#" onclick="return false;" style="margin-left:1rem"><i class="fa fa-thumbs-down" aria-hidden="true" style="color:lightgray"></i></a>
+                                <span class="price" style="margin-left:0.3rem">0</span>
                             </div>
                         </div>
                     </div>
@@ -37,18 +39,17 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
     /*eslint no-unused-vars: "error"*/
     export default {
         name: 'Main',
         data: function () {
             return {
-                test: this.$store.state.count,
                 slideIndex: 1,
-                result: {},
                 users: [],
-                path: `${this.$store.state.url}/images/products/`, // 이미지 가져오기 테스트
+                path: `${ this.$store.state.url }/images/products/`, // 이미지 가져오기 테스트
                 products: [],
-                imagePath: 'images/pictograms', // 이미지 경로
+                // imagePath: 'images/pictograms', // 이미지 경로
             }
         },
         components: {
@@ -72,12 +73,14 @@
             this.showDivs(1);
         },
         created: function () {
-            console.log('store=' + this.$store.state.count);
             (async () => {
-                this.result = await this.$axios.get(this.$store.state.url + '/products');
-                this.products = this.result.data;
+                const result = await this.$axios.get(`${ this.url }/products`);
+                this.products = result.data;
             })();
         },
+        computed: {
+            ...mapState(['url']) 
+        }
     }
 </script>
 <style>

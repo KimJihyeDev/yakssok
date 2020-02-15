@@ -10,7 +10,7 @@
           <div class="col-lg-6">
             <div class="owl-style" style="text-align:center">
               <!-- 이미지수정 -->
-              <img :src="`${$store.state.url}/${imagePath}/${product_ingredients.product_image}`" alt="Image" class="img-fluid" style="width:60%;height:60%;">
+              <img :src="`${ $store.state.url }/${ imagePath }/${ product_ingredients.product_image }`" alt="Image" class="img-fluid" style="width:60%;height:60%;">
             </div>
           </div>
           <div class="col-lg-5 ml-auto">
@@ -36,16 +36,13 @@
 
             </div>
             <!--오른쪽 테이블시작 -->
-            <div class="panel panel-default col-lg-5 ml-auto">
+            <div class="panel panel-default col-lg-5 ml-auto" style="margin-right:1rem;">
               <div class="panel-heading">
               </div>
-              <!-- <div class="panel-body">
-                <strong>영양성분표</strong>
-              </div> -->
               <!-- Table -->
               <table class="table con-log-5">
-                <tr style="background-color:#f3f3f3;">
-                  <th class="in-table">영양성분표</th>
+                <tr class="teble-color">
+                  <th class="in-table"><strong>영양성분표</strong></th>
                   <th>&nbsp;</th>
                   <th>&nbsp;</th>
                   <th>&nbsp;</th>
@@ -65,8 +62,9 @@
                   <td> {{ product_ingredients.total_servings }}회</td>
                   <td>&nbsp;</td>
                 </tr>
-                <tr>
+                <tr  class="teble-color">
                   <th class="in-table">1회 분량당</th>
+                  <th>&nbsp;</th>
                   <th>&nbsp;</th>
                   <th class="in-table">함량</th>
                   <th class="in-table">%영양소기준치</th>
@@ -74,14 +72,12 @@
                 <tr v-for="(item,idx) in product_ingredients.ingredients" :key="idx">
                   <td>{{ item.ingredient}}</td>
                   <td>&nbsp;</td>
+                  <td>&nbsp;</td>
                   <td>{{ item.per_serving }}</td>
                   <td>{{ item.daily_value }}</td>
-                  <!-- <td>탄수화물</td>
-                  <td>&nbsp;</td>
-                  <td>10mg</td>
-                  <td>125%</td> -->
                 </tr>
                 <tr>
+                  <td>&nbsp;</td>
                   <td>&nbsp;</td>
                   <td>&nbsp;</td>
                   <td>&nbsp;</td>
@@ -90,6 +86,8 @@
               </table>
               <!-- 테이블 끝 -->
             </div>
+            <!-- <div class="col-lg-1"></div> -->
+            <!-- <div style="width:2rem"></div> -->
 
             <!-- 테이블 끝 -->
             <!-- 정보에 따라 div 나누기. sugested user, warnings ... -->
@@ -109,7 +107,7 @@
               <!-- 픽토그램 추가 -->
               <div>
                 <!-- 이미지의 src를 v-bind로 처리해야지 vue를 적용할 수 있다. -->
-                <img :src="`${$store.state.url}/${pictogramPath}/${item.image_path}`" v-for="(item,idx) in pictograms" :key="idx"  style="width:80px;">
+                <img :src="`${ $store.state.url }/${ pictogramPath }/${ item.image_path }`" v-for="(item,idx) in pictograms" :key="idx"  style="width:80px;">
               </div>
               <!-- 픽토그램 끝 -->
             </div>
@@ -136,12 +134,9 @@ export default {
   created(){
     // 경로를 직접 입력하여 들어간 경우 생명주기가 작동하지 않는걸로 보인다.
     // 동일한 컴포넌트 인스턴스가 재사용 되기 때문으로 보임.
-    alert('created');
    (async() => {
      try{
-        const result = await this.$axios.get(`${this.$store.state.url}/products/${this.$route.params.id}`)
-        console.log(`${this.$store.state.url}/products/${this.$route.params.id}`);
-        console.log(`결과`)
+        const result = await this.$axios.get(`${ this.$store.state.url }/products/${ this.$route.params.id }`)
         console.log(result);
         this.product_ingredients = result.data.product_ingredients[0];
         this.pictograms = result.data.pictograms;
@@ -170,32 +165,29 @@ export default {
    beforeRouteUpdate (to, from, next) {
     // react to route changes...
     // don't forget to call next()
+    // go()는 브라우저 차원의 이동(화면 리로드)
     // 찾고자 하는 페이지가 없을 경우의 처리도 필요
-    alert('update')
-   next(this.$router.go(to.path));
+    //  next(this.$router.go(to.path));
+    next();
+    this.$router.go(to.path)
       
   }, 
   beforeRouteEnter(to, from, next) {
-    alert('beforerouterenter')
     next()
   },
   filters:{
     parent_category(val){
       if(val === 1){
-        val = '영양제'
-        return val;
+        return '영양제';
       }else{
-        val = '동물영양제' 
-        return val;
+        return '동물영양제' ;
       }
     },
     child_category(val){
       if(val === 1){
-        val= '비타민';
-        return val;
+        return '비타민';
       }else{
-        val = '프로바이오틱스';
-        return val;
+        return '프로바이오틱스';
       }
     }
   }  
@@ -219,6 +211,15 @@ export default {
   .in-table{
     color:#3d3935;
     font-weight:400;
+  }
+
+  /*테이블 컬러 */
+  .teble-color{
+    background-color:#f3f3f3;
+  }
+  /* 테이블셀 텍스트 정렬 */
+  th, td{
+    text-align: center;
   }
 
 </style>
