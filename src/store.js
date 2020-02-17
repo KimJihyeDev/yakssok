@@ -11,6 +11,8 @@ const store = new Vuex.Store({
     // data옵션에 해당하는 state
     state: {
         url: 'http://localhost:4000',
+        productImagePath: '/images/products',
+        pictogramImagePath: '/images/pictograms',
         token: '',
         tokenState: '',
         isLoggedIn: false,
@@ -18,7 +20,13 @@ const store = new Vuex.Store({
 
 
     },
-    getters: { // state의 데이터를 읽어주는 getter, computed와도 비슷
+    getters: { // state의 데이터를 읽어주는 getter, computed와도 비슷(고로 return 필수?)
+        productImagePath(state){
+            return state.url + state.productImagePath;
+        },
+        pictogramImagePath(state){
+            return state.url + state.pictogramImagePath;
+        },
         isLoggedIn(state){ // 토큰의 유무를 확인
             return state.isLoggedIn;
         },

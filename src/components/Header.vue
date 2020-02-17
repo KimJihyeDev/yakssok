@@ -49,18 +49,16 @@
               <div class="mx-auto">
                 <nav class="site-navigation position-relative text-left" role="navigation">
                   <ul class="site-menu main-menu js-clone-nav mx-auto d-none pl-0 d-lg-block border-none">
-                    <li class="active"><router-link to="/" class="nav-link text-left">Home</router-link></li>
+                    <li class="active"><router-link to="/" class="nav-link text-left" style="font-size:1.2rem;">Home</router-link></li>
                     <!-- dropdown start -->
                     <div class="btn-group">
                       <li class="btn btn-default" data-toggle="dropdown" aria-expanded="false" >
                         <a href="#" class="nav-link nav-style" style="padding-left:8px;font-size:20px;font-weight:600;color:#212529;"> 영양제</a>
                       </li>
                       <ul class="dropdown-menu" role="menu">
-                        <!-- <li><router-link :to="{ name: 'category', params: { parent_id: 1, child_id: 1 }}" class="nav-style">비타민</router-link></li> -->
                         <li><router-link :to="{ name: 'category', params: { parent_id: 1, child_id: 1 }}" class="nav-style">비타민</router-link></li>
+                        <!-- <li class="divider"></li> -->
                         <li><router-link :to="{ name: 'category', params: { parent_id: 1, child_id: 2 }}" class="nav-style">프로바이오틱스</router-link></li>
-                        <li class="divider"></li>
-                        <li><a href="#" class="nav-style">Separated link</a></li>
                       </ul>
                     </div>
                     <!-- dropdown end -->
@@ -96,7 +94,7 @@ import { mapState } from 'vuex'
     computed:{
       ...mapState(['isLoggedIn', 'url']),
       Login(){
-        var result;
+        let result;
         this.loginState === true  
           ? result = '로그아웃'
           : result = '로그인' 
@@ -106,13 +104,14 @@ import { mapState } from 'vuex'
     },
     watch:{
       'isLoggedIn': function(newVal){
-        if(newVal === false){
-          // console.log('토큰없음')
-          this.loginState = ''; 
-        }else if(newVal === true){
-          console.log(newVal);
-          this.loginState = this.isLoggedIn; 
-        }
+        // if(newVal === false){
+        //   this.loginState = ''; 
+        // }else if(newVal === true){
+        //   this.loginState = this.isLoggedIn; 
+        // }
+        newVal === false
+          ? this.loginState = ''
+          : this.loginState = this.isLoggedIn; 
       }
     },
   }
