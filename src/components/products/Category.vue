@@ -94,7 +94,7 @@
       // push는 에러나면서 이동X 
       next();
       this.$router.go(to.path)
-    },
+    }
   }
 </script>
 <style>

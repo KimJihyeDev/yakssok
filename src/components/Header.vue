@@ -22,8 +22,10 @@
             </div>
             <div class="col-12">
               <div class="pull-right">
-                <button class="btn btn-white btn-sm text-right" type="button" @click="loginLogout">{{ Login }}</button>
-                <button class="btn btn-white btn-sm text-right" type="button" style="margin-left:3px;">마이페이지</button>
+                <!-- <button class="btn btn-white btn-sm text-right" type="button" @click="loginLogout">{{ loginState }}</button> -->
+                <button class="btn btn-white btn-sm text-right" type="button" @click="loginLogout" v-if="token">로그아웃</button>
+                <button class="btn btn-white btn-sm text-right" type="button" @click="loginLogout" v-else-if="!token">로그인</button>
+                <router-link tag="button" :to="{ name: 'profile' }" class="btn btn-white btn-sm text-right" style="margin-left:3px;">마이페이지</router-link>
               </div>
             </div>
             <!-- 모바일 화면으로 전환시 네이게이션바 설정 -->
@@ -35,9 +37,9 @@
         <div class="row col-lg-12 mx-auto">
           <div class="col-lg-6 center-block">
             <div class="input-group">
-              <input type="text" class="form-control margin-control" placeholder="Search for...">
+              <input type="text" class="form-control margin-control" placeholder="Search for..." v-model="search">
               <span class="input-group-btn">
-                <button class="btn btn-default" type="button">검색</button>
+                <button class="btn btn-default" type="button" @click="searchProduct">검색</button>
               </span>
             </div><!-- /input-group -->
           </div><!-- /.col-lg-6 -->
@@ -81,38 +83,34 @@ import { mapState } from 'vuex'
     name: 'Header',
     data(){
       return {
-        loginState: this.$store.getters.isLoggedIn // loginState는 '' 또는 토큰을 갖는다
+        search: ''
       }
     },
     methods:{
       loginLogout(){
-        this.loginState === true
-          ? this.$store.commit('logOut')
-          : this.$router.push('/login')
+        // store는 새로고침되면 초기화되므로 
+        // store로 로그인 판별x
+        this.token === null
+          ? this.$router.push('/login')
+          : this.$store.commit('logout')
       },
+      searchProduct(){
+        console.log(this.search);
+        if(this.search){
+          this.$axios.get(`${ this.url }/products/search?product=${ this.search }`)
+          .then(
+            console.log('헤더에서 이게 돼?')
+          )
+          .catch((err) => { 
+            console.log(err)
+          })
+        }
+      }
     },
     computed:{
-      ...mapState(['isLoggedIn', 'url']),
-      Login(){
-        let result;
-        this.loginState === true  
-          ? result = '로그아웃'
-          : result = '로그인' 
-
-        return result;
-      }
+      ...mapState(['token', 'url']),
     },
     watch:{
-      'isLoggedIn': function(newVal){
-        // if(newVal === false){
-        //   this.loginState = ''; 
-        // }else if(newVal === true){
-        //   this.loginState = this.isLoggedIn; 
-        // }
-        newVal === false
-          ? this.loginState = ''
-          : this.loginState = this.isLoggedIn; 
-      }
     },
   }
 

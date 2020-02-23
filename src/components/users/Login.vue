@@ -15,18 +15,24 @@
             <button type="button" class="btn btn-primary btn-lg btn-block" @click="login">로그인</button>
         </form>
         <div class="dropdown-divider"></div>
-        <div class="alert alert-danger text-center" role="alert" v-if="error" style="margin-top:1rem;">
-            {{ errorMessage }}
+        <div class="alert alert-danger text-center" role="alert" v-if="errors || isError" style="margin-top:1rem;">
+            {{ message || errorMessage }}
         </div>
+        <!-- <div class="alert alert-danger text-center" role="alert" v-if="isLoginError" style="margin-top:1rem;">
+            {{ getErrorMessage }}
+        </div> -->
         <div class="text-center">
-            <button class="btn btn-default" href="#" type="button" @click="register" style="margin-right:3px;">회원가입</button>
+            <!-- <button class="btn btn-default" href="#" type="button" @click="register" style="margin-right:3px;">회원가입</button> -->
+            <router-link class="btn btn-default" tag="button" :to="{ name: 'register' }" style="margin-right:3px;">회원가입</router-link>
             <button class="btn btn-default" href="#" type="button">비밀번호 찾기</button>
         </div>
     </div>
 </template>
 
 <script>
-import store from '@/store.js'
+// eslint-disable-next-line no-unused-vars
+import store from '@/store'
+import { mapState, mapActions } from 'vuex'
 // import axios from 'axios' 
     export default {
         name: 'login',
@@ -36,78 +42,46 @@ import store from '@/store.js'
                     user_id_email: '',
                     user_pwd: ''
                 },
-                error: false,
-                errorMessage: ''
+                errors: false,
+                message: '',
             }
         },
         methods: {
-            register() {
-                this.$router.push('/register');
-            },
+            ...mapActions({ commitLogin: 'login' }),
             login() {
-                (async () => {
-                    try{
-                        if(this.user.user_id_email === ''){
-                            this.error = true;
-                            this.errorMessage = '아이디 입력해 주세요.';
-                            this.$refs.id.focus();
-                            return false;
-                        }else if(this.user.user_pwd === ''){
-                            this.error = true;
-                            this.errorMessage = '비밀번호 입력해 주세요.';
-                            this.$refs.pwd.focus();
-                            return false;
-                        }else{
-                            this.error = false
-                            this.errorMessage = '';
-                        }
-
-                        // eslint-disable-next-line no-unreachable
-                        const result = await this.$axios.post(`${ store.state.url }/users/login`, this.user)
-                        // 토큰의 유무, 발행기간 유효성 여부 등은 login 모듈에서 처리한다
-                        
-                        console.log(result);
-                        console.log(result.data.code);
-                        if(result.data.code === 403){
-                            this.error = true;
-                            this.errorMessage = '아이디 또는 비밀번호를 확인해 주세요';
-                            return false;
-                        }
-
-                        const token = result.data.token;
-                        console.log(token)
-                        localStorage.setItem('YAKSSOK-TOKEN', token);
-
-                        store.commit('logIn');
-                        this.$router.push('/');
-
-                    }catch(err){
-                        console.log(err);
-                    }
+                const vm = this;
+                let checkNull = (message, ref) => {
+                        vm.errors = true;
+                        vm.message = `${ message }를 입력해 주세요`
+                        ref.focus();
+                        // return false; **여기서 return false를 해도 값이 넘어간다**
                 }
 
-                )();
+                if(this.user.user_id_email === ''){
+                    checkNull('아이디', this.$refs.id)
+                    return false; 
+                }
+                else if(this.user.user_pwd === '' ){
+                    checkNull('비밀번호', this.$refs.pwd);
+                    return false; 
+                }
+                else {
+                    this.errors = false
+                    this.message = '';
+                }
+                this.commitLogin(this.user)
+                // store.dispatch('login', this.user);
             }
         },
+        computed: {
+            ...mapState(['isError', 'errorMessage']),
+        },
+        // beforeRouteEnter 때문에 계속 에러 발생
         beforeRouteEnter(to, from, next){
-            // beforeRouterEnter는 Vue객체가 생성되기 전에 실행되므로
-            // this !== Vue. this 키워드 사용에 주의
-            // alert('beforeenter')
-            // const token = localStorage.getItem('YAKSSOK-TOKEN');
-            // if(store.getters.isLoggedIn !== ''){
-            //     (async () => {
-            //         try{
-            //             const result = await axios.get(`${ store.state.url }/users/token`,{ headers: { authorization: token }});
-            //             console.log(result);
-            //             const payload = result.data.code;
-            //             store.commit('validateToken', payload);
-            //             next();
-            //         }catch(err){
-            //             console.log(err);
-            //         }
-            //      })();
-            // }
-            next();
+            store.state.token === null
+                ? next()
+                : next({ name: 'profile' })
+
         }
     }
 </script>

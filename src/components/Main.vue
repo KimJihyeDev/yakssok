@@ -11,7 +11,7 @@
                     </ol>
                     <div class="carousel-inner">
                         <div class="carousel-item active">
-                            <img src="/assets/images/hero_2.jpg" class="d-block w-100" alt="...">
+                            <img src="/assets/images/wine_1.png" class="d-block w-100" alt="...">
                             <div class="carousel-caption d-none d-md-block">
                                 <h5>First slide label</h5>
                                 <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
@@ -50,29 +50,21 @@
                         <div class="wine_v_1 text-center pb-4">
                             <router-link :to=" { name: 'detail', params: { id: item.id } }"
                                 class="thumbnail d-block mb-4"><img :src="`${ path }/${ item.product_image }`"
-                                    v-on:load="loaded" alt="Image" class="img-fluid custom-img">
+                                    v-on:load="loaded" alt="Image" class="img-fluid custom-img"
+                                    style="max-height:300px;width:auto;height:auto;">
                             </router-link>
                             <div>
                                 <h3 class="heading mb-1"><a href="#">{{ item.product_name }}</a></h3>
                             </div>
-                            <div class="wine-actions">
+                            <!-- <div class="wine-actions">
                                 <h3 class="heading-2"><a href="#">{{ item.product_name }}</a></h3>
-                                <!-- rating . productDetail 참고하기 -->
-                                <!-- 평점이 0이면 평점이 안 보이게 하기 -->
-                                <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="5 star"></label>
-                                <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="4 star"></label>
-                                <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="3 star"></label>
-                                <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="2 star"></label>
-                                <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="1 star"></label>
-                                   <!-- 평점을 준 사용자의 수 -->
                                 <span class="price" style="margin-left:0.3rem">0</span>
-                                <!-- 좋아요, 싫어요. 댓글에서 사용하기 -->
-                                <!-- <a href="#" onclick="return false;"><i class="fa fa-thumbs-up" aria-hidden="true"
+                                <a href="#" onclick="return false;"><i class="fa fa-thumbs-up" aria-hidden="true"
                                         style="color:lightgray"></i></a>
                                 <a href="#" onclick="return false;" style="margin-left:1rem"><i
                                         class="fa fa-thumbs-down" aria-hidden="true" style="color:lightgray"></i></a>
-                                <span class="price" style="margin-left:0.3rem">0</span> -->
-                            </div>
+                                <span class="price" style="margin-left:0.3rem">0</span>
+                            </div> -->
                         </div>
                     </div>
                     <!-- products list end -->
@@ -83,6 +75,8 @@
 </template>
 
 <script>
+// eslint-disable-next-line no-unused-vars
+import store from '@/store'
     import { mapState, mapGetters } from 'vuex'
     /*eslint no-unused-vars: "error"*/
     export default {
@@ -109,11 +103,17 @@
             loaded(){
                 this.isLoaded = true;
              },
-        }
+        },
     }
 </script>
 <style>
     .custom-img {
         padding: 20%;
+    }
+    /* carousel 사이즈 조절 */
+    .carousel-item img {
+        width: auto;
+        height: auto;
+        max-height: 700px;
     }
 </style>

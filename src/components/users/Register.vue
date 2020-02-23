@@ -23,13 +23,15 @@
             <hr class="solid">
             <button type="button" class="btn btn-primary btn-lg btn-block" @click="register">회원가입</button>
         </form>
-        <div class="alert alert-danger text-center" role="alert" v-if="error" style="margin-top:1rem;">
-            {{ message }}
+        <div :class="{ test : false }"></div>
+        <div class="alert alert-danger text-center" role="alert"  v-if="errors" style="margin-top:1rem;">
+            {{ message }} 
         </div>
     </div>
 </template>
 
 <script>
+import store from '@/store'
     export default {
         name: 'register',
         data(){
@@ -40,48 +42,52 @@
                     email:''
                 },
                 confirm_pwd: '', // 비밀번호 확인
-                error: false,
+                errors: false,
                 message: '',
+                isTest: true
             }
         },
         methods:{
             register(){
                 // 널값체크
-                if(this.user.user_id === '') {
-                    this.error = true;
-                    this.message = '아이디를 입력해 주세요.';
-                    this.$refs.id.focus();
+                const vm = this;
+                let checkNull = (message, ref) => {
+                    vm.errors = true;
+                    vm.message = `${ message } 입력해 주세요.`;
+                    ref.focus();
+                }
+
+                if (this.user.user_id === '') {
+                    checkNull('아이디를', this.$refs.id);
                     return false;
-                } else if(this.user.user_pwd === '') {
-                    this.error = true;
-                    this.message = '비밀번호를 입력해 주세요.'
-                    this.$refs.pwd.focus();
+                } else if (this.user.email === '') {
+                    checkNull('이메일을', this.$refs.email);  
+                     return false;  
+
+                } else if (this.user.user_pwd === '') {
+                    checkNull('비밀번호를', this.$refs.pwd);
+                     return false;
+
+                } else if (this.confirm_pwd === '') {
+                    checkNull('비밀번호 확인을', this.$refs.confirm_pwd);
                     return false;
-                } else if(this.confirm_pwd === '') {
-                    this.error = true;
-                    this.message = '비밀번호 확인을 입력해 주세요.'
-                    this.$refs.confirm_pwd.focus();
-                    return false;
-                } else if(this.user.email === '') {
-                    this.error = true;
-                    this.message = '이메일을 입력해 주세요.'
-                    this.$refs.email.focus();
-                    return false;
-                } else if(this.user.user_pwd !== this.confirm_pwd){
-                    this.error = true;
+
+                } else if (this.user.user_pwd !== this.confirm_pwd){
+                    this.errors = true;
                     this.message = '비밀번호가 일치하지 않습니다.'
                     this.$refs.pwd.focus();
                     return false;
                 } else {
-                    this.error = false;
+                    this.errors = false;
                     this.message = '';
                 }   
+
                 // 유효성 검사
                 if(this.user.user_id !== '') {
                     const reg =  /^[0-9A-za-z]{2,8}$/g;
-                    const validate = reg.test(this.user.user_id.replace(/(\s*)/g, ""));
-                    if(!validate) {
-                        this.error = true;
+                    const validation = reg.test(this.user.user_id.replace(/(\s*)/g, ""));
+                    if(!validation) {
+                        this.errors= true;
                         this.message = '아이디는 2자 이상 8이하의 영문 또는 숫자만 입력해 주세요.';
                         this.$refs.id.focus();
                         return false;
@@ -89,9 +95,9 @@
                 } 
                 if(this.user.email !== '') {
                     const reg = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i
-                    const validate = reg.test(this.user.email.replace(/(\s*)/g, ""));
-                    if(!validate) {
-                        this.error = true;
+                    const validation = reg.test(this.user.email.replace(/(\s*)/g, ""));
+                    if(!validation) {
+                        this.errors = true;
                         this.message = '이메일 형식을 확인해 주세요.';
                         this.$refs.email.focus();
                         return false;
@@ -99,27 +105,37 @@
                }
                (async () => {
                     try {
-                        const result = await this.$axios.post(`${this.$store.state.url}/users`, this.user)
-                        // console.log(result);
-
-                        if(result.data.code === 409){
-                            this.error = true;
-                            this.message = '이미 사용 중인 아이디입니다.';
-                            // return false;
-                        } else if (result.data.code === 410 ){
-                            this.error = true;
-                            this.message = '이미 가입된 이메일입니다.';
-                            // return false;
+                        const result = await this.$axios.post(`${ store.state.url }/users`, this.user)
+                        let code = result.data.code === 409 || result.data.code === 500;
+                        if(code){
+                            this.errors = true;
+                            this.message = result.data.message;
                         }
-                        
+
                         if(result.status === 201){
+                            const token = result.data.token;
+                            const { id } = result.data;
+                            store.commit('login', token, id);
                             this.$router.push('/');
                         }
+                        
                     }catch(err) {
                        console.log(err);
                     }
                })();
             }
+        },
+        beforeRouteEnter(to, from, next){
+            store.state.token === null
+                ? next()
+                : next({ name: 'profile' })
         }
     }
 </script>
+<style >
+.test {
+    height: 100px;
+    width : 200px;
+   border: 1px solid red;
+}
+</style>

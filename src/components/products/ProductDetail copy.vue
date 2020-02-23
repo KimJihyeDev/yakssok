@@ -2,7 +2,7 @@
   <div>
     <div style="margin:80px 70px 0px 70px;">
       <p style="top:0px;margin:0px;padding:0;" class="col-md-6"> 카테고리 > {{ product.parent_category | parent_category }}
-        <span v-if="child_category"> > </span> {{ child_category }} </p>
+        <span v-if="!(child_category=== null)"> > </span> {{ child_category }} </p>
     </div>
     <div class="site-section mt-5 product">
       <div class="container">
@@ -163,7 +163,7 @@
           <!-- review list start -->
           <!-- 별점 코드 :class rate적용하기(class가 2개인게 정상 맞다)  -->
           <div class="container">
-            <h2 class="text-center" v-if="!reviewList.length"> 리뷰가 없습니다.</h2>
+            <h2 class="text-center" v-if="reviewList.length === 0"> 리뷰가 없습니다.</h2>
 
             <!-- 리뷰는 최신순으로 정렬 -->
             <div class="card" v-for="(item, idx) in reviewList" :key="idx">
@@ -200,37 +200,44 @@
                   </div>
                 </div>
                 <!-- 댓글 시작 -->
-                <div class="card" v-for="(item, idx) in reviewList" :key="idx">
-              <div class="card-body">
-                <div class="row">
-                  <div class="col-md-12">
-                    <p>
-                      <h3 class="text-dark font-weight-bold">{{ item.title }}</h3>
-                      <!-- <span class="float-right"><i class="fa fa-star star rate"></i></span>
-                      <span class="float-right"><i class="fa fa-star star rate"></i></span>
-                      <span class="float-right"><i class="fa fa-star star rate"></i></span>
-                      <span class="float-right"><i class="fa fa-star star rate"></i></span>
-                      <span class="float-right"><i class="fa fa-star star rate"></i></span> -->
-
-                      <!-- </p> -->
-                      <span>{{ item.createdAt }}</span>
-                      <div class="clearfix"></div>
-                      <p class="text-dark font-weight-bolder">{{ item.contents }}</p>
-                      <p>
-                        <!-- 이 아래 코드는 대댓글에 적용 -->
-                        <!-- <router-link class="float-right btn btn-outline-primary ml-2" v-if="!token" tag="button"
-                          :to="{ name: 'login' }" href="#" onclick="return false;"> <i class="fa fa-reply"></i> 댓글달기
-                        </router-link> -->
-                        <button class="float-right btn btn-outline-primary ml-2" @click="isVisible(idx)"><i class="fa fa-reply"></i> 댓글
-                        </button>
-                        <!-- <button class="float-right btn btn-outline-primary ml-2" type="button" v-if="token" tag="button" href="#" onclick="return false;" > <i class="fa fa-reply"></i> 댓글달기!</button> -->
-                        <!-- <button class="float-right btn btn-outline-primary ml-2" type="button" v-if="token" href="#"
-                          onclick="return false;" @click="isVisible"><i class="fa fa-reply"></i> 댓글보기</button> -->
-                      </p>
+                <div class="card card-inner" ref="test" :class="{ visible: true }">
+                  <div class="card-body">
+                    <!-- 댓글 입력폼 시작 -->
+                    <!-- 댓글작성도 로그인 한 사용자만 볼 수 있어야 한다. -->
+                    <div class="form-group" style="border:1px solid lightgray" v-if="token">
+                      <div class="text-center">
+                        <span>댓글 작성(최대 300자까지 가능합니다). </span>
+                        <label for="comment">글자수 <span
+                            style="margin-left:0.5rem">{{ comment.contents.length }}/300</span></label>
+                      </div>
+                      <textarea class="form-control" rows="5" id="comment" v-model="comment.contents" maxlength="300"
+                        placeholder="최대 300까지 작성하실 수 있습니다."></textarea>
+                      <!-- 버튼은 오른쪽으로 배치(text-right) -->
+                      <div style="higth:200px;" class="text-right">
+                        <button type="button" class="btn btn-primary btn-xl" @click="write">등록</button>
+                      </div>
+                    </div>
+                    <!-- 댓글 입력폼 끝 -->
+                    <div class="row">
+                      <!-- <div class="col-md-2">
+                        <img src="https://image.ibb.co/jw55Ex/def_face.jpg" class="img img-rounded img-fluid" />
+                        <p class="text-secondary text-center">15 Minutes Ago</p>
+                      </div> -->
+                      <div class="col-md-12 border">
+                        <p><a href="https://maniruzzaman-akash.blogspot.com/p/contact.html"><strong>Maniruzzaman
+                              Akash</strong></a></p>
+                        <p>Lorem Ipsum is simply dummy text of the pr make but also the leap into electronic
+                          typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release
+                          of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing
+                          software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+                        <p>
+                          <a class="float-right btn btn-outline-primary ml-2"> <i class="fa fa-reply"></i> Reply</a>
+                          <a class="float-right btn text-white btn-danger"> <i class="fa fa-heart"></i> Like</a>
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
-              </div>
-            </div>
                 <!-- 댓글 끝 -->
               </div>
             </div>
@@ -280,8 +287,7 @@
       // },
       isVisible(idx) {
         // 댓글보기 활성화/비활성화 여부
-        // this.$refs.test[idx].style.display === ''
-        !(this.$refs.test[idx].style.display)
+        this.$refs.test[idx].style.display === ''
           ? this.$refs.test[idx].style.display = 'block'
           : this.$refs.test[idx].style.display = ''
         
