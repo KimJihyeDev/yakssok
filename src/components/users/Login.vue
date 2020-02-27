@@ -76,12 +76,10 @@ import { mapState, mapActions } from 'vuex'
         computed: {
             ...mapState(['isError', 'errorMessage']),
         },
-        // beforeRouteEnter 때문에 계속 에러 발생
         beforeRouteEnter(to, from, next){
-            store.state.token === null
-                ? next()
-                : next({ name: 'profile' })
-
+            store.state.isLogin === true
+                ? next({ name: 'profile' })
+                : next()
         }
     }
 </script>

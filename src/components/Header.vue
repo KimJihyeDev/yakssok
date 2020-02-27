@@ -23,9 +23,10 @@
             <div class="col-12">
               <div class="pull-right">
                 <!-- <button class="btn btn-white btn-sm text-right" type="button" @click="loginLogout">{{ loginState }}</button> -->
-                <button class="btn btn-white btn-sm text-right" type="button" @click="loginLogout" v-if="token">로그아웃</button>
-                <button class="btn btn-white btn-sm text-right" type="button" @click="loginLogout" v-else-if="!token">로그인</button>
-                <router-link tag="button" :to="{ name: 'profile' }" class="btn btn-white btn-sm text-right" style="margin-left:3px;">마이페이지</router-link>
+                <button class="btn btn-white btn-sm text-right" type="button" @click="loginLogout" v-if="isLogin">로그아웃</button>
+                <button class="btn btn-white btn-sm text-right" type="button" @click="loginLogout" v-else-if="!isLogin">로그인</button>
+                <!-- <router-link tag="button" :to="{ name: 'profile' }" class="btn btn-white btn-sm text-right" style="margin-left:3px;">마이페이지</router-link> -->
+                <button type="button" class="btn btn-white btn-sm text-right" style="margin-left:3px;" @click="profile">마이페이지</button>
               </div>
             </div>
             <!-- 모바일 화면으로 전환시 네이게이션바 설정 -->
@@ -51,16 +52,16 @@
               <div class="mx-auto">
                 <nav class="site-navigation position-relative text-left" role="navigation">
                   <ul class="site-menu main-menu js-clone-nav mx-auto d-none pl-0 d-lg-block border-none">
-                    <li class="active"><router-link to="/" class="nav-link text-left" style="font-size:1.2rem;">Home</router-link></li>
+                    <li class="active"><router-link :to="{ name: 'main' }"  tag="p" class="nav-link text-left" style="font-size:1.2rem;">Home</router-link></li>
                     <!-- dropdown start -->
                     <div class="btn-group">
                       <li class="btn btn-default" data-toggle="dropdown" aria-expanded="false" >
                         <a href="#" class="nav-link nav-style" style="padding-left:8px;font-size:20px;font-weight:600;color:#212529;"> 영양제</a>
                       </li>
                       <ul class="dropdown-menu" role="menu">
-                        <li><router-link :to="{ name: 'category', params: { parent_id: 1, child_id: 1 }}" class="nav-style">비타민</router-link></li>
+                        <li><router-link :to="{ name: 'category', params: { parent_id: 1, child_id: 1 }}" tag="button" class="nav-style">비타민</router-link></li>
                         <!-- <li class="divider"></li> -->
-                        <li><router-link :to="{ name: 'category', params: { parent_id: 1, child_id: 2 }}" class="nav-style">프로바이오틱스</router-link></li>
+                        <li><router-link :to="{ name: 'category', params: { parent_id: 1, child_id: 2 }}" tag="button" class="nav-style">프로바이오틱스</router-link></li>
                       </ul>
                     </div>
                     <!-- dropdown end -->
@@ -87,28 +88,28 @@ import { mapState } from 'vuex'
       }
     },
     methods:{
+      profile(){
+        this.$router.push('/profile');
+      },
       loginLogout(){
         // store는 새로고침되면 초기화되므로 
         // store로 로그인 판별x
-        this.token === null
-          ? this.$router.push('/login')
-          : this.$store.commit('logout')
+        this.isLogin === true
+          ? this.$store.commit('logout')
+          : this.$router.push('/login')
       },
       searchProduct(){
         console.log(this.search);
         if(this.search){
-          this.$axios.get(`${ this.url }/products/search?product=${ this.search }`)
-          .then(
-            console.log('헤더에서 이게 돼?')
-          )
-          .catch((err) => { 
-            console.log(err)
-          })
+          this.$router.push({ name: 'search' , query: {keyword: this.search}})
+        } else {
+          return false;
         }
+
       }
     },
     computed:{
-      ...mapState(['token', 'url']),
+      ...mapState(['isLogin', 'url']),
     },
     watch:{
     },

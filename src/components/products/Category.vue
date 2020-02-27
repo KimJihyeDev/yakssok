@@ -25,7 +25,7 @@
           </div>
         </div>
         <div>
-          <button type="button" class="btn btn-primary btn-lg btn-block" @click="more">더보기</button>
+          <button type="button" class="btn btn-primary btn-lg btn-block" @click="more" v-if="count">더보기</button>
         </div>
       </div>
     </div>
@@ -42,6 +42,7 @@
         products: [],
         offSet: 0, // 더보기 계산용 변수
         isLoaded: false,
+        count: false, // 전체 상품개수용 변수(더보기 버튼 활성화 여부)
       }
     },
     methods: {
@@ -52,8 +53,8 @@
       more() { // 더보기 버튼용 메소드
         (async () => {
           const result = await this.$axios.get(`
-                  ${ this.url}/products/categories/${this.$route.params.parent_id}/${this.$route.params.child_id}
-                  ?offSet=${ this.offSet}`
+                  ${ this.url}/products/categories/${ this.$route.params.parent_id }/${ this.$route.params.child_id }
+                  ?offSet=${ this.offSet }`
           );
           console.log('결과배열길이')
           console.log(result.data.length);
@@ -76,22 +77,30 @@
     created() {
       (async () => {
         const result = await this.$axios.get(`
-                  ${ this.url}/products/categories/${this.$route.params.parent_id}/${this.$route.params.child_id}
-                  ?offSet=${ this.offSet}`
+                  ${ this.url }/products/categories/${ this.$route.params.parent_id }/${ this.$route.params.child_id }
+                  ?offSet=${ this.offSet }`
         );
         console.log(result);
-        this.products = result.data;
-        this.offSet++;
+        this.products = result.data.rows;
+        result.data.count <= 12 // 더 보기 버튼 활성화
+          ? this.count = false
+          : this.count = true;
+
+        this.offSet++; // 오프셋 증가
       })();
     },
     beforeRouteUpdate(to, from, next) {
       // go는 브라우저 차원의 이동
+      // url 에 상품번호를 입력할 때
+      // 컴포넌트 재사용되는 것을 막기위해 반드시 go로 처리해야 함
+      // next에 경로 적으면 무한 호출하는 현상 발생(main만 정상적으로 이동)
       // next()후에 go를 해야 이동이 되네?
       // 파라미터를 직접 입력할 때는
       //  next(this.$router.go(to.path))로 이동이 되지만
       // 클릭으로 이동할 때는
       // next(); this.$router.go(to.path)로만 이동된다
       // push는 에러나면서 이동X 
+
       next();
       this.$router.go(to.path)
     }
@@ -101,4 +110,9 @@
   .custom-img {
     padding: 20%;
   }
+  /* 상품 리스트 이미지 조절 */
+    .wine_v_1 img {
+        width:auto;
+        height:400px;
+    }
 </style>

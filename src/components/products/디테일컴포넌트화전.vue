@@ -1,8 +1,8 @@
 <template>
   <div>
     <div style="margin:80px 70px 0px 70px;">
-      <p style="top:0px;margin:0px;padding:0;" class="col-md-6"> 카테고리 > {{ product.parent_category | parent_category }}
-        <span v-if="!(child_category=== null)"> > </span> {{ child_category }} </p>
+      <p style="top:0px;margin:0px;padding:0;" class="col-md-6" v-if="isLoaded" v-on:load="loaded"> 카테고리 > {{ product.parent_category | parent_category }}
+        <span v-if="child_category"> > </span> {{ child_category }} </p>
     </div>
     <div class="site-section mt-5 product">
       <div class="container">
@@ -150,7 +150,7 @@
               placeholder="최대 300까지 작성하실 수 있습니다."></textarea>
             <!-- 버튼은 오른쪽으로 배치(text-right) -->
             <div style="higth:200px;" class="text-right">
-              <button type="button" class="btn btn-primary btn-xl" @click="write">등록</button>
+              <button type="button" class="btn btn-info btn-xl" @click="write">등록</button>
             </div>
           </div>
           <!-- 로그인 되어 있지 않은 경우 -->
@@ -163,15 +163,15 @@
           <!-- review list start -->
           <!-- 별점 코드 :class rate적용하기(class가 2개인게 정상 맞다)  -->
           <div class="container">
-            <h2 class="text-center" v-if="reviewList.length === 0"> 리뷰가 없습니다.</h2>
+            <h2 class="text-center" v-if="!reviewList.length"> 리뷰가 없습니다.</h2>
 
             <!-- 리뷰는 최신순으로 정렬 -->
-            <div class="card" v-for="(item, idx) in reviewList" :key="idx">
+            <div class="card" v-for="(item, idx) in reviewList" :key="idx" ref="list">
               <div class="card-body">
                 <div class="row">
                   <div class="col-md-2">
                     <img src="https://image.ibb.co/jw55Ex/def_face.jpg" class="img img-rounded img-fluid" />
-                    <p class="text-secondary text-center">YAKSSOK MEMBER</p>
+                    <p class="text-secondary text-center">{{ item.user_id }}</p>
                   </div>
                   <div class="col-md-10">
                     <p>
@@ -191,7 +191,8 @@
                         <!-- <router-link class="float-right btn btn-outline-primary ml-2" v-if="!token" tag="button"
                           :to="{ name: 'login' }" href="#" onclick="return false;"> <i class="fa fa-reply"></i> 댓글달기
                         </router-link> -->
-                        <button class="float-right btn btn-outline-primary ml-2" @click="isVisible(idx)"><i class="fa fa-reply"></i> 댓글
+                        <button class="float-right btn btn-outline-primary ml-2" @click="isVisible(idx, item.id)"><i
+                            class="fa fa-reply"></i> 댓글
                         </button>
                         <!-- <button class="float-right btn btn-outline-primary ml-2" type="button" v-if="token" tag="button" href="#" onclick="return false;" > <i class="fa fa-reply"></i> 댓글달기!</button> -->
                         <!-- <button class="float-right btn btn-outline-primary ml-2" type="button" v-if="token" href="#"
@@ -200,40 +201,50 @@
                   </div>
                 </div>
                 <!-- 댓글 시작 -->
-                <div class="card card-inner" ref="test" :class="{ visible: true }">
-                  <div class="card-body">
-                    <!-- 댓글 입력폼 시작 -->
-                    <!-- 댓글작성도 로그인 한 사용자만 볼 수 있어야 한다. -->
-                    <div class="form-group" style="border:1px solid lightgray" v-if="token">
-                      <div class="text-center">
-                        <span>댓글 작성(최대 300자까지 가능합니다). </span>
-                        <label for="comment">글자수 <span
-                            style="margin-left:0.5rem">{{ comment.contents.length }}/300</span></label>
-                      </div>
-                      <textarea class="form-control" rows="5" id="comment" v-model="comment.contents" maxlength="300"
-                        placeholder="최대 300까지 작성하실 수 있습니다."></textarea>
-                      <!-- 버튼은 오른쪽으로 배치(text-right) -->
-                      <div style="higth:200px;" class="text-right">
-                        <button type="button" class="btn btn-primary btn-xl" @click="write">등록</button>
-                      </div>
+                <!-- ref="test" :class="{ visible: true }"를 어디에 넣어야 하지? -->
+                <div class="card" ref="test" :class="{ visible: true }">
+                  <!-- 댓글 입력폼 시작 -->
+                  <!-- 댓글작성도 로그인 한 사용자만 볼 수 있어야 한다. -->
+                  <!-- 대댓글 작성한다고 하면 안 보이게 할까? 입력창이 2개니까 헷갈린다 -->
+                  <div class="form-group" style="border:1px solid lightgray" v-if="token" >
+                    <div class="text-center">
+                      <span>댓글 작성(최대 300자까지 가능합니다). </span>
                     </div>
-                    <!-- 댓글 입력폼 끝 -->
-                    <div class="row">
-                      <!-- <div class="col-md-2">
-                        <img src="https://image.ibb.co/jw55Ex/def_face.jpg" class="img img-rounded img-fluid" />
-                        <p class="text-secondary text-center">15 Minutes Ago</p>
-                      </div> -->
-                      <div class="col-md-12 border">
-                        <p><a href="https://maniruzzaman-akash.blogspot.com/p/contact.html"><strong>Maniruzzaman
-                              Akash</strong></a></p>
-                        <p>Lorem Ipsum is simply dummy text of the pr make but also the leap into electronic
-                          typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release
-                          of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing
-                          software like Aldus PageMaker including versions of Lorem Ipsum.</p>
+                    <textarea class="form-control" rows="5" id="comment" maxlength="300"
+                      placeholder="최대 300까지 작성하실 수 있습니다." ref="comment"></textarea>
+                    <!-- 버튼은 오른쪽으로 배치(text-right) -->
+                    <div style="higth:200px;" class="text-right">
+                      <!-- 리뷰의 id를 전달해 줘야 함 -->
+                      <button type="button" class="btn btn-secondary btn-xl" @click="reply(item.id, idx)">댓글등록</button>
+                    </div>
+                  </div>
+                  <!-- 댓글 입력폼 끝 -->
+                  <!-- 댓글 보기 시작 -->
+                  <!--  어떻게 해야 댓글이 다 불려진 후에 화면이 보이게 할 수 있을까? -->
+                  <div class="card-body border" v-for="(one, idx) in item.commentList" :key="idx">
+                    <div class="row" >
+                      <div class="col-md-12">
                         <p>
-                          <a class="float-right btn btn-outline-primary ml-2"> <i class="fa fa-reply"></i> Reply</a>
-                          <a class="float-right btn text-white btn-danger"> <i class="fa fa-heart"></i> Like</a>
-                        </p>
+                          <!-- <span class="float-right"><i class="fa fa-star star rate"></i></span>
+                      <span class="float-right"><i class="fa fa-star star rate"></i></span>
+                      <span class="float-right"><i class="fa fa-star star rate"></i></span>
+                      <span class="float-right"><i class="fa fa-star star rate"></i></span>
+                      <span class="float-right"><i class="fa fa-star star rate"></i></span> -->
+
+                          <!-- </p> -->
+                          <span>{{ one.createdAt }}</span>
+                          <div class="clearfix"></div>
+                          <!-- <strong class="text-dark font-bolder">@수신자</strong> -->
+                          <p class="text-dark font-weight-bolder">{{ one.contents }}</p>
+                          <p>
+                           <!-- 자기가 쓴 글일 경우 수정, 삭제가 보이게 -->
+                            <button class="float-right btn btn-outline-warning ml-2" v-if="id === one.userId && token"><i
+                                class="fas fa-pencil-alt"></i> 수정
+                            </button>
+                            <button class="float-right btn btn-outline-danger ml-2" v-if="id === one.userId && token"><i
+                                class="fas fa-trash-alt"></i> 삭제
+                            </button>
+                          </p>
                       </div>
                     </div>
                   </div>
@@ -265,6 +276,8 @@
         },
         comment: {
           contents: '',
+          userId: '', // this.id 해도 소용x. 전송시에 직접 대입해줘야 함
+          reviewId: ''
         },
         isLoaded: false, // 화면 로드 완료 확인용
         rate: '', // 제품 평점
@@ -285,17 +298,33 @@
       //   var ele = event.target.value;
       //   console.log(ele);
       // },
-      isVisible(idx) {
+      isVisible(idx, id) {
         // 댓글보기 활성화/비활성화 여부
-        this.$refs.test[idx].style.display === ''
+        // 그리고 댓글 불러오기
+        (async () => {
+          try {
+            const result = await this.$axios.get(`${ this.url }/reviews/comments?review_id=${ id }`)
+            console.log(result);
+            // 받아온 데이터를 추가해준다
+            console.log('이게 뭔지 확인이나 해보자')
+            this.$refs.list[idx].commentList = result.data;
+            console.log(this.$refs.list[idx].commentList)
+          } catch(err) {  
+            console.log(err);
+          }
+        })();
+        
+
+       
+
+        !(this.$refs.test[idx].style.display)
           ? this.$refs.test[idx].style.display = 'block'
           : this.$refs.test[idx].style.display = ''
-        
       },
       write() {
         (async () => {
           try {
-            const result = await this.$axios.post(`${this.url}/reviews/`, this.review);
+            const result = await this.$axios.post(`${ this.url }/reviews/`, this.review);
             console.log(result);
             console.log('요청보냄')
 
@@ -304,7 +333,31 @@
           }
         }
         )();
-      }
+      },
+      reply(reviewId, idx){
+        (async () => {
+          try {
+            this.comment.reviewId = reviewId;
+            this.comment.userId = this.id;
+            this.comment.contents = this.$refs.comment[idx].value;
+            console.log('리뷰id확인');
+            console.log(reviewId);
+            console.log('작성자 id확인')
+            console.log(this.comment.writer)
+            console.log('댓글내용확인');
+            console.log(this.$refs.comment[idx].value);
+
+            const result = await this.$axios.post(`${ this.url }/reviews/comments`, this.comment)
+            console.log(result);
+            // 받아온 데이터를 집어넣는다
+            this.commentList.push(result.data);
+          } catch(err) {
+            console.log(err);
+          }
+        }
+
+        )();
+      },
     },
     created() {
       // 경로를 직접 입력하여 들어간 경우 생명주기가 작동하지 않는걸로 보인다.
@@ -313,8 +366,14 @@
         try {
           const result = await this.$axios.get(`${this.url}/products/${this.$route.params.id}`)
           console.log(result);
-          this.product = result.data[0];
-          this.reviewList = result.data[0].reviews;
+          this.product = result.data.productInfo;
+          this.reviewList = result.data.reviewInfo;
+          // 댓글리스트 추가
+          this.reviewList.forEach(item => {
+            item.commentList = [];
+          })
+          console.log('지금진짜 알고싶은것? 추가된거냐')
+          console.log(this.reviewList);
 
           // 반드시 직접 대입해 줘야 인식됨. 어째서??
           this.review.userId = this.id;
@@ -325,9 +384,6 @@
 
           console.log('product params확인')
           console.log(this.$route.params);
-
-          console.log('reivews확인');
-          console.log(result.data[0].reviews)
         } catch (err) {
           console.log(err);
         }
@@ -480,8 +536,9 @@
   .starrating>input:hover~label {
     color: orange;
   }
+
   /* 댓글 창 보일지 여부 */
   .visible {
-    display: none; 
+    display: none;
   }
 </style>

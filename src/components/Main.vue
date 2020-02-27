@@ -11,24 +11,24 @@
                     </ol>
                     <div class="carousel-inner">
                         <div class="carousel-item active">
-                            <img src="/assets/images/wine_1.png" class="d-block w-100" alt="...">
+                            <img src="/assets/images/vitamin.PNG" class="d-block w-100" alt="...">
                             <div class="carousel-caption d-none d-md-block">
-                                <h5>First slide label</h5>
-                                <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p>
+                                <!-- <h5>First slide label</h5> -->
+                                <!-- <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p> -->
                             </div>
                         </div>
                         <div class="carousel-item">
-                            <img src="/assets/images/hero_2.jpg" class="d-block w-100" alt="...">
+                            <img src="/assets/images/minerals.PNG" class="d-block w-100" alt="...">
                             <div class="carousel-caption d-none d-md-block">
-                                <h5>Second slide label</h5>
-                                <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                                <!-- <h5>Second slide label</h5> -->
+                                <!-- <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p> -->
                             </div>
                         </div>
                         <div class="carousel-item">
-                            <img src="/assets/images/hero_2.jpg" class="d-block w-100" alt="...">
+                            <img src="/assets/images/notification.PNG" class="d-block w-100" alt="...">
                             <div class="carousel-caption d-none d-md-block">
-                                <h5>Third slide label</h5>
-                                <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p>
+                                <!-- <h5>Third slide label</h5> -->
+                                <!-- <p>Praesent commodo cursus magna, vel scelerisque nisl consectetur.</p> -->
                             </div>
                         </div>
                     </div>
@@ -50,8 +50,7 @@
                         <div class="wine_v_1 text-center pb-4">
                             <router-link :to=" { name: 'detail', params: { id: item.id } }"
                                 class="thumbnail d-block mb-4"><img :src="`${ path }/${ item.product_image }`"
-                                    v-on:load="loaded" alt="Image" class="img-fluid custom-img"
-                                    style="max-height:300px;width:auto;height:auto;">
+                                    v-on:load="loaded" alt="Image" class="img-fluid custom-img">
                             </router-link>
                             <div>
                                 <h3 class="heading mb-1"><a href="#">{{ item.product_name }}</a></h3>
@@ -112,8 +111,12 @@ import store from '@/store'
     }
     /* carousel 사이즈 조절 */
     .carousel-item img {
-        width: auto;
-        height: auto;
-        max-height: 700px;
+        /* width: auto;
+        height: 500px; */
+    }
+    /* 상품 리스트 이미지 조절 */
+    .wine_v_1 img {
+        width:auto;
+        height:400px;
     }
 </style>

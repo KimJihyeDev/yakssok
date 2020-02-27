@@ -126,9 +126,9 @@ import store from '@/store'
             }
         },
         beforeRouteEnter(to, from, next){
-            store.state.token === null
-                ? next()
-                : next({ name: 'profile' })
+            store.state.isLogin === true
+                ? next({ name: 'profile' })
+                : next()
         }
     }
 </script>
