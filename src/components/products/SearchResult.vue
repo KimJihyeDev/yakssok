@@ -2,7 +2,9 @@
   <div class="container">
     <div class="site-section mt-5">
       <div class="container">
-        <h2 v-if="resultMessage">{{ resultMessage }}</h2>
+        <div class="text-center">
+         <h2 v-if="resultMessage">{{ resultMessage }}</h2>
+        </div>
         <div class="row" v-if="!resultMessage">
           <!-- 상품리스트 시작 -->
           <div class="col-lg-3 mb-5 col-md-6" style="margin-top:0px;" v-for="(item,idx) in searchResult" :key="idx">
@@ -63,23 +65,18 @@ import { mapState, mapGetters } from 'vuex'
           console.log('쿼리확인')
           console.log(this.$route.query.keyword)
           const keyword = this.$route.query.keyword;
-          let result = await this.$axios.get(`${this.url}/products/search?keyword=${keyword}`);
+          let result = await this.$axios.get(`${ this.url }/products/search?keyword=${ keyword }`);
           console.log('검색결과')
           console.log(result);
           this.searchResult = result.data;
           // 검색결과가 없으면 []이 온다. 빈배열은 false가 아니다
           // length가 0인지로 판단해야 한다.
-          if (result.data.length > 1) {
-
-            console.log(result);
-          } else {
+          if (this.searchResult.length < 1) 
             this.resultMessage = '검색결과가 없습니다';
-            console.log('검색결과가 없습니다')
-          }
+
         } catch (err) {
           console.log(err);
         }
-
       })();
     },
     beforeRouteUpdate(to, from, next) {

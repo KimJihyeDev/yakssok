@@ -1,8 +1,8 @@
 <template>
     <div class="container" style="width:100%;height:100%;margin-top: 80px;">
         <div>
-            <div class="form-group row">
-                <select class="form-control col-md-3" v-model="si" @change="select_gu">
+            <div class="form-group row ">
+                <!-- <select class="form-control col-md-3" v-model="si" @change="select_gu">
                     <option disabled value="">선택</option>
                     <option v-for="(one,idx) in location.region.si" :key="idx" :value="one.value">{{one.value}}</option>
                 </select>
@@ -13,7 +13,9 @@
                 <select class="form-control col-md-3" v-model="dong" @change="searchPlace">
                     <option disabled value="">선택</option>
                     <option v-for="(dong,idx) in optionDong" v-bind:key="idx">{{dong.value}}</option>
-                </select>
+                </select> -->
+                <input class="form-control col-md-10" @keyup.enter="searchPlace" v-model="keyword" placeholder="장소를 입력해 주세요.">
+                <button class="btn btn-primary col-md-1" @click="searchPlace">검색</button>
             </div>
             <div class="map_wrap">
                 <div id="map" style="width:100%;height:150%;position:relative;overflow:scroll;"></div>
@@ -30,6 +32,7 @@
 </template>
 
 <script>
+// 지리 정보를 담고있는 json 파일
     import location from '@/assets/location.json'
     // 아래 코드를 사용하여 eslint를 해당 파일에서 사용 불능으로 만들 수 있다. 
     // 반드시 script 코드 맨 위에 작성할 것.
@@ -40,12 +43,13 @@
             return {
                 lat: 37.566826, // 위도
                 lon: 126.9786567, // 경도
-                si: '', // 검색할 지역설정(시) 
-                gu: '',  // 검색할 지역설정(구)
-                dong: '', // 검색할 지역설정(동)
-                location: location, // 행정지역목록
-                optionGu: [], // 시를 선택했을 시 보여질 구의 배열
-                optionDong: [], // 구를 선택했을 시 보여질 동의 배열
+                keyword: '',
+                // si: '', // 검색할 지역설정(시) 
+                // gu: '',  // 검색할 지역설정(구)
+                // dong: '', // 검색할 지역설정(동)
+                // location: location, // 행정지역목록
+                // optionGu: [], // 시를 선택했을 시 보여질 구의 배열
+                // optionDong: [], // 구를 선택했을 시 보여질 동의 배열
                 map: {}, // 카카오 맵 객체
                 center: (0.0), // 지도 중심 좌표
                 level: 5  // 지도 확대 레벨
@@ -216,7 +220,7 @@
                 var geocoder = new kakao.maps.services.Geocoder();
 
                 // 주소에 해당하는 좌표를 검색
-                geocoder.addressSearch(this.si + this.gu + this.dong, function (result, status) {
+                geocoder.addressSearch(this.keyword, function (result, status) {
 
                     if (status === kakao.maps.services.Status.OK) {
                         console.log(result);

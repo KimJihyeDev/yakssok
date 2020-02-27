@@ -38,7 +38,7 @@
         <div class="row col-lg-12 mx-auto">
           <div class="col-lg-6 center-block">
             <div class="input-group">
-              <input type="text" class="form-control margin-control" placeholder="Search for..." v-model="search">
+              <input type="text" class="form-control margin-control" @keyup.enter="searchProduct" placeholder="Search for..." v-model="search">
               <span class="input-group-btn">
                 <button class="btn btn-default" type="button" @click="searchProduct">검색</button>
               </span>
