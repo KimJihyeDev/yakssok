@@ -19,6 +19,7 @@
               <a :href="`/`" class="site-logo">
                 <img src="/assets/images/logo.png" alt="Image" class="img-fluid" >
               </a>
+              <p>ci/cd테스트</p>
             </div>
             <div class="col-12">
               <div class="pull-right">

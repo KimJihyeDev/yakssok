@@ -197,7 +197,8 @@
                         <!-- <button class="float-right btn btn-outline-warning ml-2" @click="modifyReview(review.id, idx)" ><i
                             class="fa fa-pencil-alt"></i> 수정
                         </button> -->
-                        <button class="float-right btn btn-outline-danger ml-2" @click="deleteReview(review.id, idx)"><i
+                        {{ review.userId }}, 이건 현재{{id}}
+                        <button class="float-right btn btn-outline-danger ml-2" @click="deleteReview(review.id, idx)" v-if="review.userId === id"><i
                             class="fa fa-trash-alt"></i> 삭제
                         </button>
                         <!-- <button class="float-right btn btn-outline-primary ml-2" type="button" v-if="isLogin" tag="button" href="#" onclick="return false;" > <i class="fa fa-reply"></i> 댓글달기!</button> -->
@@ -508,7 +509,8 @@
 
     },
     beforeRouteEnter(to, from, next) {
-      // store.getUserId();
+      // 글 작성을 위해 로그인 여부, id를 확인한다.
+      store.dispatch('getUserId');
       next()
     },
     watch: {
