@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div style="margin:80px 70px 0px 70px;">
+    <div style="margin:90px 70px 0px 70px;">
       <p style="top:0px;margin:0px;padding:0;" class="col-md-6" v-if="isLoaded" v-on:load="loaded"> 카테고리 > {{ product.parent_category | parent_category }}
         <span v-if="child_category"> > </span> {{ child_category }} </p>
     </div>
@@ -79,7 +79,7 @@
                   <td>&nbsp;</td>
                   <td>&nbsp;</td>
                   <td>{{ item.per_serving }}</td>
-                  <td>{{ item.daily_value }}</td>
+                  <td>{{ item.daily_value }}<span v-if="item.daily_value">%</span></td>
                 </tr>
                 <tr>
                   <td>&nbsp;</td>
@@ -125,7 +125,7 @@
           </div>
           <hr>
           <!-- 로그인 되어 있는 경우(300자 까지 허용, 0/300으로 글자 수 카운트하기) -->
-          <div class="form-group" style="border:1px solid lightgray" v-if="token">
+          <div class="form-group" style="border:1px solid lightgray" v-if="isLogin">
             <!-- rating start -->
             <div class="text-center">
               <span>제품 평가를 남겨주세요(최대 300자까지 가능합니다). </span>
@@ -154,7 +154,7 @@
             </div>
           </div>
           <!-- 로그인 되어 있지 않은 경우 -->
-          <div class="text-center col-lg-12" v-if="!token">
+          <div class="text-center col-lg-12" v-if="!isLogin">
             <router-link :to="{ name: 'login' }" class="text-danger font-weight-bold font" style="font-size:1rem;">
               회원만 제품 리뷰를 작성하실 수 있습니다.
             </router-link>
@@ -166,16 +166,16 @@
             <h2 class="text-center" v-if="reviewList.length < 1"> 리뷰가 없습니다.</h2>
 
             <!-- 리뷰는 최신순으로 정렬 -->
-            <div class="card" v-for="(reviews, idx) in reviewList" :key="reviews.id" ref="list">
+            <div class="card" v-for="(review, idx) in reviewList" :key="review.id" ref="list">
               <div class="card-body">
                 <div class="row">
                   <div class="col-md-2">
                     <img src="https://image.ibb.co/jw55Ex/def_face.jpg" class="img img-rounded img-fluid" />
-                    <p class="text-secondary text-center">{{ reviews.user_id }}</p>
+                    <p class="text-secondary text-center">{{ review.user_id }}</p>
                   </div>
                   <div class="col-md-10">
                     <p>
-                      <h3 class="text-dark font-weight-bold">{{ reviews.title }}</h3>
+                      <h3 class="text-dark font-weight-bold">{{ review.title }}</h3>
                       <!-- <span class="float-right"><i class="fa fa-star star rate"></i></span>
                       <span class="float-right"><i class="fa fa-star star rate"></i></span>
                       <span class="float-right"><i class="fa fa-star star rate"></i></span>
@@ -183,36 +183,37 @@
                       <span class="float-right"><i class="fa fa-star star rate"></i></span> -->
 
                       <!-- </p> -->
-                      <span>{{ reviews.createdAt }}</span>
+                      <span>{{ review.createdAt }}</span>
                       <div class="clearfix"></div>
-                      <p class="text-dark font-weight-bolder">{{ reviews.contents }}</p>
+                      <p class="text-dark font-weight-bolder">{{ review.contents }}</p>
                       <p>
                         <!-- 이 아래 코드는 대댓글에 적용 -->
-                        <!-- <router-link class="float-right btn btn-outline-primary ml-2" v-if="!token" tag="button"
+                        <!-- <router-link class="float-right btn btn-outline-primary ml-2" v-if="!isLogin" tag="button"
                           :to="{ name: 'login' }" href="#" onclick="return false;"> <i class="fa fa-reply"></i> 댓글달기
                         </router-link> -->
                         <button class="float-right btn btn-outline-primary ml-2" @click="isVisible(idx)"><i
                             class="fa fa-reply"></i> 댓글
                         </button>
-                        <!-- <button class="float-right btn btn-outline-warning ml-2" @click="modifyReview(reviews.id, idx)" ><i
+                        <!-- <button class="float-right btn btn-outline-warning ml-2" @click="modifyReview(review.id, idx)" ><i
                             class="fa fa-pencil-alt"></i> 수정
                         </button> -->
-                        <button class="float-right btn btn-outline-danger ml-2" @click="deleteReview(reviews.id, idx)"><i
+                        <button class="float-right btn btn-outline-danger ml-2" @click="deleteReview(review.id, idx)"><i
                             class="fa fa-trash-alt"></i> 삭제
                         </button>
-                        <!-- <button class="float-right btn btn-outline-primary ml-2" type="button" v-if="token" tag="button" href="#" onclick="return false;" > <i class="fa fa-reply"></i> 댓글달기!</button> -->
-                        <!-- <button class="float-right btn btn-outline-primary ml-2" type="button" v-if="token" href="#"
+                        <!-- <button class="float-right btn btn-outline-primary ml-2" type="button" v-if="isLogin" tag="button" href="#" onclick="return false;" > <i class="fa fa-reply"></i> 댓글달기!</button> -->
+                        <!-- <button class="float-right btn btn-outline-primary ml-2" type="button" v-if="isLogin" href="#"
                           onclick="return false;" @click="isVisible"><i class="fa fa-reply"></i> 댓글보기</button> -->
                       </p>
                   </div>
                 </div>
                 <!-- 댓글 시작 -->
                 <!-- ref="test" :class="{ visible: true }"를 어디에 넣어야 하지? -->
-                <div class="card" ref="test" :class="{ visible: true }">
+                <!-- <div class="card" ref="test" :class="{ visible: true }" v-if="list.temp"> -->
+                <div class="card" v-if="review.temp">
                   <!-- 댓글 입력폼 시작 -->
                   <!-- 댓글작성도 로그인 한 사용자만 볼 수 있어야 한다. -->
                   <!-- 대댓글 작성한다고 하면 안 보이게 할까? 입력창이 2개니까 헷갈린다 -->
-                  <div class="form-group" style="border:1px solid lightgray" v-if="token" >
+                  <div class="form-group" style="border:1px solid lightgray" v-if="isLogin" >
                     <div class="text-center">
                       <span>댓글 작성(최대 300자까지 가능합니다). </span>
                     </div>
@@ -221,16 +222,16 @@
                     <!-- 버튼은 오른쪽으로 배치(text-right) -->
                     <div style="higth:200px;" class="text-right">
                       <!-- 리뷰의 id를 전달해 줘야 함 -->
-                      <button type="button" class="btn btn-secondary btn-xl" @click="reply(reviews.id, idx)">댓글등록</button>
+                      <button type="button" class="btn btn-secondary btn-xl" @click="reply(review.id, idx)">댓글등록</button>
                     </div>
                   </div>
                   <!-- 댓글 입력폼 끝 -->
                   <!-- 댓글 보기 시작 -->
 
                   <!-- <h4 class="text-center font-bolder text-body" v-show="typeof item.comments.length === 'undefined' || item.comments.length < 1 ">댓글이 없습니다</h4> -->
-                  <h4 class="text-center font-bolder text-body" v-if="reviews.comments.length < 1">댓글이 없습니다</h4>
+                  <h4 class="text-center font-bolder text-body" v-if="review.comments.length < 1">댓글이 없습니다</h4>
                   <!-- 새로 작성한 글은 코멘트 객체가 없으므로 여기서 에러 발생 -->
-                  <div class="card-body border" v-for="(one, idx) in reviews.comments" :key="idx">
+                  <div class="card-body border" v-for="(one, idx) in review.comments" :key="idx">
                     <div class="row" >
                       <div class="col-md-12">
                         <p>
@@ -247,10 +248,10 @@
                           <p class="text-dark font-weight-bolder">{{ one.contents }}</p>
                           <p>
                            <!-- 자기가 쓴 글일 경우 수정, 삭제가 보이게 -->
-                            <button class="float-right btn btn-outline-warning ml-2" v-if="id === one.userId && token"><i
+                            <button class="float-right btn btn-outline-warning ml-2" v-if="id === one.userId && isLogin"><i
                                 class="fas fa-pencil-alt"></i> 수정
                             </button>
-                            <button class="float-right btn btn-outline-danger ml-2" v-if="id === one.userId && token" 
+                            <button class="float-right btn btn-outline-danger ml-2" v-if="id === one.userId && isLogin" 
                             ><i class="fas fa-trash-alt"></i> 삭제
                             </button>
                           </p>
@@ -272,6 +273,8 @@
 
 <script>
   import { mapState, mapGetters } from 'vuex'
+  // eslint-disable-next-line no-unused-vars
+  import store from '@/store'
   export default {
     name: 'ProductDetail',
     data() {
@@ -313,15 +316,25 @@
         // 그리고 댓글 불러오기
         console.log('몇번째요소?')
         console.log(idx);
-        // !(this.$refs.test[idx].style.display)
-        //   ? this.$refs.test[idx].style.display = 'block'
-        //   : this.$refs.test[idx].style.display = ''
-        !(this.$refs.test[idx].style.display)
-          ? this.$refs.test[idx].style.display = 'block'
-          : this.$refs.test[idx].style.display = ''
+        console.log(this.$refs.list[idx]);
+        // 아래 코드는 실행x
+        // !(this.$refs.list[idx].style.display)
+        //   ? this.$refs.list[idx].style.display = ''
+        //   : this.$refs.list[idx].style.display = ''
+
+        // console.log('변경전', this.reviewList[idx])
+        // console.log(this.reviewList[idx].temp)
+        // this.reviewList[idx].temp = true;
+        // console.log(this.reviewList[idx])
+        // console.log(this.reviewList[idx].temp)
+        this.reviewList[idx].temp 
+          ? this.reviewList[idx].temp = false
+          : this.reviewList[idx].temp = true
+        this.$forceUpdate ();
       },
       write() {
         (async () => {
+          // 널값체크
           if(!this.review.title){
             alert('리뷰 제목을 입력해 주세요.');
             this.$refs.reviewTitle.focus();
@@ -331,13 +344,21 @@
             this.$refs.reviewContents.focus();
             return false;
           }
+          
           try {
+            
             const response = await this.$axios.post(`${ this.url }/reviews/`, this.review);
             console.log(response);
             console.log('요청보냄')
             const { code, message } = response.data;
             if(code === 201) {
-
+              // 상품평을 뿌릴 때 코멘트 배열의 길이를 비교하는데
+              // 방금 생성된 상품평에는 코멘트가 없어서 v-for로 뿌릴 때 에러 발생
+              // 에러를 막기 위해 빈 코맨드 배열 추가
+              response.data.result.comments = [];
+              this.review.title = '';
+              this.review.contents = '';
+              
               // splice: 배열의 기존 요소를 삭제 또는 교체하거나
               //  새 요소를 추가하여 배열의 내용을 변경합니다.
               // array.splice(start, deleteCount, item )
@@ -349,6 +370,9 @@
 
               console.log('리스트 바뀌나?')
               console.log(this.reviewList);
+              // 반드시 강제로 재 렌더링을 해줘야 vue에서 제대로 인식됨
+              // 안 그러면 댓글 달 때도 인식X(예전 리스트를 인식함)
+              this.$forceUpdate ();
               // this.reviewList = result.data.reviewInfo;
             } else {
               alert(message);
@@ -384,9 +408,10 @@
       // },
       reply(reviewId, idx){
         (async () => {
-          try {
             this.comment.reviewId = reviewId;
             this.comment.userId = this.id;
+            // v-for로 반복을 돌렸으므로 v-model로는 처리불가
+            // data옵션에 정의하면 모든 v-for요소들이 상태를 공유하게 된다.
             this.comment.contents = this.$refs.comment[idx].value;
             console.log('리뷰id확인');
             console.log(reviewId);
@@ -395,14 +420,19 @@
             console.log('댓글내용확인');
             console.log(this.$refs.comment[idx].value);
            
+          if(!this.comment.contents) {
+             alert('댓글을 입력해주세요');
+             return false;
+          }
+          try {
             const result = await this.$axios.post(`${ this.url }/reviews/comments`, this.comment);
             console.log(result);
             const { code, message } = result.data;
 
             if(code === 201) {
               // 받아온 데이터를 기존 댓글 리스트에 추가해야한다.
-              // 리스트가 갱신되었음에도 화면에는 추가되지 않는다. 왜??
-              this.reviewList[idx].comments.push(result.data.result)
+              this.reviewList[idx].comments.push(result.data.result);
+              this.comment.contents = '';
             } else {
               alert(message);
             }
@@ -418,11 +448,18 @@
       // 경로를 직접 입력하여 들어간 경우 생명주기가 작동하지 않는걸로 보인다.
       // 동일한 컴포넌트 인스턴스가 재사용 되기 때문으로 보임.
       (async () => {
+        // 먼저 현재 로그인 유무, 유효성을 확인한다.
         try {
-          const result = await this.$axios.get(`${this.url}/products/${this.$route.params.id}`)
+          const result = await this.$axios.get(`${ this.url }/products/${this.$route.params.id}`)
           console.log(result);
           this.product = result.data.productInfo;
           this.reviewList = result.data.reviewInfo;
+          // 댓글 더보기에 사용할 요소 추가
+          this.reviewList.forEach(list => 
+            list.temp = false
+          )
+          console.log('확인해보자!!', this.reviewList);
+
           this.reviewListLength =  this.reviewList.length;
           console.log('배열 길이 확인');
           console.log(this.reviewListLength)
@@ -432,7 +469,7 @@
 
           console.log(this.product)
           console.log('detail에서 usreid확인**');
-          console.log(this.review.userId);
+          console.log(this.review.userId, 'store는', this.id);
 
           console.log('product params확인')
           console.log(this.$route.params);
@@ -450,7 +487,7 @@
       // getElementsByClassName은
       // 해당 클레스에 속하는 요소들을 HTMLCollection으로 반환
       // HTMLCollection은 배열이 아니다.
-      // classList는 해당 요소가 가지고 있는 클래스들의 domtokenlist
+      // classList는 해당 요소가 가지고 있는 클래스들의 domisLoginlist
       // 이것도 배열과 비슷하지만 배열은 아니다. 
       // const star = document.getElementsByClassName('rate')
       // console.log(star)
@@ -471,13 +508,10 @@
 
     },
     beforeRouteEnter(to, from, next) {
+      // store.getUserId();
       next()
     },
     watch: {
-      'reviewList.length': function(newVal){
-        console.log('reviewListLength의 길이 변경됨')
-        return newVal;
-      }
     },
     filters: {
       parent_category(val) {
@@ -489,7 +523,7 @@
       },
     },
     computed: {
-      ...mapState(['token', 'id', 'url']),
+      ...mapState(['isLogin', 'id', 'url']),
       ...mapGetters(['productImagePath', 'pictogramImagePath']),
       child_category() {
         // filter의 this는 undefined

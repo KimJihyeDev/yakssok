@@ -90,7 +90,7 @@ router.beforeEach((to, from, next) => {
     const token = localStorage.getItem('YAKSSOK-TOKEN');
     console.log('beforeEach에서 토큰확인', token);
     // 토큰의 유무만 확인하여(유효성은 인증이 필수인 페이지에서만 체크)
-    // 헤더에서 로그인, 로그아웃 출력 결정
+    // 헤더에서 로그인 상태 결정(로그인, 로그아웃)
     store.commit('loginState', token);
     
     // 토큰은 크기가 크므로 

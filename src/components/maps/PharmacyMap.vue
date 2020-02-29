@@ -1,5 +1,5 @@
 <template>
-    <div class="container" style="width:100%;height:100%;margin-top: 80px;">
+    <div class="container" style="width:100%;height:100%;margin-top: 90px;">
         <div>
             <div class="form-group row ">
                 <!-- <select class="form-control col-md-3" v-model="si" @change="select_gu">

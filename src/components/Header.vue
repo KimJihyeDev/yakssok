@@ -52,16 +52,16 @@
               <div class="mx-auto">
                 <nav class="site-navigation position-relative text-left" role="navigation">
                   <ul class="site-menu main-menu js-clone-nav mx-auto d-none pl-0 d-lg-block border-none">
-                    <li class="active"><router-link :to="{ name: 'main' }"  tag="p" class="nav-link text-left" style="font-size:1.2rem;">Home</router-link></li>
+                    <li class="active"><router-link :to="{ name: 'main' }"  class="nav-link text-left" style="font-size:1.2rem;">Home</router-link></li>
                     <!-- dropdown start -->
                     <div class="btn-group">
                       <li class="btn btn-default" data-toggle="dropdown" aria-expanded="false" >
                         <a href="#" class="nav-link nav-style" style="padding-left:8px;font-size:20px;font-weight:600;color:#212529;"> 영양제</a>
                       </li>
                       <ul class="dropdown-menu" role="menu">
-                        <li><router-link :to="{ name: 'category', params: { parent_id: 1, child_id: 1 }}" tag="button" class="nav-style">비타민</router-link></li>
+                        <li><router-link :to="{ name: 'category', params: { parent_id: 1, child_id: 1 }}" class="nav-style">비타민</router-link></li>
                         <!-- <li class="divider"></li> -->
-                        <li><router-link :to="{ name: 'category', params: { parent_id: 1, child_id: 2 }}" tag="button" class="nav-style">프로바이오틱스</router-link></li>
+                        <li><router-link :to="{ name: 'category', params: { parent_id: 1, child_id: 2 }}" class="nav-style">프로바이오틱스</router-link></li>
                       </ul>
                     </div>
                     <!-- dropdown end -->

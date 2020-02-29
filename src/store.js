@@ -74,8 +74,8 @@ const store = new Vuex.Store({
             // 여기서 router push하면 무조건 무한반복
             // router.push('profile');
         },
-        getUserId(state, payload){
-            state.id = payload; // id(DB의 user 식별 id)
+        getUserId(state, id){
+            state.id = id; // id(DB의 user 식별 id)
             state.isLogin = true;
         },
         setSoketId(state, payload) {

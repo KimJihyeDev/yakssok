@@ -20,11 +20,11 @@ steps:
     npm run build
   displayName: 'npm install and build'
   
-steps:
-- task: ExtractFiles@1
-  displayName: 'Extract files '
-  inputs:
-    destinationFolder: '$(System.DefaultWorkingDirectory)/_KimJihyeDev.yakssok_front'
+# steps:
+# - task: ExtractFiles@1
+#   displayName: 'Extract files '
+#   inputs:
+#     destinationFolder: '$(System.DefaultWorkingDirectory)/_KimJihyeDev.yakssok_front'
 # displayName: 'npm run build'
 # - task: ArchiveFiles@2
 # inputs:
