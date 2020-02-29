@@ -1,6 +1,7 @@
 .DS_Store
 node_modules
-/dist
+# 파이프라인 연결을 위해 dist도 git에 업로드
+# /dist  
 public/assets/items
 .env
 # local env files
