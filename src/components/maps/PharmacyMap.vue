@@ -1,5 +1,5 @@
 <template>
-    <div class="container" style="width:100%;height:100%;margin-top: 90px;">
+    <div class="container" style="width:100%;height:100%;margin-top: 90px; height: 650px;">
         <div>
             <div class="form-group row ">
                 <!-- <select class="form-control col-md-3" v-model="si" @change="select_gu">
@@ -14,6 +14,7 @@
                     <option disabled value="">선택</option>
                     <option v-for="(dong,idx) in optionDong" v-bind:key="idx">{{dong.value}}</option>
                 </select> -->
+                <span class="text-danger">검색은 국내에 한해서만 가능합니다.</span>
                 <input class="form-control col-md-10" @keyup.enter="searchPlace" v-model="keyword" placeholder="장소를 입력해 주세요.">
                 <button class="btn btn-primary col-md-1" @click="searchPlace">검색</button>
             </div>

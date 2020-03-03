@@ -40,8 +40,8 @@ new Vue({
   store, // Vue 객체에 직접 정의해 줄 경우 컴포넌트에서 import 할 필요가 없다.
   router,
   // 앱이 시작할 때마다 유저 id알아오기(웹소켓 연결)
-  beforeCreate() { // beforeCreate인데도 this사용가능
-    this.$store.dispatch('getUserId'); 
-  },
+  // beforeCreate() { // beforeCreate인데도 this사용가능
+  //   this.$store.dispatch('getUserId'); 
+  // },
   render: h => h(App),
 }).$mount('#app')

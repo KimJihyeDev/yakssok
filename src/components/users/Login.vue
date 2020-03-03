@@ -6,11 +6,13 @@
                 <span class="font-weight-bold" style="font-size:2rem;">로그인</span>
                 <hr class="solid">
                 <label for="exampleDropdownFormEmail1">아이디/이메일</label>
-                <input type="text" class="form-control" ref="id" v-model="user.user_id_email" placeholder="아이디 또는 이메일 주소를 입력해주세요.">
+                <input type="text" class="form-control" ref="id" v-model="user.user_id_email" placeholder="아이디 또는 이메일 주소를 입력해주세요." 
+                    @keyup.enter="login">
             </div>
             <div class="form-group">
                 <label for="exampleDropdownFormPassword1">비밀번호</label>
-                <input type="password" class="form-control" ref="pwd" v-model="user.user_pwd" placeholder="비밀번호를 입력해주세요.">
+                <input type="password" class="form-control" ref="pwd" v-model="user.user_pwd" placeholder="비밀번호를 입력해주세요." 
+                    @keyup.enter="login">
             </div>
             <button type="button" class="btn btn-primary btn-lg btn-block" @click="login">로그인</button>
         </form>

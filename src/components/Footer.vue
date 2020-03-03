@@ -5,10 +5,8 @@
                 <div class="row">
                     <div class="col-12 text-center">
                         <div class="social-icons">
-                            <a href="#"><span class="icon-facebook"></span></a>
-                            <a href="#"><span class="icon-twitter"></span></a>
-                            <a href="#"><span class="icon-youtube"></span></a>
-                            <a href="#"><span class="icon-instagram"></span></a>
+                            <a href="https://github.com/KimJihyeDev"><span class="fab fa-github-square fa-4x"></span></a>
+                            <a href="mailto:kim.jihye.dev@gamil.com"><span class="fas fa-envelope-square fa-4x"></span></a>
                         </div>
                     </div>
                 </div>

@@ -11,14 +11,18 @@
                     </ol>
                     <div class="carousel-inner">
                         <div class="carousel-item active">
-                            <img src="/assets/images/vitamin.PNG" class="d-block w-100" alt="...">
+                            <router-link :to="{ name: 'category', params: { parent_id: 1, child_id: 1 }}">
+                                <img src="/assets/images/vitamins.PNG" class="d-block w-100" alt="...">
+                            </router-link>
                             <div class="carousel-caption d-none d-md-block">
                                 <!-- <h5>First slide label</h5> -->
                                 <!-- <p>Nulla vitae elit libero, a pharetra augue mollis interdum.</p> -->
                             </div>
                         </div>
                         <div class="carousel-item">
-                            <img src="/assets/images/minerals.PNG" class="d-block w-100" alt="...">
+                            <router-link :to="{ name: 'category', params: { parent_id: 2, child_id: 1 }}">
+                                <img src="/assets/images/pets.PNG" class="d-block w-100" alt="...">
+                            </router-link>
                             <div class="carousel-caption d-none d-md-block">
                                 <!-- <h5>Second slide label</h5> -->
                                 <!-- <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p> -->

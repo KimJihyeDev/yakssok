@@ -27,9 +27,7 @@ const store = new Vuex.Store({
         isLogin: false,
         isError: false, 
         errorMessage: '', // 로그인 에러 메시지
-        userProfile: {
-            email: ''
-        },
+        email: '',
         socketId: ''
     },
     getters: { // state의 데이터를 읽어주는 getter, computed와도 비슷(고로 return 필수?)
@@ -68,14 +66,19 @@ const store = new Vuex.Store({
             router.push('/');
 
         },
-        profile(state, payload){
-            state.userId = payload.user_id;  // user id
-            state.userProfile.email = payload.email;
+        profile(state, { id, user_id, email }){
+            console.log('프로필 확인', user_id, email );
+            state.id = id;
+            state.userId = user_id;  // user id
+            state.email = email;
             // 여기서 router push하면 무조건 무한반복
             // router.push('profile');
         },
-        getUserId(state, id){
-            state.id = id; // id(DB의 user 식별 id)
+        // 매개변수가 2개 이상일 때는 반드시 객체로 묶어서 보내야 한다(안 그러면 한개만 인식)
+        getUserId(state,{ id, user_id }){
+            console.log('getUserId입니다. 매개변수 확인',  user_id, id);
+            state.id = id; // id(DB의 user 식별 id)\
+            state.userId = user_id;
             state.isLogin = true;
         },
         setSoketId(state, payload) {
@@ -121,13 +124,14 @@ const store = new Vuex.Store({
                     try{ 
                         // 반드시 headers로 보내야 한다
                         const config = { headers : { authorization: token } }
-                        // 유저 정보에서 id(테이블 id)만 가져온다
+                        // 유저 정보에서 id(테이블 id)와 user_id를 가져온다
                         const result = await axios.get(`${ state.url }/users/profile?type=i`, config)
                         const code = result.data.code;
                         if(code === 200) {
-                            console.log('서버에서 토큰확인 완료. 로그인 중.')
-                            const id = result.data.id;
-                            commit('getUserId', id);
+                            console.log('서버에서 토큰확인 완료. 로그인 중.', result.data)
+                            const { id, user_id } = result.data;
+                            console.log('commit할 때는 있는데요?',id, user_id)
+                            commit('getUserId', { id, user_id });
                         } else {
                             // 토큰이 유효하지 않은 경우이므로 로그아웃 처리
                             localStorage.removeItem('YAKSSOK-TOKEN');
@@ -184,11 +188,10 @@ const store = new Vuex.Store({
                     try{ 
                         const result = await axios.get(`${ state.url }/users/profile?type=p`, config)
                         const code = result.data.code;
-                        console.log('프로필 요청결과')
-                        console.log(result);
+                        console.log('프로필 요청결과', result);
                         const payload = result.data;
                         if(code === 200) {
-                            console.log('서버에서 토큰확인 완료. 로그인 중.')
+                            console.log('서버에서 토큰확인 완료. 로그인 중.', payload);
                             commit('profile', payload);
                         } else {
                             console.log('토큰이 유효하지 않음')

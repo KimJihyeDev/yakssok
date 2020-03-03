@@ -5,20 +5,24 @@
             <span class="font-weight-bold" style="font-size:2rem;">회원가입</span>
             <hr class="solid">
             <div class="form-group">
-                <label for="exampleDropdownFormEmail1">아이디</label>
-                <input type="text" class="form-control" ref="id" v-model="user.user_id" maxlength="8" placeholder="2자 이상 8자 이하의 영문 또는 숫자만 입력해주세요.">
+                <label for="exampleDropdownFormEmail1">아이디<span class="text-danger">*</span></label>
+                <input type="text" class="form-control" ref="id" v-model="user.user_id" maxlength="8" 
+                    placeholder="2자 이상 8자 이하의 영문 또는 숫자만 입력해주세요." @keyup.enter="register">
             </div>
             <div class="form-group">
-                <label for="exampleDropdownFormEmail1">이메일</label>
-                <input type="email" class="form-control" ref="email" v-model="user.email" placeholder="email@example.com">
+                <label for="exampleDropdownFormEmail1">이메일<span class="text-danger">*</span></label>
+                <input type="email" class="form-control" ref="email" v-model="user.email" placeholder="email@example.com"
+                    @keyup.enter="register">
             </div>
             <div class="form-group">
-                <label for="exampleDropdownFormPassword1">비밀번호</label>
-                <input type="password" class="form-control" ref="pwd" v-model="user.user_pwd" placeholder="비밀번호를 입력해 주세요.">
+                <label for="exampleDropdownFormPassword1">비밀번호<span class="text-danger">*</span></label>
+                <input type="password" class="form-control" ref="pwd" v-model="user.user_pwd" placeholder="비밀번호를 입력해 주세요."
+                    @keyup.enter="register">
             </div>
             <div class="form-group">
-                <label for="exampleDropdownFormPassword1">비밀번호 확인</label>
-                <input type="password" class="form-control" ref="confirm_pwd" v-model="confirm_pwd" placeholder="비밀번호를 다시 입력해 주세요.">
+                <label for="exampleDropdownFormPassword1">비밀번호 확인<span class="text-danger">*</span></label>
+                <input type="password" class="form-control" ref="confirm_pwd" v-model="confirm_pwd" placeholder="비밀번호를 다시 입력해 주세요."
+                    @keyup.enter="register">
             </div>
             <hr class="solid">
             <button type="button" class="btn btn-primary btn-lg btn-block" @click="register">회원가입</button>
@@ -57,18 +61,18 @@ import store from '@/store'
                     ref.focus();
                 }
 
-                if (this.user.user_id === '') {
+                if (!this.user.user_id) {
                     checkNull('아이디를', this.$refs.id);
                     return false;
-                } else if (this.user.email === '') {
+                } else if (!this.user.email) {
                     checkNull('이메일을', this.$refs.email);  
                      return false;  
 
-                } else if (this.user.user_pwd === '') {
+                } else if (!this.user.user_pwd) {
                     checkNull('비밀번호를', this.$refs.pwd);
                      return false;
 
-                } else if (this.confirm_pwd === '') {
+                } else if (!this.confirm_pwd) {
                     checkNull('비밀번호 확인을', this.$refs.confirm_pwd);
                     return false;
 
@@ -83,7 +87,7 @@ import store from '@/store'
                 }   
 
                 // 유효성 검사
-                if(this.user.user_id !== '') {
+                if(this.user.user_id) {
                     const reg =  /^[0-9A-za-z]{2,8}$/g;
                     const validation = reg.test(this.user.user_id.replace(/(\s*)/g, ""));
                     if(!validation) {
@@ -93,7 +97,7 @@ import store from '@/store'
                         return false;
                     }
                 } 
-                if(this.user.email !== '') {
+                if(this.user.email) {
                     const reg = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i
                     const validation = reg.test(this.user.email.replace(/(\s*)/g, ""));
                     if(!validation) {
@@ -126,7 +130,7 @@ import store from '@/store'
             }
         },
         beforeRouteEnter(to, from, next){
-            store.state.isLogin === true
+            store.state.isLogin
                 ? next({ name: 'profile' })
                 : next()
         }

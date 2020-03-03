@@ -19,7 +19,6 @@
               <a :href="`/`" class="site-logo">
                 <img src="/assets/images/logo.png" alt="Image" class="img-fluid" >
               </a>
-              <p>ci/cd테스트</p>
             </div>
             <div class="col-12">
               <div class="pull-right">
@@ -68,6 +67,7 @@
                     <!-- dropdown end -->
                     <li><router-link :to="{ name: 'category', params: { parent_id: 2, child_id: 1}}" class="nav-link text-left" style="font-size:20px;font-weight:600;color:#212529;">동물영양제</router-link></li>
                     <li><router-link :to="{ name: 'map' }" class="nav-link text-left" style="font-size:20px;font-weight:600;color:#212529;">약국찾기</router-link></li>
+                    <li><router-link :to="{ name: 'about' }" class="nav-link text-left text-info" style="font-size:20px;font-weight:600;color:#212529;">사이트정보</router-link></li>
                   </ul>
                 </nav>
               </div>

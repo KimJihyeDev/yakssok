@@ -61,6 +61,11 @@ const routes = [
         component: () => import('@/components/users/Profile.vue')
     },
     {
+        path: '/about',
+        name: 'about',
+        component: () => import('@/components/About.vue')
+    },
+    {
         path: '/chat',
         name: 'chat',
         component: () => import('@/components/Chat.vue')
@@ -109,12 +114,12 @@ router.beforeEach((to, from, next) => {
                     // 반드시 headers로 보내야 한다
                     const config = { headers : { authorization: token } }
                     // 유저 정보에서 id(테이블 id)만 가져온다
-                    const result = await axios.get(`${ store.state.url }/users/profile?type=i`, config)
+                    const result = await axios.get(`${ store.state.url }/users/profile?type=p`, config)
                     const code = result.data.code;
                     if(code === 200) {
-                        console.log('서버에서 토큰확인 완료. 로그인 중.')
-                        const id = result.data.id;
-                        store.commit('getUserId', id);
+                        console.log('routeEach.서버에서 토큰확인.로그인 중.')
+                        const { id, user_id, email } = result.data;
+                        store.commit('profile', { id, user_id, email });
                         next();
                     } else {
                         // 토큰이 유효하지 않은 경우이므로 로그아웃 처리
