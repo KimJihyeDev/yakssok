@@ -94,8 +94,13 @@ import store from '@/store'
         },
         created: function () {
             (async () => {
-                const result = await this.$axios.get(`${this.url}/products`);
-                this.products = result.data;
+                const response = await this.$axios.get(`${ this.url }/products`);
+                const { code, message, products } = response.data;
+                if(code === 200) {
+                    this.products = products;
+                } else {
+                    alert(message);
+                }
             })();
         },
         computed: {
@@ -113,11 +118,13 @@ import store from '@/store'
     .custom-img {
         padding: 20%;
     }
+
     /* carousel 사이즈 조절 */
-    .carousel-item img {
-        /* width: auto;
-        height: 500px; */
-    }
+    /* .carousel-item img {
+        width: auto;
+        height: 500px;
+    } */
+
     /* 상품 리스트 이미지 조절 */
     .wine_v_1 img {
         width:auto;

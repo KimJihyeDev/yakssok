@@ -1,7 +1,7 @@
 <template>
   <div>
     <div style="margin:90px 70px 0px 70px;">
-      <p style="top:0px;margin:0px;padding:0;" class="col-md-6" v-if="isLoaded" v-on:load="loaded"> 카테고리 > {{ product.parent_category | parent_category }}
+      <p style="top:0px;margin:0px;padding:0;" class="col-md-6" v-if="isLoaded" @load="loaded"> 카테고리 > {{ product.parent_category | parent_category }}
         <span v-if="child_category"> > </span> {{ child_category }} </p>
     </div>
     <div class="site-section mt-5 product">
@@ -9,7 +9,7 @@
         <div class="row">
           <div class="col-lg-6">
             <div class="owl-style" style="text-align:center">
-              <img :src="`${ productPath }`" v-on:load="loaded" v-show="isLoaded" alt="Image" class="img-fluid"
+              <img :src="`${ productPath }`" @load="loaded" v-show="isLoaded" alt="Image" class="img-fluid"
                 style="width:60%;height:60%;">
             </div>
           </div>
@@ -68,18 +68,18 @@
                   <td>&nbsp;</td>
                 </tr>
                 <tr class="teble-color">
-                  <th class="in-table">1회 분량당</th>
+                  <th class="in-table">성분명</th>
                   <th>&nbsp;</th>
                   <th>&nbsp;</th>
-                  <th class="in-table">함량</th>
+                  <th class="in-table">함유량</th>
                   <th class="in-table">%영양소기준치</th>
                 </tr>
-                <tr v-for="(item,idx) in product.ingredients" :key="idx">
+                <tr v-for="ingredient in product.ingredients" :key="ingredient.id">
                   <td>{{ item.ingredient}}</td>
                   <td>&nbsp;</td>
                   <td>&nbsp;</td>
-                  <td>{{ item.per_serving }}</td>
-                  <td>{{ item.daily_value }}<span v-if="item.daily_value">%</span></td>
+                  <td>{{ ingredient.per_serving }}</td>
+                  <td>{{ ingredient.daily_value }}<span v-if="ingredient.daily_value">%</span></td>
                 </tr>
                 <tr>
                   <td>&nbsp;</td>
@@ -108,8 +108,8 @@
               <!-- Pictogram Start -->
               <div>
                 <!-- 반복문 돌려야 하므로 경로는 더 이상 수정 어려움 -->
-                <img :src="`${ pictogramPath }/${ item.image_path }`" v-for="(item,idx) in product.pictograms"
-                  :key="idx" style="width:80px;">
+                <img :src="`${ pictogramPath }/${ item.image_path }`" v-for="item in product.pictograms"
+                  :key="item.id" style="width:80px;">
               </div>
               <!-- Pictogram End -->
             </div>
@@ -129,8 +129,6 @@
 <script>
   import { mapState, mapGetters } from 'vuex'
   import ReviewList from './ReviewList.vue'
-  // eslint-disable-n0e000000000000xt-line no0000-unused-vars
-  import store from '@/store'
   export default {
     name: 'ProductDetail',
     data() {
@@ -167,22 +165,22 @@
       // 경로를 직접 입력하여 들어간 경우 생명주기가 작동하지 않는걸로 보인다.
       // 동일한 컴포넌트 인스턴스가 재사용 되기 때문으로 보임.
       (async () => {
-        // 먼저 현재 로그인 유무, 유효성을 확인한다.
         try {
-          const result = await this.$axios.get(`${ this.url }/products/${ this.$route.params.id }`)
-          console.log(result);
-          this.product = result.data;
+          const result 
+            = await this.$axios.get(`${ this.url }/products/${ this.$route.params.id }`)
+          console.log('단일 제품 결과', result);
+          const { code, message, product } = result.data;
 
-          console.log('store에서 id확인', this.id);
-          console.log('productDetail에서 userId확인', this.userId);
+          if(code === 200) {
+            this.product = product;
+          } else {
+            alert(message);
+          }
         } catch (err) {
           console.log(err);
         }
       }
       )();
-    },
-    updated(){
-      console.log('업데이트')
     },
     mounted() {
       // 평점(별점 관련 코드)
@@ -200,20 +198,11 @@
       // }
     },
     beforeRouteUpdate(to, from, next) {
-      // react to route changes...
-      // don't forget to call next()
       // go()는 브라우저 차원의 이동(화면 리로드)
       //  next(this.$router.go(to.path));
       next();
       this.$router.go(to.path)
 
-    },
-    beforeRouteEnter(to, from, next) {
-      // 글 작성을 위해 로그인 여부, id, 토큰의 유효성을 확인한다.
-      store.dispatch('getUserId');
-      next()
-    },
-    watch: {
     },
     filters: {
       parent_category(val) {
@@ -226,7 +215,7 @@
     },
     computed: {
       ...mapState(['isLogin', 'id', 'userId', 'url']),
-      ...mapGetters(['productImagePath', 'pictogramImagePath']),
+      ...mapGetters(['productImagePath', 'pictogramPath']),
       child_category() {
         // filter의 this는 undefined
         if (this.product.parent_category === 1) {
@@ -240,11 +229,9 @@
         }
       },
       productPath() {
-        const path = `${this.productImagePath}/${this.product.product_image}`;
-        return path;
-      },
-      pictogramPath() {
-        const path = `${this.pictogramImagePath}`;
+        // created가 실행되기 전에 먼제 이미지 경로를 읽어들인다(콘솔 확인결과)
+        // imagepath가 undefined로 나오지만 출력에는 이상 없음.
+        const path = `${ this.productImagePath }/${ this.product.product_image }`;
         return path;
       },
     }
@@ -329,7 +316,6 @@
   }
 
   /* Set yellow color when star checked */
-
   .starrating>input:hover~label {
     color: orange;
   }

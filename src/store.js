@@ -2,7 +2,7 @@ import 'babel-polyfill' // 브라우저 하위버전 지원을 위한 babel-poly
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
-import router from '@/router/routes'
+// import router from '@/router/routes'
 // import io from 'socket.io-client';
 
 
@@ -20,23 +20,33 @@ const store = new Vuex.Store({
     state: {
         url: 'http://localhost:4000',
         id: '', // user테이블의 id(int)
-        userId: '', // user id
-        productImagePath: '/images/products',
-        pictogramImagePath: '/images/pictograms',
-        // token: null, // 토큰이 없으면 로그아웃 상태로 변환시키기
+        userId: '', // user_id. 실제 사용자 id
+        productImagePath: '/images/products', // 제품 이미지 경로
+        pictogramPath: '/images/pictograms', // 픽토그램 경로
         isLogin: false,
-        isError: false, 
+        isError: false,
         errorMessage: '', // 로그인 에러 메시지
-        email: '',
         socketId: ''
     },
     getters: { // state의 데이터를 읽어주는 getter, computed와도 비슷(고로 return 필수?)
-        productImagePath(state){
+        productImagePath(state) {
             return state.url + state.productImagePath;
         },
-        pictogramImagePath(state){
-            return state.url + state.pictogramImagePath;
+        pictogramPath(state) {
+            return state.url + state.pictogramPath;
         },
+        getloginState(state) {
+            return state.isLogin;
+        },
+        getId(state) {
+            return state.id;
+        },
+        getUserId(state) {
+            return state.userId;
+        },
+        getEmail(state) {
+            return state.email;
+        }
     },
     // setter에 해당하는 mutations
     // **mutations 이외에서 state의 값을 변경해서는 안 된다**
@@ -45,169 +55,89 @@ const store = new Vuex.Store({
     // payload는 mutations를 호출할 때의 commit에서 전해준 매개변수
     // mutations는 동기적으로 작동한다(비동기적 처리는 모두 actions에서 처리)
     mutations: {
-        login(state, token, id){
+        // 매개변수가 2개 이상일 때는 
+        // 호출할 때도 받을 때도 반드시 { }로 묶어야 한다.
+        login(state, { token, id }) {
             state.isLogin = true;
             state.isError = false;
             state.errorMessage = '';
             localStorage.setItem('YAKSSOK-TOKEN', token);
-            state.userId = id;
-            // 로그인 이전에 보던 페이지로 이동
-            router.go(-1);
+            console.log('state의 login mutations에서 id확인', id);
+            console.log('state의 login mutations에서 token', token);
+            // 이 부분이 잘못되었음
+            state.id = id;
         },
-        loginError(state, payload){
+        loginError(state, payload) {
             console.log(payload.data.message)
             state.isError = true;
             state.errorMessage = payload.data.message;
         },
-        logout(state){
+        logout(state) {
             localStorage.removeItem('YAKSSOK-TOKEN');
-            localStorage.removeItem('tokenAlarm');
             state.isLogin = false;
-            router.push('/');
-
         },
-        profile(state, { id, user_id, email }){
-            console.log('프로필 확인', user_id, email );
-            state.id = id;
-            state.userId = user_id;  // user id
-            state.email = email;
-            // 여기서 router push하면 무조건 무한반복
-            // router.push('profile');
-        },
-        // 매개변수가 2개 이상일 때는 반드시 객체로 묶어서 보내야 한다(안 그러면 한개만 인식)
-        getUserId(state,{ id, user_id }){
-            console.log('getUserId입니다. 매개변수 확인',  user_id, id);
-            state.id = id; // id(DB의 user 식별 id)\
+        getUserId(state, { id, user_id }) {
+            // 토큰 유효성 확인 후
+            state.id = id; // id(DB의 user 식별 id)
             state.userId = user_id;
             state.isLogin = true;
         },
         setSoketId(state, payload) {
             state.socketId = payload;
         },
-        loginState(state, token) { 
+        loginState(state, token) {
             // 라우트에서 로그인 확인용
-            if(token) 
+            if (token)
                 state.isLogin = true;
-            else 
+            else
                 state.isLogin = false;
         }
     },
     actions: {
-        login({ state, commit }, user){
-            (async () => {
-                try{    
-                    const result = await axios.post(`${ state.url }/users/login`, user)
-                    console.log(result);
-                    let code = result.data.code;
-                    if(code === 200){
-                        const token = result.data.token;
-                        // 2시간 후에 자동으로 토큰 삭제 & 로그아웃 처리
-                        localStorage.setItem('tokenAlarm', result.data.time);
-                        commit('login', token);
-                    }
-                    else {
-                        commit('loginError', result);
-                        console.log(result.data.message)                        
-                    }       
-                }catch(err){
-                    console.log(err);
-                }
-            })();
-        }, 
-        // eslint-disable-next-line no-unused-vars
-        // 앱이 재시작 될 때마다 main.js에서 token의 유무 검사
-        getUserId({ state, commit }){ 
+        
+        getUserId({ state, commit }) {
             const token = localStorage.getItem('YAKSSOK-TOKEN');
             // 서버에 토큰 유효성을 검사받는다.
             (async () => {
-                if(token) {
-                    try{ 
-                        // 반드시 headers로 보내야 한다
-                        const config = { headers : { authorization: token } }
+                if (token) {
+                    try {
+                        const config = { headers: { authorization: token } }
                         // 유저 정보에서 id(테이블 id)와 user_id를 가져온다
-                        const result = await axios.get(`${ state.url }/users/profile?type=i`, config)
+                        const result = await axios.get(`${ state.url }/users/token`, config)
                         const code = result.data.code;
-                        if(code === 200) {
+                        if (code === 200) {
                             console.log('서버에서 토큰확인 완료. 로그인 중.', result.data)
                             const { id, user_id } = result.data;
-                            console.log('commit할 때는 있는데요?',id, user_id)
                             commit('getUserId', { id, user_id });
                         } else {
                             // 토큰이 유효하지 않은 경우이므로 로그아웃 처리
-                            localStorage.removeItem('YAKSSOK-TOKEN');
-                            localStorage.removeItem('tokenAlarm');
-                            state.token = null;
-                            state.isLogin = false;
+                            commit('logout');
                         }
-                        
+
                         // 채팅 소켓 연결(나중에 사용 예정)
                         // const chatSocket = io(`${store.state.url}/chat`);
 
                         // chatSocket.emit('setUser', socket_id, id);
-                         // 채팅방 가입
+                        // 채팅방 가입
                         //  chatSocket.on('join', (message) => {
                         //     console.log('채팅방에 가입')
                         //     console.log(message)
                         //     chatSocket.emit('hi', '채팅가입했어요');
                         // })
-                    } catch(err) {
+                    } catch (err) {
                         console.log(err);
                     }
                 } else {
                     // 토큰이 없는 경우
-                    // console.log('state.verifyToken확인', state.verifyToken);
-                    return null;
-                }   
+                    commit('loginState', token);
+                }
             })();
-
         },
-        // autoLogout({ commit }) {
-        //     // 토큰의 유효시간을 클라이언트에서 확인하고 
-        //     // 유효시간이 지나면 자동 로그아웃 처리한다.
-        //     const token = localStorage.getItem('YAKSSOK-TOKEN');
-        //     const alarm = localStorage.getItem('tokenAlarm');
-        //     const time = Date.now();
-        //     console.log('현재시각', time);
-        //     console.log('토큰 알람!!', alarm);
-        //    if(token) {
-        //         if(time > alarm) {
-        //             alert('로그인 시간을 초과하여 자동 로그아웃 되었습니다.');
-        //             commit('logout');
-        //         } else {
-        //             commit('setToken');
-        //         }
-        //    } else {
-        //         return null;
-        //    }
-        // },
-        profile({ state, commit }, token){
-            (async () => {
-                // 로그인 되어 있지 않은 경우(토큰이 없는 경우)는 소켓연결X
-                // 반드시 headers로 보내야 한다
-                const config = { headers : { authorization: token } }
-                    try{ 
-                        const result = await axios.get(`${ state.url }/users/profile?type=p`, config)
-                        const code = result.data.code;
-                        console.log('프로필 요청결과', result);
-                        const payload = result.data;
-                        if(code === 200) {
-                            console.log('서버에서 토큰확인 완료. 로그인 중.', payload);
-                            commit('profile', payload);
-                        } else {
-                            console.log('토큰이 유효하지 않음')
-                            localStorage.removeItem('YAKSSOK-TOKEN');
-                            localStorage.removeItem('tokenAlarm');
-                            state.token = null;
-                            state.isLogin = false;
-                            router.push({ name: 'login'});
-                        }
-                    } catch(err) {
-                        console.log(err);
-                    }
-            })();
-            
+        loginState({ commit }) {
+            // 단순히 토큰의 유무만 확인(로그인, 로그아웃 출력용)
+            const token = localStorage.getItem('YAKSSOK-TOKEN');
+            commit('loginState', token);
         }
-    
     }
 })
 

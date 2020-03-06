@@ -34,7 +34,7 @@
 
 <script>
 // 지리 정보를 담고있는 json 파일
-    import location from '@/assets/location.json'
+    // import location from '@/assets/location.json'
     // 아래 코드를 사용하여 eslint를 해당 파일에서 사용 불능으로 만들 수 있다. 
     // 반드시 script 코드 맨 위에 작성할 것.
     /* eslint-disable */
@@ -252,21 +252,7 @@
                         component.map.setLevel(component.level);
                     }
                 })
-            },
-            select_gu() {
-                if (this.si === "서울특별시") {
-                    this.optionGu = location.region.gu.inSeoul_gu
-                } else if (this.si === '강원도') {
-                    this.optionGu = location.region.gu.Gangwondo_gu
-                }
-            },
-            select_dong() {
-                if (this.gu === '강남구') {
-                    this.optionDong = location.region.dong.inGangnam_dong;
-                } else if (this.gu === '마포구') {
-
-                }
-            },
+            }
         },
         mounted: function () {
             this.createMap()

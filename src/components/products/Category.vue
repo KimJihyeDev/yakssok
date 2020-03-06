@@ -51,22 +51,26 @@
         // 화면 로드가 끝난 후에 이미지 보여주기(로드 전 이미지 보이는걸 방지)
         this.isLoaded = true;
       },
-      more() { // 더보기 버튼용 메소드
+      more() { // 더보기 버튼용 
         (async () => {
           const result = await this.$axios.get(`
-                  ${ this.url}/products/categories/${this.$route.params.parent_id}/${this.$route.params.child_id}
-                  ?offSet=${ this.offSet}`
+                  ${ this.url }/products/categories/${ this.$route.params.parent_id }/${ this.$route.params.child_id }
+                  ?offSet=${ this.offSet }`
           );
-          console.log('결과배열길이')
-          console.log(result.data, result.data.rows.length);
-          if (result.data.rows.length > 0) {
-            result.data.rows.forEach(product => {
-              this.products.push(product)
-            });
-            this.offSet++;
+          const { code, message } = result.data;
+          const rows = result.data.products.rows;
+          if(code === 200) {
+            if (rows.length > 0) {
+              rows.forEach(product => {
+                this.products.push(product)
+              });
+              this.offSet++;
+            } else {
+              alert('마지막 페이지입니다.');
+              return false;
+            }
           } else {
-            alert('마지막 페이지입니다.');
-            return false;
+            alert(message);
           }
         })();
       }
@@ -78,16 +82,23 @@
     created() {
       (async () => {
         const result = await this.$axios.get(`
-                  ${ this.url}/products/categories/${this.$route.params.parent_id}/${this.$route.params.child_id}
-                  ?offSet=${ this.offSet}`
+                  ${ this.url }/products/categories/${ this.$route.params.parent_id }/${ this.$route.params.child_id }
+                    ?offSet=${ this.offSet }`
         );
-        console.log(result);
-        this.products = result.data.rows;
-        result.data.count <= 12 // 더 보기 버튼 활성화
-          ? this.count = false
-          : this.count = true;
+        const { code, message } = result.data;
+        const { rows, count } = result.data.products;
+        console.log('카테고리 조회 결과', result);
+        if(code === 200) {
+          this.products = rows;
 
-        this.offSet++; // 오프셋 증가
+          count <= 12 // 더 보기 버튼 활성화
+            ? this.count = false
+            : this.count = true;
+
+          this.offSet++; // 오프셋 증가
+        } else {
+          alert(message);
+        }
       })();
     },
     beforeRouteUpdate(to, from, next) {

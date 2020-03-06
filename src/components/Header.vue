@@ -23,8 +23,8 @@
             <div class="col-12">
               <div class="pull-right">
                 <!-- <button class="btn btn-white btn-sm text-right" type="button" @click="loginLogout">{{ loginState }}</button> -->
-                <button class="btn btn-white btn-sm text-right" type="button" @click="loginLogout" v-if="isLogin">로그아웃</button>
-                <button class="btn btn-white btn-sm text-right" type="button" @click="loginLogout" v-else-if="!isLogin">로그인</button>
+                <button class="btn btn-white btn-sm text-right" type="button" @click="loginLogout" v-if="getloginState">로그아웃</button>
+                <button class="btn btn-white btn-sm text-right" type="button" @click="loginLogout" v-else-if="!getloginState">로그인</button>
                 <!-- <router-link tag="button" :to="{ name: 'profile' }" class="btn btn-white btn-sm text-right" style="margin-left:3px;">마이페이지</router-link> -->
                 <button type="button" class="btn btn-white btn-sm text-right" style="margin-left:3px;" @click="profile">마이페이지</button>
               </div>
@@ -80,7 +80,7 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
   export default {
     name: 'Header',
     data(){
@@ -93,16 +93,18 @@ import { mapState } from 'vuex'
         this.$router.push('/profile');
       },
       loginLogout(){
-        // store는 새로고침되면 초기화되므로 
-        // store로 로그인 판별x
-        this.isLogin === true
-          ? this.$store.commit('logout')
-          : this.$router.push('/login')
+        
+        if(this.getloginState) {
+          this.$store.commit('logout');
+          this.$router.push('/')
+        } else {
+          this.$router.push('/login')
+        }
       },
       searchProduct(){
         console.log(this.search);
         if(this.search){
-          this.$router.push({ name: 'search' , query: {keyword: this.search}})
+          this.$router.push({ name: 'search' , query: { keyword: this.search }})
         } else {
           return false;
         }
@@ -110,7 +112,8 @@ import { mapState } from 'vuex'
       }
     },
     computed:{
-      ...mapState(['isLogin', 'url']),
+      ...mapGetters(['getloginState']),
+      ...mapState(['url']),
     },
     watch:{
     },

@@ -20,13 +20,9 @@
         <div class="alert alert-danger text-center" role="alert" v-if="errors || isError" style="margin-top:1rem;">
             {{ message || errorMessage }}
         </div>
-        <!-- <div class="alert alert-danger text-center" role="alert" v-if="isLoginError" style="margin-top:1rem;">
-            {{ getErrorMessage }}
-        </div> -->
         <div class="text-center">
-            <!-- <button class="btn btn-default" href="#" type="button" @click="register" style="margin-right:3px;">회원가입</button> -->
-            <router-link class="btn btn-default" tag="button" :to="{ name: 'register' }" style="margin-right:3px;">회원가입</router-link>
-            <button class="btn btn-default" href="#" type="button">비밀번호 찾기</button>
+            <router-link class="btn btn-default btn-lg" tag="button" :to="{ name: 'register' }" style="margin-right:1rem;">회원가입</router-link>
+            <router-link class="btn btn-default btn-lg" tag="button" :to="{ name: 'passwordreset' }">비밀번호 찾기</router-link>
         </div>
     </div>
 </template>
@@ -34,8 +30,7 @@
 <script>
 // eslint-disable-next-line no-unused-vars
 import store from '@/store'
-import { mapState, mapActions } from 'vuex'
-// import axios from 'axios' 
+import { mapState } from 'vuex'
     export default {
         name: 'login',
         data(){
@@ -49,37 +44,59 @@ import { mapState, mapActions } from 'vuex'
             }
         },
         methods: {
-            ...mapActions({ commitLogin: 'login' }),
-            login() {
+            checkForm() {
                 const vm = this;
-                let checkNull = (message, ref) => {
+                const checkNull = (message, ref) => {
                         vm.errors = true;
-                        vm.message = `${ message }를 입력해 주세요`
+                        vm.message = `${ message } 입력해 주세요`
                         ref.focus();
-                        // return false; **여기서 return false를 해도 값이 넘어간다**
+                        return false; 
                 }
 
-                if(this.user.user_id_email === ''){
-                    checkNull('아이디', this.$refs.id)
-                    return false; 
+                if(!this.user.user_id_email) {
+                    return checkNull('아이디를', this.$refs.id);
                 }
-                else if(this.user.user_pwd === '' ){
-                    checkNull('비밀번호', this.$refs.pwd);
-                    return false; 
+                else if(!this.user.user_pwd) {
+                    return checkNull('비밀번호를', this.$refs.pwd); 
                 }
                 else {
-                    this.errors = false
+                    this.errors = false;
                     this.message = '';
                 }
-                this.commitLogin(this.user)
-                // store.dispatch('login', this.user);
+                return true;
+            },
+            login() {
+                const check = this.checkForm();
+                if(!check) return false;
+
+                (async () => {
+                    try {
+                        const result = 
+                            await this.$axios.post(`${ store.state.url }/users/login`, this.user)
+                        console.log('로그인 컴포넌트에서 결과 확인', result);
+                        const { code, message, token, id } = result.data;
+                        console.log('로그인 컴포넌트에서 id 확인', id);
+                        
+                        if (code === 200) {
+                            store.commit('login', { token, id });
+                            this.$router.push({ name: 'main' });
+                        }
+                        else {
+                            store.commit('loginError', result);
+                            console.log(message)
+                        }
+                    } catch (err) {
+                        console.log(err);
+                    }
+                })();
             }
         },
         computed: {
             ...mapState(['isError', 'errorMessage']),
         },
         beforeRouteEnter(to, from, next){
-            store.state.isLogin === true
+            const isLogin = store.getters.getloginState;
+            isLogin
                 ? next({ name: 'profile' })
                 : next()
         }

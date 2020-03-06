@@ -27,7 +27,7 @@
             <hr class="solid">
             <button type="button" class="btn btn-primary btn-lg btn-block" @click="register">회원가입</button>
         </form>
-        <div :class="{ test : false }"></div>
+        <!-- <div :class="{ test : false }"></div> -->
         <div class="alert alert-danger text-center" role="alert"  v-if="errors" style="margin-top:1rem;">
             {{ message }} 
         </div>
@@ -52,36 +52,35 @@ import store from '@/store'
             }
         },
         methods:{
-            register(){
-                // 널값체크
+            checkForm() {
+                  // 널값체크
                 const vm = this;
                 let checkNull = (message, ref) => {
                     vm.errors = true;
                     vm.message = `${ message } 입력해 주세요.`;
                     ref.focus();
+                    return false;
                 }
 
                 if (!this.user.user_id) {
-                    checkNull('아이디를', this.$refs.id);
-                    return false;
-                } else if (!this.user.email) {
-                    checkNull('이메일을', this.$refs.email);  
-                     return false;  
-
-                } else if (!this.user.user_pwd) {
-                    checkNull('비밀번호를', this.$refs.pwd);
-                     return false;
-
-                } else if (!this.confirm_pwd) {
-                    checkNull('비밀번호 확인을', this.$refs.confirm_pwd);
-                    return false;
-
-                } else if (this.user.user_pwd !== this.confirm_pwd){
+                    return checkNull('아이디를', this.$refs.id);
+                } 
+                else if (!this.user.email) {
+                    return checkNull('이메일을', this.$refs.email); 
+                } 
+                else if (!this.user.user_pwd) {
+                    return checkNull('비밀번호를', this.$refs.pwd);
+                } 
+                else if (!this.confirm_pwd) {
+                    return checkNull('비밀번호 확인을', this.$refs.confirm_pwd);
+                } 
+                else if (this.user.user_pwd !== this.confirm_pwd){
                     this.errors = true;
                     this.message = '비밀번호가 일치하지 않습니다.'
                     this.$refs.pwd.focus();
                     return false;
-                } else {
+                } 
+                else {
                     this.errors = false;
                     this.message = '';
                 }   
@@ -107,39 +106,38 @@ import store from '@/store'
                         return false;
                     }
                }
+               // 전부 통과한 경우    
+               return true;
+            },
+            register(){
+                const check = this.checkForm();
+                if(!check) return false;
+
                (async () => {
                     try {
                         const result = await this.$axios.post(`${ store.state.url }/users`, this.user)
-                        let code = result.data.code === 409 || result.data.code === 500;
-                        if(code){
-                            this.errors = true;
-                            this.message = result.data.message;
-                        }
+                        const { code, message } = result.data;
 
-                        if(result.status === 201){
+                        if(code === 201){
                             const token = result.data.token;
                             const { id } = result.data;
                             store.commit('login', token, id);
                             this.$router.push('/');
+                        } else {
+                            this.errors = true;
+                            this.message = message;
                         }
-                        
-                    }catch(err) {
+                    } catch(err) {
                        console.log(err);
                     }
                })();
             }
         },
         beforeRouteEnter(to, from, next){
-            store.state.isLogin
+            const isLogin = store.getters.getloginState;
+            isLogin
                 ? next({ name: 'profile' })
                 : next()
         }
     }
 </script>
-<style >
-.test {
-    height: 100px;
-    width : 200px;
-   border: 1px solid red;
-}
-</style>
