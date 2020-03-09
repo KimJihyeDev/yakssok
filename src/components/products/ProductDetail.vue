@@ -75,7 +75,7 @@
                   <th class="in-table">%영양소기준치</th>
                 </tr>
                 <tr v-for="ingredient in product.ingredients" :key="ingredient.id">
-                  <td>{{ item.ingredient}}</td>
+                  <td>{{ ingredient.ingredient}}</td>
                   <td>&nbsp;</td>
                   <td>&nbsp;</td>
                   <td>{{ ingredient.per_serving }}</td>
@@ -197,13 +197,6 @@
       //   star[star.length - i].classList.add('text-warning')
       // }
     },
-    beforeRouteUpdate(to, from, next) {
-      // go()는 브라우저 차원의 이동(화면 리로드)
-      //  next(this.$router.go(to.path));
-      next();
-      this.$router.go(to.path)
-
-    },
     filters: {
       parent_category(val) {
         if (val === 1) {
@@ -218,8 +211,8 @@
       ...mapGetters(['productImagePath', 'pictogramPath']),
       child_category() {
         // filter의 this는 undefined
-        if (this.product.parent_category === 1) {
-          if (this.product.child_category === 1) {
+        if (this.product.parent_category == 1) {
+          if (this.product.child_category == 1) {
             return '비타민'
           } else {
             return '프로바이오틱스';

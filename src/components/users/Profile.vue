@@ -15,10 +15,10 @@
                 <label for="c_lname" class="text-black">비밀번호 변경</label>
                 <div class="input-group">
                   <input type="password" class="form-control" placeholder="현재 비밀번호를 입력해 주세요"
-                    aria-label="Coupon Code" aria-describedby="button-addon2" ref="email" v-model="newProfile.currentPwd"
+                    aria-label="Coupon Code" aria-describedby="button-addon2" ref="currentPwd" v-model="newProfile.currentPwd"
                     @keyup.enter="modifyPwd">
                   <input type="password" class="form-control" placeholder="새 비밀번호를 입력해 주세요"
-                    aria-label="Coupon Code" aria-describedby="button-addon2" ref="email" v-model="newProfile.pwd"
+                    aria-label="Coupon Code" aria-describedby="button-addon2" ref="newPwd" v-model="newProfile.pwd"
                     @keyup.enter="modifyPwd">
                   <div class="input-group-append">
                     <button class="btn btn-primary btn-sm rounded px-4" type="button" id="button-addon2"
@@ -84,6 +84,14 @@ import { mapState } from 'vuex'
       }
     },
     methods: {
+      notError() { 
+        this.errors = false;
+        this.message = '';
+      },
+      error(message) {
+        this.errors = true;
+        this.message = message;
+      },
       getProfile() {
         (async () => {
           try {
@@ -111,21 +119,21 @@ import { mapState } from 'vuex'
       checkEmail() {
         // 폼과 유효성 체크
         if (!this.newProfile.email) {
-          this.errors = true;
-          this.message = '변경할 이메일 주소를 입력해주세요';
+          const message = '변경할 이메일 주소를 입력해주세요';
+          this.error(message);
           this.$refs.email.focus();
           return null;
         } else {
           const reg = /^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$/i
           const validation = reg.test(this.newProfile.email.replace(/(\s*)/g, ""));
+          
           if (!validation) {
-            this.errors = true;
-            this.message = '이메일 형식을 확인해 주세요.';
+            const message = '이메일 형식을 확인해 주세요.';
+            this.error(message);
             this.$refs.email.focus();
             return false;
           } else {
-            this.errors = false;
-            this.message = '';
+            this.notError();
             return true;
           }
         }
@@ -136,26 +144,23 @@ import { mapState } from 'vuex'
 
         (async () => {
           try {
-            await store.dispatch('getUserId');
+            await store.dispatch('auth');
             const isLogin = store.getters.getloginState;
             if(!isLogin) return this.notLogin();
 
             this.newProfile.id = store.getters.getId;
             const response = 
                 await this.$axios.patch(`${ this.url }/users/modify/${ this.id }?type=e`, this.newProfile);
-            console.log(response);
 
             const { code, message } = response.data;
             if(code === 200) {
               alert(message);
               this.newProfile.email = '';
               this.getProfile();
-              this.errors = false;
-              this.message = '';
+              this.notError();
             } else {
               // 이미 사용 중인 이메일의 경우
-              this.errors = true;
-              this.message = message;
+              this.error(message);
             }
           } catch (err) {
             console.log(err);
@@ -164,12 +169,11 @@ import { mapState } from 'vuex'
       },
       checkPwd() {
         if (!this.newProfile.currentPwd || !this.newProfile.pwd) {
-          this.errors = true;
-          this.message = '비밀번호를 입력해 주세요.';
+          const message = '비밀번호를 입력해 주세요.';
+          this.error(message);
           return false;
         } else {
-          this.errors = false;
-          this.message = '';
+          this.notError();
           return true;
         }
       },
@@ -180,7 +184,7 @@ import { mapState } from 'vuex'
         (async() => {
           try {
             // 토큰 유효성 확인 
-            await store.dispatch('getUserId');
+            await store.dispatch('auth');
             const isLogin = store.getters.getloginState;
             if(!isLogin) return this.notLogin();
 
@@ -192,12 +196,10 @@ import { mapState } from 'vuex'
               this.newProfile.currentPwd = '';
               this.newProfile.pwd = '';
               alert(message);
-              this.errors = false;
-              this.message = '';
+              this.notError();
             } else {  
               // 비밀번호가 일치하지 않는 경우
-              this.errors = true;
-              this.message = message;
+              this.error(message);
             }
           } catch(err) {
             console.log(err);
@@ -208,13 +210,13 @@ import { mapState } from 'vuex'
         // confirm으로 확인
         // 맞다면 토큰 유효성 확인
         // 그 후에 서버에 탈퇴 요청 보내기
-        const selection = 
+        const isDeleteAccount = 
           confirm('탈퇴하시면 계정을 복구하실 수 없습니다. 정말 탈퇴하시겠습니까?');
-        if(!selection) return false;
+        if(!isDeleteAccount) return false;
         
         (async () => {
           try {
-            await store.dispatch('getUserId');
+            await store.dispatch('auth');
             const isLogin = store.getters.getloginState;
             if(!isLogin) return this.notLogin();
 
@@ -222,16 +224,15 @@ import { mapState } from 'vuex'
               await this.$axios.delete(`${ this.url }/users/deleteAccount/${ this.id }`);
             
             const { code, message } = response.data;
+
             if(code === 200) {
               alert(message);
               store.commit('logout');
               this.$router.push({ name: 'main' });
             } else {
               // 서버 에러 처리
-              this.errors = true;
-              this.message = message;
+              this.error(message);
             }
-
           } catch(err) {
             console.log(err);
           }
@@ -243,6 +244,6 @@ import { mapState } from 'vuex'
     },
     created() {
         this.getProfile();
-    }
+    },
   }
 </script>

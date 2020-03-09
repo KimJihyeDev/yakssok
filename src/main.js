@@ -7,9 +7,12 @@ import axios from 'axios'
 import store from '@/store.js'
 // import io from 'socket.io-client';
 
+// NavigationDuplicated error 처리
+const originalPush = VueRouter.prototype.push
+VueRouter.prototype.push = function push(location) {
+  return originalPush.call(this, location).catch(err => err)
+}
 
-// 앱이 새로 시작될 때 마다 main.js 가 읽힌다
-// = 페이지 새로고침 될 때(즉,router.push로는 실행X)
 console.log('main.js파일')
 
 Vue.use(VueRouter);

@@ -7,6 +7,9 @@
           <div class="p-3 p-lg-5 border">
             <div class="form-group row">
               <div class="col-md-12">
+                <label for="c_lname" class="text-danger font-weight-bold" v-if="token">
+                  잘못된 비밀번호 재설정 링크를 클릭한 것 같습니다. 다시 시도하십시오.
+                </label>
                 <label for="c_lname" class="text-black font-weight-bold">회원가입시 입력한 이메일 주소로
                     새 비밀번호 설정 링크가 전송됩니다.</label>
                 <div class="input-group">
@@ -43,7 +46,8 @@ import { mapState } from 'vuex'
         message: '',
         user: {
             email: '',
-        }
+        },
+        token: false,
       }
     },
     methods: {
@@ -95,6 +99,14 @@ import { mapState } from 'vuex'
     computed:{
       ...mapState(['id', 'userId', 'url'])
     },
+    created(){
+      const token = this.$route.query.token;
+      console.log('쿼리', token)
+      if(token) {
+        // 토큰이 있다면 경고 메시지를 출력한다(상단에)
+        this.token = true;
+      }
+    }
   }
 </script>
 <style>

@@ -57,7 +57,7 @@
             <div class="col-md-2 text-center">
               <h1>{{ review.id }}</h1>
               <img src="/assets/images/profile-picture.PNG" class="img rounded-circle img-fluid" />
-              <p class="text-secondary text-center"><span>회원:</span>{{ review.user_id }}</p>
+              <p class="text-secondary text-center"><span>회원:</span>{{ review.user.user_id }}</p>
             </div>
             <div class="col-md-10">
               <p>
@@ -100,12 +100,14 @@
               </div>
             </div>
             <!-- 로그인 하지 않은 상태에서 보여질 댓글 입력폼 -->
-            <div class="form-group border" @click="beforeWrite" v-else>
-              <div class="text-center">
-                <label class="text-danger font-weight-bold h6">회원만 댓글을 작성하실 수 있습니다.</label>
-                <textarea class="form-control" rows="5" maxlength="300" placeholder="로그인해주세요" ref="comment"
-                  v-model="commentArr[idx]"></textarea>
-              </div>
+            <div class="form-group border" v-else>
+              <router-link :to="{ name: 'login' }">
+                <div class="text-center">
+                  <label class="text-danger font-weight-bold h6">회원만 댓글을 작성하실 수 있습니다.</label>
+                  <textarea class="form-control" rows="5" maxlength="300" placeholder="로그인해주세요" ref="comment"
+                    v-model="commentArr[idx]"></textarea>
+                </div>
+              </router-link>
             </div>
 
             <!-- 댓글 보기 시작 -->
@@ -115,32 +117,27 @@
             <div class="card-body border" v-for="one in review.comments" :key="one.id">
               <div class="row">
                 <div class="col-md-12">
-                  <p>
-                    <!-- <span class="float-right"><i class="fa fa-star star rate"></i></span>
+                  <!-- <span class="float-right"><i class="fa fa-star star rate"></i></span>
               <span class="float-right"><i class="fa fa-star star rate"></i></span>
               <span class="float-right"><i class="fa fa-star star rate"></i></span>
               <span class="float-right"><i class="fa fa-star star rate"></i></span>
               <span class="float-right"><i class="fa fa-star star rate"></i></span> -->
-
+                  <p>
                     <span>{{ one.createdAt }}</span>
-                    <!-- 자기가 쓴글이라서 작성자라고 출력되어야 한다. -->
-                    <!-- <div class="pull-right">
-                      <strong class="pull-right"> -->
-                        <button type="button" class="btn btn-outline-info btn-sm pull-right" disabled
-                          v-if="review.userId === one.userId">작성자댓글</button>
-                        <label class="pull-right" style="margin-right: 0.3rem;">회원: {{ one.user_id }} </label>
+                    <button type="button" class="btn btn-outline-info btn-sm pull-right" disabled
+                      v-if="review.userId === one.userId">작성자댓글</button>
+                    <!-- 이 코드에서 계속 에러 발생 -->
+                    <label class="pull-right" style="margin-right: 0.3rem;">회원: {{ one.user.user_id }} </label>
                   </p>
-                      <!-- </strong>
-                    </div> -->
 
-                    <div class="clearfix"></div>
-                    <p class="text-dark font-weight-bolder">{{ one.contents }}</p>
-                    <p>
-                      <!-- 자기가 쓴 댓글일 경우 삭제가 보이게 한다 -->
-                      <button class="float-right btn btn-outline-danger ml-2" v-if="id === one.userId && getloginState"
-                        @click="deleteComment(one.id, idx, review.id)"><i class="fas fa-trash-alt"></i> 삭제
-                      </button>
-                    </p>
+                  <div class="clearfix"></div>
+                  <p class="text-dark font-weight-bolder">{{ one.contents }}</p>
+                  <p>
+                    <!-- 자기가 쓴 댓글일 경우 삭제가 보이게 한다 -->
+                    <button class="float-right btn btn-outline-danger ml-2" v-if="id === one.userId && getloginState"
+                      @click="deleteComment(one.id, idx, review.id)"><i class="fas fa-trash-alt"></i> 삭제
+                    </button>
+                  </p>
                 </div>
               </div>
             </div>
@@ -155,6 +152,7 @@
 </template>
 
 <script>
+  /* eslint-disable no-undef */
   import store from '@/store'
   import { mapState, mapGetters } from 'vuex'
   export default {
@@ -174,7 +172,7 @@
           userId: '', // this.id. 전송 전에 대입.
           reviewId: ''
         },
-        commentArr: [] // 서버에 보낼 코맨드(v-model로 연결)
+        commentArr: [], // 서버에 보낼 코맨드(v-model로 연결)
       }
     },
     methods: {
@@ -185,112 +183,154 @@
         console.log('v-if의 인덱스 확인. class의 인덱스와 일치하는지 확인', idx);
 
         if (this.reviewList[idx].isShow) {
+          this.reviewList[idx].isShow = false;
           this.$forceUpdate();
-          return this.reviewList[idx].isShow = false;
-
-        } else {
+          return false;
+        }
+        if (!this.reviewList[idx].isShow) {
           this.reviewList[idx].isShow = true;
+          this.$forceUpdate();
           (async () => {
             try {
-              const response = 
+              const response =
                 await this.$axios.get(`${ this.url }/reviews/comments?review_id=${ id }`);
               console.log('가져온 댓글', response.data);
+               
+              const { code, message } = response.data;
+              if (code === 200) {
+                 this.reviewList[idx].comments = response.data.result;
 
-              this.reviewList[idx].comments = response.data.result;
-              response.data.comments.length > 0
-                ? this.reviewList[idx].commentLength = ''
-                : this.reviewList[idx].commentLength = '댓글이 없습니다.'
-              this.$forceUpdate();
-
+                 this.reviewList[idx].comments.length > 0
+                  ? this.reviewList[idx].commentLength = ''
+                  : this.reviewList[idx].commentLength = '댓글이 없습니다.'
+                  this.$forceUpdate();
+              } else {
+                alert(message);
+              }
             } catch (err) {
               console.log(err);
             }
           })();
         }
+        // if (this.reviewList[idx].isShow) {
+        //   this.$forceUpdate();
+        //   return this.reviewList[idx].isShow = false;
+
+        // } else {
+        //   this.reviewList[idx].isShow = true;
+        //   (async () => {
+        //     try {
+        //       const response =
+        //         await this.$axios.get(`${ this.url }/reviews/comments?review_id=${ id }`);
+        //       console.log('가져온 댓글', response.data);
+
+        //       this.reviewList[idx].comments = response.data.result;
+        //       console.log('흠??', this.reviewList[idx].comments);
+        //       response.data.comments.length > 0
+        //         ? this.reviewList[idx].commentLength = ''
+        //         : this.reviewList[idx].commentLength = '댓글이 없습니다.'
+        //       this.$forceUpdate();
+
+        //     } catch (err) {
+        //       console.log(err);
+        //     }
+        //   })();
+        // }
       },
-      beforeWrite() {
-        (async () => {
-          await store.dispatch('getUserId');
-          const state = store.getters.getloginState;
-          if (!state) this.$router.push({ name: 'login' });
+      checkReview() {
+        // 널값체크
+        if (!this.review.title) {
+          alert('리뷰 제목을 입력해 주세요.');
+          this.$refs.reviewTitle.focus();
+          return false;
+        } else if (!this.review.contents) {
+          alert('리뷰 내용을 입력해 주세요.');
+          this.$refs.reviewContents.focus();
+          return false;
+        }
+        return true;
+      },
+      resetReview() {
+        this.review.title = '';
+        this.review.contents = '';
+      },
+      auth() {
+        // 내부에 비동기 코드가 들어가 있는 코드가
+        // 다른 코드에 호출 될 경우에는
+        // 반드시 다음 2가지 형태 중 하나를 취한다.
+        // 1. 아래처럼 return(비동기 코드 전체. 
+        //  내부에 async나 then 사용. 콜백도 당연히 가능하겠지?)
+        // 2. 콜백(비동기 코드 전체. 내부는 위와 같음)
+        // ** 아래 코드에서 return 가 삭제되면 동기화 실패하므로 주의 **
+        // return 작성 안 한 것 때문에 동기화 실패했었음
+        return (async () => {
+          await store.dispatch('auth');
+
+          if(!store.getters.auth) {
+            alert('로그인 되어있지 않습니다. 다시 로그인 해주세요.');
+            this.resetReview();
+            return false;
+          } else {
+            return true;
+          }
         })();
       },
-      write() {
+      write() { 
+        const check = this.checkReview();
+        if(!check) return false;
+        
         (async () => {
-          // 널값체크
-          if (!this.review.title) {
-            alert('리뷰 제목을 입력해 주세요.');
-            this.$refs.reviewTitle.focus();
-            return false;
-          } else if (!this.review.contents) {
-            alert('리뷰 내용을 입력해 주세요.');
-            this.$refs.reviewContents.focus();
-            return false;
-          }
+          const auth = await this.auth();
+          if(!auth) return false;
 
-          try {
-            await store.dispatch('getUserId');
-            const isLogin = store.getters.getloginState;
-            if(isLogin) {
+          // 토큰이 만료되었다면 로그아웃처리가 된다
+            console.log('reviw:글 작성시 id확인', this.id);
+            this.review.userId = this.id;
 
-              this.review.userId = this.id;
+            // post방식일 때, token은 전송할 데이터 다음에 작성
+            const response = 
+              await this.$axios.post(`${ this.url }/reviews/`, this.review);
 
-              // post방식일 때, token은 전송할 데이터 다음에 작성
-              const response = await this.$axios.post(`${this.url}/reviews/`, this.review);
-              console.log('리뷰 작성 응답', response);
-              const { code, message } = response.data;
-              if (code === 201) {
-                this.reviewList = response.data.result;
-                console.log('바뀐 리스트 확인', this.reviewList);
-                // 댓글 배열 초기화
-                // this.commentArr = [];
+            console.log('review:리뷰 작성 응답', response);
+            const { code, message } = response.data;
+            if (code === 201) {
+              this.reviewList = response.data.result;
+              console.log('review:바뀐 리스트 확인', this.reviewList);
+              // 댓글 배열 초기화
+              // this.commentArr = [];
 
-                // 댓글 더보기에 사용할 요소 추가
-                this.reviewList.forEach(list => {
-                  list.isShow = false
-                  list.commentLength = ''; // 댓글이 없습니다에 사용될 변수
-                });
+              // 댓글 더보기에 사용할 요소 추가
+              this.reviewList.forEach(list => {
+                list.isShow = false
+                list.commentLength = ''; // 댓글이 없습니다에 사용될 변수
+              });
 
-                this.review.title = '';
-                this.review.contents = '';
-
-                this.$forceUpdate();
-              } else {
-                alert(message);
-              }
-
+              this.resetReview();
+              this.$forceUpdate();
             } else {
-              alert('로그인 되어있지 않습니다. 다시 로그인 해주세요.');
+              alert(message);
             }
-          } catch (err) {
-            console.log(err);
-          }
         })();
       },
       deleteReview(reviewId) {
-
         const isDelete = confirm('삭제하시겠습니까?');
         if (!isDelete) return false;
 
         (async () => {
           try {
-            await store.dispatch('getUserId');
-            const isLogin = store.getters.getloginState;
-            if(isLogin) {
+            const auth = await this.auth();
+            if(!auth) return false;
+
+            if (auth) {
               const response =
-              await this.$axios.delete(`${ this.url }/reviews/delete/${ this.$route.params.id }/${ reviewId }`);
+                await this.$axios.delete(`${this.url}/reviews/delete/${this.$route.params.id}/${reviewId}`);
 
-              console.log('삭제결과', response);
-
-              response.data.code === 200
+              const { code, message } = response.data;
+              console.log('삭제후', response);
+              code === 200
                 ? this.reviewList = response.data.result
-                : alert(response.data.message);
-
-              this.$forceUpdate();
-            } else {
-              alert('로그인 되어있지 않습니다. 다시 로그인 해주세요.');
+                : alert(message);
             }
-
           } catch (err) {
             console.log(err);
           }
@@ -311,11 +351,7 @@
         // v-if가 아닌 v-show를 써야 했다
         // v-if를 쓰니까 textarear가 존재하질 않는다. 
 
-        this.comment.reviewId = reviewId;
-        this.comment.userId = this.id;
-        this.comment.contents = this.commentArr[idx];
-
-        if (!this.comment.contents) {
+        if (!this.commentArr[idx]) {
           alert('댓글을 입력해주세요');
           this.$refs.comment[idx].focus();
           return false;
@@ -323,60 +359,55 @@
 
         (async () => {
           try {
-            // 토큰 유효성 확인
-            await store.dispatch('getUserId');
-            const isLogin = store.getters.getloginState;
-            console.log('댓글 달 때 로그인 상태 확인', isLogin);
-            if(isLogin) {
-              const response = await this.$axios.post(`${ this.url }/reviews/comments`, this.comment);
-              console.log(response);
-              const { code, message, result } = response.data;
-
-              if (code === 201) {
-                this.reviewList[idx].comments = result;
-                this.commentArr[idx] = '';
-
-                // 댓글이 없습니다 안 보이게 처리
-                this.reviewList[idx].commentLength = ''
-                this.$forceUpdate();
-              } else {
-                alert(message);
-              }
-              
-            } else {
-              alert('로그인 되어있지 않습니다. 다시 로그인 해주세요.');
+            const auth = await this.auth();
+            if(!auth) {
+              console.log('댓글달려했는데 로그인x', this.commentArr[idx]);
+              this.commentArr[idx] = '';
+              this.$forceUpdate();
+              return false;
             }
 
+            this.comment.reviewId = reviewId;
+            this.comment.userId = this.id;
+            this.comment.contents = this.commentArr[idx];
+
+            const response = 
+              await this.$axios.post(`${ this.url }/reviews/comments`, this.comment);
+
+            const { code, message, result } = response.data;
+            if (code === 201) {
+              this.reviewList[idx].comments = result;
+              this.commentArr[idx] = '';
+
+             // 댓글이 없습니다 안 보이게 처리
+              this.reviewList[idx].commentLength = '';
+              this.$forceUpdate();
+            } else {
+              alert(message);
+            }
           } catch (err) {
             console.log(err);
           }
         })();
       },
       deleteComment(commentId, reviewIdx, reviewId) {
-
         const isDelete = confirm('삭제하시겠습니까?');
         if (!isDelete) return false;
 
         (async () => {
           try {
-            await store.dispatch('getUserId');
-            const isLogin = store.getters.getloginState;
-            if (isLogin) {
-              const response = 
-              await this.$axios.delete(`${ this.url }/reviews/deleteComment/${ reviewId }/${ commentId }`);
-              console.log(response);
+            const auth = await this.auth();
+            if(!auth) return false;
 
-              // 삭제했으면 새로 댓글 리스트를 받아온다.
-              const { code, message } = response.data;
-              code === 200
-                ? this.reviewList[reviewIdx].comments = response.data.result
-                : alert(message);
-
-              this.$forceUpdate();
-            } else {
-              alert('로그인 되어있지 않습니다. 다시 로그인 해주세요.');
-            }
-            
+            const response =
+              await this.$axios.delete(`${this.url}/reviews/deleteComment/${reviewId}/${commentId}`);
+            console.log(response);
+            // 삭제했으면 새로 댓글 리스트를 받아온다.
+            const { code, message } = response.data;
+            code === 200
+              ? this.reviewList[reviewIdx].comments = response.data.result
+              : alert(message);
+            this.$forceUpdate();
           } catch (err) {
             console.log(err);
           }
@@ -390,28 +421,28 @@
     created() {
       (async () => {
         try {
-          const response = 
-            await this.$axios.get(`${ this.url }/reviews?productId=${ this.$route.params.id }`)
+          const response =
+            await this.$axios.get(`${this.url}/reviews?productId=${this.$route.params.id}`)
           console.log('리뷰리스트', response.data);
 
           const { code, message } = response.data;
           if (code === 200) {
             this.reviewList = response.data.result;
 
-            response.data.result.length < 1
+            this.reviewList.length < 1
               ? this.reviewLength = '리뷰가 없습니다.'
               : this.reviewLength = '';
 
             // 댓글 더보기에 사용할 요소 추가
             this.reviewList.forEach(list => {
               list.isShow = false
-              // list.comments = [];
               list.commentLength = ''; // 댓글이 없습니다에 사용될 변수
-            })
+            });
+
+
           } else {
             alert(message);
           }
-
         } catch (err) {
           console.log(err);
         }

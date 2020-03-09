@@ -25,8 +25,7 @@
                 <!-- <button class="btn btn-white btn-sm text-right" type="button" @click="loginLogout">{{ loginState }}</button> -->
                 <button class="btn btn-white btn-sm text-right" type="button" @click="loginLogout" v-if="getloginState">로그아웃</button>
                 <button class="btn btn-white btn-sm text-right" type="button" @click="loginLogout" v-else-if="!getloginState">로그인</button>
-                <!-- <router-link tag="button" :to="{ name: 'profile' }" class="btn btn-white btn-sm text-right" style="margin-left:3px;">마이페이지</router-link> -->
-                <button type="button" class="btn btn-white btn-sm text-right" style="margin-left:3px;" @click="profile">마이페이지</button>
+                <router-link tag="button" :to="{ name: 'profile' }" class="btn btn-white btn-sm text-right" style="margin-left:3px;">마이페이지</router-link>
               </div>
             </div>
             <!-- 모바일 화면으로 전환시 네이게이션바 설정 -->
@@ -89,9 +88,6 @@ import { mapGetters, mapState } from 'vuex'
       }
     },
     methods:{
-      profile(){
-        this.$router.push('/profile');
-      },
       loginLogout(){
         
         if(this.getloginState) {

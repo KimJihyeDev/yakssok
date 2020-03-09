@@ -11,7 +11,7 @@
             <div class="wine_v_1 text-center pb-4">
               <router-link :to="`/product/detail/${ item.id }`" class="thumbnail d-block mb-4"><img
                   :src="`${ productPath }/${item.product_image}`" v-on:load="loaded" alt="Image"
-                  class="img-fluid custom-img" style="max-height:20rem;width:auto;height:auto;">
+                  class="img-fluid custom-img">
               </router-link>
               <div>
                 <h3 class="heading mb-1"><a href="#">{{ item.product_name }}</a></h3>

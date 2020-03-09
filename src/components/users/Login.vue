@@ -31,6 +31,7 @@
 // eslint-disable-next-line no-unused-vars
 import store from '@/store'
 import { mapState } from 'vuex'
+// import Router from 'vue-router'
     export default {
         name: 'login',
         data(){
@@ -45,10 +46,9 @@ import { mapState } from 'vuex'
         },
         methods: {
             checkForm() {
-                const vm = this;
                 const checkNull = (message, ref) => {
-                        vm.errors = true;
-                        vm.message = `${ message } 입력해 주세요`
+                        this.errors = true;
+                        this.message = `${ message } 입력해 주세요`
                         ref.focus();
                         return false; 
                 }
@@ -73,9 +73,7 @@ import { mapState } from 'vuex'
                     try {
                         const result = 
                             await this.$axios.post(`${ store.state.url }/users/login`, this.user)
-                        console.log('로그인 컴포넌트에서 결과 확인', result);
                         const { code, message, token, id } = result.data;
-                        console.log('로그인 컴포넌트에서 id 확인', id);
                         
                         if (code === 200) {
                             store.commit('login', { token, id });
@@ -95,10 +93,11 @@ import { mapState } from 'vuex'
             ...mapState(['isError', 'errorMessage']),
         },
         beforeRouteEnter(to, from, next){
+
             const isLogin = store.getters.getloginState;
             isLogin
                 ? next({ name: 'profile' })
                 : next()
-        }
+        },
     }
 </script>

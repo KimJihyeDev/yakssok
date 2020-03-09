@@ -1,6 +1,7 @@
 <template>
   <div class="container">
     <div class="site-section mt-5">
+          <label v-if="isLoaded">총 {{ count }}개의 제품이 등록되어 있습니다.</label>
       <div class="container">
         <div class="row">
           <!-- 상품리스트 시작 -->
@@ -26,7 +27,7 @@
           </div>
         </div>
         <div>
-          <button type="button" class="btn btn-primary btn-lg btn-block" @click="more" v-if="count">더보기</button>
+          <button type="button" class="btn btn-primary btn-lg btn-block" @click="more" v-if="count > 12">더보기</button>
         </div>
       </div>
     </div>
@@ -43,7 +44,7 @@
         products: [],
         offSet: 0, // 더보기 계산용 변수
         isLoaded: false,
-        count: false, // 전체 상품개수용 변수(더보기 버튼 활성화 여부)
+        count: 0, // 전체 상품개수용 변수(더보기 버튼 활성화 여부)
       }
     },
     methods: {
@@ -51,16 +52,19 @@
         // 화면 로드가 끝난 후에 이미지 보여주기(로드 전 이미지 보이는걸 방지)
         this.isLoaded = true;
       },
-      more() { // 더보기 버튼용 
+      more() { 
         (async () => {
           const result = await this.$axios.get(`
                   ${ this.url }/products/categories/${ this.$route.params.parent_id }/${ this.$route.params.child_id }
                   ?offSet=${ this.offSet }`
           );
           const { code, message } = result.data;
-          const rows = result.data.products.rows;
+          const { rows, count } = result.data.products;
+
           if(code === 200) {
+
             if (rows.length > 0) {
+              this.count = count;
               rows.forEach(product => {
                 this.products.push(product)
               });
@@ -80,42 +84,8 @@
       ...mapGetters({ productPath: 'productImagePath' })
     },
     created() {
-      (async () => {
-        const result = await this.$axios.get(`
-                  ${ this.url }/products/categories/${ this.$route.params.parent_id }/${ this.$route.params.child_id }
-                    ?offSet=${ this.offSet }`
-        );
-        const { code, message } = result.data;
-        const { rows, count } = result.data.products;
-        console.log('카테고리 조회 결과', result);
-        if(code === 200) {
-          this.products = rows;
-
-          count <= 12 // 더 보기 버튼 활성화
-            ? this.count = false
-            : this.count = true;
-
-          this.offSet++; // 오프셋 증가
-        } else {
-          alert(message);
-        }
-      })();
+      this.more();
     },
-    beforeRouteUpdate(to, from, next) {
-      // go는 브라우저 차원의 이동
-      // url 에 상품번호를 입력할 때
-      // 컴포넌트 재사용되는 것을 막기위해 반드시 go로 처리해야 함
-      // next에 경로 적으면 무한 호출하는 현상 발생(main만 정상적으로 이동)
-      // next()후에 go를 해야 이동이 되네?
-      // 파라미터를 직접 입력할 때는
-      //  next(this.$router.go(to.path))로 이동이 되지만
-      // 클릭으로 이동할 때는
-      // next(); this.$router.go(to.path)로만 이동된다
-      // push는 에러나면서 이동X 
-
-      next();
-      this.$router.go(to.path)
-    }
   }
 </script>
 <style>

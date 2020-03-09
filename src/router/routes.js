@@ -106,10 +106,10 @@ router.beforeEach((to, from, next) => {
     if (to.matched.some(record => record.meta.requireAuth)) {
         // 다음 라우트로 넘어갈지 말지는 무조건 여기서 정한다
         (async () => {
-            await store.dispatch('getUserId');
-            const isLogin = store.getters.getloginState;
-            
-            if(isLogin) {
+            await store.dispatch('auth');
+            const userId = store.getters.auth;
+            console.log('id확인',userId);
+            if(userId) {
                 next();
             } else {
                 next({ name: 'login' });
@@ -118,9 +118,12 @@ router.beforeEach((to, from, next) => {
     } else {
         // 인증이 불필요한 페이지
         store.dispatch('loginState')
-        .then(console.log('beforeEach에서 로그인 여부 확인', store.getters.getloginState));
+        .then(
+            console.log('beforeEach에서 로그인 여부 확인', store.getters.getloginState), 
+            next()
+        );
         
-        next();
+       
     }
 })
 

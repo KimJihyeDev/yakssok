@@ -41,7 +41,7 @@ const store = new Vuex.Store({
         getId(state) {
             return state.id;
         },
-        getUserId(state) {
+        auth(state) {
             return state.userId;
         },
         getEmail(state) {
@@ -75,8 +75,11 @@ const store = new Vuex.Store({
         logout(state) {
             localStorage.removeItem('YAKSSOK-TOKEN');
             state.isLogin = false;
+            state.id = '';
+            state.userId = '';
         },
-        getUserId(state, { id, user_id }) {
+        auth(state, { id, user_id }) {
+            console.log('mutations에서 id, user_id확인', id, user_id)
             // 토큰 유효성 확인 후
             state.id = id; // id(DB의 user 식별 id)
             state.userId = user_id;
@@ -94,49 +97,47 @@ const store = new Vuex.Store({
         }
     },
     actions: {
-        
-        getUserId({ state, commit }) {
+        auth({ state, commit }) {
             const token = localStorage.getItem('YAKSSOK-TOKEN');
             // 서버에 토큰 유효성을 검사받는다.
-            (async () => {
-                if (token) {
-                    try {
-                        const config = { headers: { authorization: token } }
-                        // 유저 정보에서 id(테이블 id)와 user_id를 가져온다
-                        const result = await axios.get(`${ state.url }/users/token`, config)
-                        const code = result.data.code;
-                        if (code === 200) {
-                            console.log('서버에서 토큰확인 완료. 로그인 중.', result.data)
-                            const { id, user_id } = result.data;
-                            commit('getUserId', { id, user_id });
-                        } else {
-                            // 토큰이 유효하지 않은 경우이므로 로그아웃 처리
-                            commit('logout');
-                        }
-
-                        // 채팅 소켓 연결(나중에 사용 예정)
-                        // const chatSocket = io(`${store.state.url}/chat`);
-
-                        // chatSocket.emit('setUser', socket_id, id);
-                        // 채팅방 가입
-                        //  chatSocket.on('join', (message) => {
-                        //     console.log('채팅방에 가입')
-                        //     console.log(message)
-                        //     chatSocket.emit('hi', '채팅가입했어요');
-                        // })
-                    } catch (err) {
-                        console.log(err);
+            // 토큰 없으면 서버에서 401에러(유효x) 처리되므로 따로 처리x
+            // actions도 promise를 반환한다!!
+            // return이 있어야 뭘 반환하던지 말던지 하지!!
+            return (async () => {
+            // (async () => { // 리턴이 없는 잘못된 코드
+                try {
+                    const config = { headers: { authorization: token } }
+                    // 유저 정보에서 id(테이블 id)와 user_id를 가져온다
+                    const result = await axios.get(`${state.url}/users/token`, config)
+                    const code = result.data.code;
+                    if (code === 200) {
+                        console.log('store:토큰유효. 로그인 중.', result.data)
+                        const { id, user_id } = result.data;
+                        commit('auth', { id, user_id });
+                    } else {
+                        // 토큰이 없거나 유효하지 않은 경우이므로 로그아웃 처리
+                        commit('logout');
                     }
-                } else {
-                    // 토큰이 없는 경우
-                    commit('loginState', token);
+
+                    // 채팅 소켓 연결(나중에 사용 예정)
+                    // const chatSocket = io(`${store.state.url}/chat`);
+
+                    // chatSocket.emit('setUser', socket_id, id);
+                    // 채팅방 가입
+                    //  chatSocket.on('join', (message) => {
+                    //     console.log('채팅방에 가입')
+                    //     console.log(message)
+                    //     chatSocket.emit('hi', '채팅가입했어요');
+                    // })
+                } catch (err) {
+                    console.log(err);
                 }
             })();
         },
         loginState({ commit }) {
             // 단순히 토큰의 유무만 확인(로그인, 로그아웃 출력용)
             const token = localStorage.getItem('YAKSSOK-TOKEN');
-            commit('loginState', token);
+            return commit('loginState', token);
         }
     }
 })

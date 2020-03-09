@@ -73,6 +73,9 @@
                     <!-- products list end -->
                 </div>
             </div>
+            <div>
+                <button type="button" class="btn btn-primary btn-lg btn-block" @click="more" v-if="count > 12">더보기</button>
+            </div>
         </div>
     </div>
 </template>
@@ -89,29 +92,60 @@ import store from '@/store'
                 users: [],
                 products: [],
                 isLoaded: false,
-                rate: ''
+                rate: '',
+                offSet: 0,
+                count: 0,
+            }
+        },
+        methods: {
+            loaded(){
+                this.isLoaded = true;
+            },
+            more() {
+                (async () => {
+                    const response = 
+                        await this.$axios.get(`${ this.url }/products?offSet=${ this.offSet }`);
+                    console.log(response.data);
+                    const { code, message } = response.data;
+                    // eslint-disable-next-line no-unused-vars
+                    const { rows, count } = response.data.products;
+
+                    if(code === 200) {
+                        if (rows.length > 0) {
+                            this.count = count;
+                            rows.forEach(product => {
+                            this.products.push(product)
+                            });
+                            this.offSet++;
+                        } else {
+                            alert('마지막 페이지입니다.');
+                            return false;
+                        }
+                    } else {
+                        alert(message);
+                    }
+                })();
             }
         },
         created: function () {
-            (async () => {
-                const response = await this.$axios.get(`${ this.url }/products`);
-                const { code, message, products } = response.data;
-                if(code === 200) {
-                    this.products = products;
-                } else {
-                    alert(message);
-                }
-            })();
+            // (async () => {
+            //     const response = await this.$axios.get(`${ this.url }/products`);
+            //     const { code, message, products } = response.data;
+            //     if(code === 200) {
+            //         this.products = products;
+            //     } else {
+            //         alert(message);
+            //     }
+            // })();
+            this.more();
+            // if(this.products.length >= 12) this.offSet++;
+            
         },
         computed: {
             ...mapState(['url']),
             ...mapGetters({ path: 'productImagePath' }),
         },
-        methods: {
-            loaded(){
-                this.isLoaded = true;
-             },
-        },
+        
     }
 </script>
 <style>

@@ -54,10 +54,9 @@ import store from '@/store'
         methods:{
             checkForm() {
                   // 널값체크
-                const vm = this;
-                let checkNull = (message, ref) => {
-                    vm.errors = true;
-                    vm.message = `${ message } 입력해 주세요.`;
+                const checkNull = (message, ref) => {
+                    this.errors = true;
+                    this.message = `${ message } 입력해 주세요.`;
                     ref.focus();
                     return false;
                 }
