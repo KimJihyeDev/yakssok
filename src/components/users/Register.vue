@@ -27,7 +27,6 @@
             <hr class="solid">
             <button type="button" class="btn btn-primary btn-lg btn-block" @click="register">회원가입</button>
         </form>
-        <!-- <div :class="{ test : false }"></div> -->
         <div class="alert alert-danger text-center" role="alert"  v-if="errors" style="margin-top:1rem;">
             {{ message }} 
         </div>

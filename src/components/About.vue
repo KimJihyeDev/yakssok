@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-top:100px;">
+  <div class="site-section">
     <div class="row justify-content-center">
       <div class="col-md-10">
           <div class="col-md-12">
@@ -26,7 +26,8 @@
                       </tr>
                       <tr>
                         <td class="text-black font-weight-bold"><strong>Git</strong></td>
-                        <td class="text-black font-weight-bold"><a href="https://github.com/KimJihyeDev"><strong>https://github.com/KimJihyeDev</strong></a></td>
+                        <!-- a태그 적용시 글자가 작아지는 현상 발생 -->
+                        <td class="text-black font-weight-bold"><span onclick="javascript:window.location='https://github.com/KimJihyeDev'"><strong class="text-primary pointer">https://github.com/KimJihyeDev</strong></span></td>
                       </tr>
                       <tr>
                         <td class="text-black font-weight-bold"><strong>참고사이트(제품정보)</strong></td>
@@ -47,19 +48,8 @@
   </div>
 </template>
 
-<script>
-  /* eslint-disable no-unused-vars */
-  import axios from 'axios'
-  import store from '@/store'
-  import router from '@/router/routes'
-  export default {
-    name: 'about',
-    data() {
-      return {
-      }
-    },
-    created() {
-
-    },
+<style >
+  .pointer {
+    cursor: pointer;
   }
-</script>
+</style>

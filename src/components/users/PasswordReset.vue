@@ -1,5 +1,5 @@
 <template>
-  <div style="margin-top:100px; height: 300px;">
+  <div class="site-section">
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-md-10 mb-5 mb-md-0">

@@ -7,7 +7,7 @@
         </div>
         <div class="row" v-if="!resultMessage">
           <!-- 상품리스트 시작 -->
-          <div class="col-lg-3 mb-5 col-md-6" style="margin-top:0px;" v-for="(item,idx) in searchResult" :key="idx">
+          <div class="col-lg-3 mb-5 col-md-6" v-for="(item,idx) in searchResult" :key="idx">
             <div class="wine_v_1 text-center pb-4">
               <router-link :to="`/product/detail/${ item.id }`" class="thumbnail d-block mb-4"><img
                   :src="`${ productPath }/${item.product_image}`" v-on:load="loaded" alt="Image"
@@ -16,19 +16,19 @@
               <div>
                 <h3 class="heading mb-1"><a href="#">{{ item.product_name }}</a></h3>
               </div>
-              <div class="wine-actions">
-                <h3 class="heading-2"><a href="#">{{ item.product_name }}</a></h3>
-                <a href="#" onclick="return false;"><i class="fa fa-thumbs-up" aria-hidden="true"
+              <!-- <div class="wine-actions">
+                <h3 class="heading-2"><a>{{ item.product_name }}</a></h3>
+                <span class="price" style="margin-left:0.3rem">0</span>
+                <a onclick="return false;"><i class="fa fa-thumbs-up" aria-hidden="true"
+                    style="color:lightgray"></i></a>
+                <a onclick="return false;" style="margin-left:1rem"><i class="fa fa-thumbs-down" aria-hidden="true"
                     style="color:lightgray"></i></a>
                 <span class="price" style="margin-left:0.3rem">0</span>
-                <a href="#" onclick="return false;" style="margin-left:1rem"><i class="fa fa-thumbs-down"
-                    aria-hidden="true" style="color:lightgray"></i></a>
-                <span class="price" style="margin-left:0.3rem">0</span>
-              </div>
+              </div> -->
             </div>
           </div>
         </div>
-          <!-- 검색결과가 12개가 넘을 경우 -->
+        <!-- 검색결과가 12개가 넘을 경우 -->
         <!-- <div>
           <button type="button" class="btn btn-primary btn-lg btn-block" @click="more">더보기</button>
         </div> -->
@@ -64,7 +64,7 @@
         try {
           const keyword = this.$route.query.keyword;
           const response
-            = await this.$axios.get(`${this.url}/products/search?keyword=${ keyword }`);
+            = await this.$axios.get(`${this.url}/products/search?keyword=${keyword}`);
           console.log('검색결과', response);
           const { code, message, result } = response.data;
 

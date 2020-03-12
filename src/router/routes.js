@@ -1,7 +1,6 @@
 // @는 src의 별칭
 import VueRouter from 'vue-router'
 import store from '@/store'
-// import axios from 'axios'
 
 // 파라미터로 숫자만 받을 경우 (\\d+)로 패턴 지정.
 const routes = [
@@ -81,10 +80,9 @@ const routes = [
     },
 ]
 
-
 const router = new VueRouter({
-    // mode: 'history',
-    base: process.env.BASE_URL,
+    mode: 'history',
+    // base: process.env.BASE_URL,
     scrollBehavior() {
         return { x: 0, y: 0 }
     },
@@ -92,11 +90,6 @@ const router = new VueRouter({
 })
 
 // 전역가드 설정
-// 모든 라우트에서 사용
-// main.js에서는 앱이 재시작 될 때마다만 토큰 확인이 가능하다.
-// 중간에 브라우저에서 토큰을 삭제하거나, 
-// 새로 고침이 없었을 때 토큰이 만료된 경우에는 확인불가. 
-// 모든 라우트 마다 확인하는게 가장 확실하다.
 router.beforeEach((to, from, next) => {
    
     // 토큰은 크기가 크므로 
@@ -104,7 +97,6 @@ router.beforeEach((to, from, next) => {
 
     // 인증이 반드시 필요한 페이지(profile)
     if (to.matched.some(record => record.meta.requireAuth)) {
-        // 다음 라우트로 넘어갈지 말지는 무조건 여기서 정한다
         (async () => {
             await store.dispatch('auth');
             const userId = store.getters.auth;
@@ -122,8 +114,6 @@ router.beforeEach((to, from, next) => {
             console.log('beforeEach에서 로그인 여부 확인', store.getters.getloginState), 
             next()
         );
-        
-       
     }
 })
 

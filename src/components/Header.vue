@@ -29,7 +29,7 @@
               </div>
             </div>
             <!-- 모바일 화면으로 전환시 네이게이션바 설정 -->
-            <a href="#" class="mx-auto d-inline-block d-lg-none site-menu-toggle js-menu-toggle text-black"><span
+            <a  class="mx-auto d-inline-block d-lg-none site-menu-toggle js-menu-toggle text-black"><span
                 class="icon-menu h3 navbar-position"></span></a>
           </div>
         </div>
@@ -55,12 +55,12 @@
                     <!-- dropdown start -->
                     <div class="btn-group">
                       <li class="btn btn-default" data-toggle="dropdown" aria-expanded="false" >
-                        <a href="#" class="nav-link nav-style" style="padding-left:8px;font-size:20px;font-weight:600;color:#212529;"> 영양제</a>
+                        <a class="nav-link nav-style" style="padding-left:8px;font-size:20px;font-weight:600;color:#212529;"> 영양제</a>
                       </li>
                       <ul class="dropdown-menu" role="menu">
-                        <li><router-link :to="{ name: 'category', params: { parent_id: 1, child_id: 1 }}" class="nav-style">비타민</router-link></li>
+                        <li><router-link tag="span" :to="{ name: 'category', params: { parent_id: 1, child_id: 1 }}" class="nav-style pointer">비타민</router-link></li>
                         <!-- <li class="divider"></li> -->
-                        <li><router-link :to="{ name: 'category', params: { parent_id: 1, child_id: 2 }}" class="nav-style">프로바이오틱스</router-link></li>
+                        <li><router-link tag="span" :to="{ name: 'category', params: { parent_id: 1, child_id: 2 }}" class="nav-style pointer">프로바이오틱스</router-link></li>
                       </ul>
                     </div>
                     <!-- dropdown end -->
@@ -140,5 +140,10 @@ import { mapGetters, mapState } from 'vuex'
   /* 헤더 요소들의 패딩 조절:네이게이션과 검색창간의 거리 조절 */
   .padding-control {
     padding-bottom: 2px;
+  }
+
+  /* a태그 글자가 깨지는 것을 처리 */
+  .pointer {
+    cursor: pointer;
   }
 </style>

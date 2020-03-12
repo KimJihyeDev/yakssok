@@ -123,7 +123,7 @@ import { mapState } from 'vuex'
                 const { code, message } = respnase.data;
                 console.log('토큰 인증결과 코드', code);
                 if(code !== 200) this.$router.push(
-                    { name: 'passwordreset', query: { token: 'fail' }}
+                    { name: 'passwordreset', query: { token: 'Expired' }}
                 );
            } catch(err) {   
                console.log(err);

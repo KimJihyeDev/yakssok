@@ -48,8 +48,7 @@
 
     <!-- review list start -->
     <div class="container">
-      <!-- <h2 class="text-center count-zero" :class="{ 'count-check': reviewCount > 0 }">리뷰가 없습니다.</h2> -->
-      <h2 class="text-center count-zero" :class="{ 'count-check': reviewCount < 1 }">리뷰가 없습니다.</h2>
+      <h2 class="text-center"> {{ reviewLength }} </h2>
 
       <!-- 리뷰는 최신순으로 정렬 -->
       <div class="card reviewList" v-for="(review, idx) in reviewList" :key="review.id" ref="review">
@@ -74,7 +73,6 @@
                   <button class="float-right btn btn-outline-primary ml-2" @click="isVisible(idx, review.id)"><i
                       class="fa fa-reply"></i> 댓글
                   </button>
-                  리뷰id {{ review.userId}}, id {{ id}}
                   <button class="float-right btn btn-outline-danger ml-2" @click="deleteReview(review.id)"
                     v-if="review.userId === id && getloginState"><i class="fa fa-trash-alt"></i> 삭제
                   </button>
@@ -110,9 +108,7 @@
             </div>
 
             <!-- 댓글 보기 시작 -->
-            <h4 class="text-center font-bolder text-body count-zero" :class="{ 'count-check': commentCount[idx] < 1 }">
-              댓글이 없습니다.
-            </h4>
+            <h4 class="text-center font-bolder text-body">{{ review.commentLength }}</h4>
 
             <!-- 새로 작성한 글은 코멘트 배열이 없으므로 여기서 에러 발생. 코멘트 배열 추가 -->
             <div class="card-body border" v-for="one in review.comments" :key="one.id">
@@ -160,6 +156,7 @@
     name: 'reviewList',
     data() {
       return {
+        reviewLength: '', // 리뷰가 없을시에 노출될 메시지
         reviewList: [], // 리뷰 리스트
         review: {
           title: '', // 리뷰 제목
@@ -173,8 +170,6 @@
           reviewId: ''
         },
         commentArr: [], // 서버에 보낼 코맨드(v-model로 연결)
-        reviewCount: 0,
-        commentCount: [],
       }
     },
     methods: {
@@ -198,14 +193,14 @@
                 await this.$axios.get(`${ this.url }/reviews/comments?review_id=${ id }`);
               console.log('가져온 댓글', response.data);
                
-              const { code, message, result } = response.data;
+              const { code, message } = response.data;
               if (code === 200) {
-                const { count, rows } = result;
-                this.reviewList[idx].comments = rows;
-                this.commentCount[idx] = count;
+                 this.reviewList[idx].comments = response.data.result;
 
-                this.$forceUpdate();
-                
+                 this.reviewList[idx].comments.length > 0
+                  ? this.reviewList[idx].commentLength = ''
+                  : this.reviewList[idx].commentLength = '댓글이 없습니다.'
+                  this.$forceUpdate();
               } else {
                 alert(message);
               }
@@ -214,6 +209,30 @@
             }
           })();
         }
+        // if (this.reviewList[idx].isShow) {
+        //   this.$forceUpdate();
+        //   return this.reviewList[idx].isShow = false;
+
+        // } else {
+        //   this.reviewList[idx].isShow = true;
+        //   (async () => {
+        //     try {
+        //       const response =
+        //         await this.$axios.get(`${ this.url }/reviews/comments?review_id=${ id }`);
+        //       console.log('가져온 댓글', response.data);
+
+        //       this.reviewList[idx].comments = response.data.result;
+        //       console.log('흠??', this.reviewList[idx].comments);
+        //       response.data.comments.length > 0
+        //         ? this.reviewList[idx].commentLength = ''
+        //         : this.reviewList[idx].commentLength = '댓글이 없습니다.'
+        //       this.$forceUpdate();
+
+        //     } catch (err) {
+        //       console.log(err);
+        //     }
+        //   })();
+        // }
       },
       checkReview() {
         // 널값체크
@@ -265,15 +284,14 @@
             console.log('reviw:글 작성시 id확인', this.id);
             this.review.userId = this.id;
 
+            // post방식일 때, token은 전송할 데이터 다음에 작성
             const response = 
               await this.$axios.post(`${ this.url }/reviews/`, this.review);
 
             console.log('review:리뷰 작성 응답', response);
-            const { code, message, result } = response.data;
+            const { code, message } = response.data;
             if (code === 201) {
-              const { count, rows } = result;
-              this.reviewList = rows;
-              this.reviewCount = count;
+              this.reviewList = response.data.result;
               console.log('review:바뀐 리스트 확인', this.reviewList);
               // 댓글 배열 초기화
               // this.commentArr = [];
@@ -281,8 +299,11 @@
               // 댓글 더보기에 사용할 요소 추가
               this.reviewList.forEach(list => {
                 list.isShow = false
+                list.commentLength = ''; // 댓글이 없습니다에 사용될 변수
               });
-              this.$emit('review-event');
+
+              this.resetReview();
+              this.$forceUpdate();
             } else {
               alert(message);
             }
@@ -301,18 +322,11 @@
               const response =
                 await this.$axios.delete(`${this.url}/reviews/delete/${this.$route.params.id}/${reviewId}`);
 
-              const { code, message, result } = response.data;
+              const { code, message } = response.data;
               console.log('삭제후', response);
-
-              if(code === 200) {
-                const { count, rows } = result;
-                this.reviewCount = count;
-                this.reviewLis = rows;
-                this.$emit('review-event');
-              } else {
-                alert(message);
-              }
-              
+              code === 200
+                ? this.reviewList = response.data.result
+                : alert(message);
             }
           } catch (err) {
             console.log(err);
@@ -346,7 +360,7 @@
             if(!auth) {
               console.log('댓글달려했는데 로그인x', this.commentArr[idx]);
               this.commentArr[idx] = '';
-              this.$emit('review-event');
+              this.$forceUpdate();
               return false;
             }
 
@@ -358,13 +372,12 @@
               await this.$axios.post(`${ this.url }/reviews/comments`, this.comment);
 
             const { code, message, result } = response.data;
-
             if (code === 201) {
-              const { count, rows } = result;
-              this.commentCount[idx] = count;
-              this.reviewList[idx].comments = rows;
+              this.reviewList[idx].comments = result;
               this.commentArr[idx] = '';
 
+             // 댓글이 없습니다 안 보이게 처리
+              this.reviewList[idx].commentLength = '';
               this.$forceUpdate();
             } else {
               alert(message);
@@ -376,10 +389,7 @@
       },
       deleteComment(commentId, reviewIdx, reviewId) {
         const isDelete = confirm('삭제하시겠습니까?');
-        if (!isDelete) {
-          this.$forceUpdate();
-          return false;
-        }
+        if (!isDelete) return false;
 
         (async () => {
           try {
@@ -387,21 +397,14 @@
             if(!auth) return false;
 
             const response =
-              await this.$axios.delete(`${ this.url }/reviews/deleteComment/${ reviewId }/${ commentId }`);
+              await this.$axios.delete(`${this.url}/reviews/deleteComment/${reviewId}/${commentId}`);
             console.log(response);
             // 삭제했으면 새로 댓글 리스트를 받아온다.
-            const { code, message, result } = response.data;
-
-            if(code === 200) {
-              const{ count, rows } = result;
-              this.reviewList[reviewIdx].comments = rows;
-              console.log('얘 왜이래', this.reviewList[reviewIdx].comments);
-              // 이 부분 잘 보기
-              this.commentCount[reviewIdx] = count;
-              this.$forceUpdate();
-            } else {
-              alert(message);
-            }
+            const { code, message } = response.data;
+            code === 200
+              ? this.reviewList[reviewIdx].comments = response.data.result
+              : alert(message);
+            this.$forceUpdate();
           } catch (err) {
             console.log(err);
           }
@@ -417,17 +420,23 @@
         try {
           const response =
             await this.$axios.get(`${this.url}/reviews?productId=${this.$route.params.id}`)
-          
-          const { code, message, result } = response.data;
+          console.log('리뷰리스트', response.data);
+
+          const { code, message } = response.data;
           if (code === 200) {
-            const { count, rows } = result;
-              this.reviewList = rows;
-              this.reviewCount = count;
+            this.reviewList = response.data.result;
+
+            this.reviewList.length < 1
+              ? this.reviewLength = '리뷰가 없습니다.'
+              : this.reviewLength = '';
 
             // 댓글 더보기에 사용할 요소 추가
             this.reviewList.forEach(list => {
               list.isShow = false
+              list.commentLength = ''; // 댓글이 없습니다에 사용될 변수
             });
+
+
           } else {
             alert(message);
           }
@@ -435,17 +444,6 @@
           console.log(err);
         }
       })();
-    },
+    }
   }
 </script>
-
-<style>
-/* 리뷰, 댓글이 없는 경우 */
-.count-zero {
-  display: none;
-}
-/* 리뷰, 댓글이 있는 경우 */
-.count-check {
-  display: block;
-}
-</style>
