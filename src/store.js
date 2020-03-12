@@ -8,12 +8,10 @@ import axios from 'axios'
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
-    // https://yakssokfront.z32.web.core.windows.net/  -> FRONT
     // data옵션에 해당하는 state
-    // https://yakssokback.azurewebsites.net  -> REST API
     state: {
-        url: 'http://localhost:4000',
-        // url: 'https://yakssokback.azurewebsites.net',
+        // url: 'http://localhost:4000',
+        url: 'https://yakssokback.azurewebsites.net',
         id: '', // user테이블의 id(int)
         userId: '', // user_id. 실제 사용자 id
         productImagePath: '/images/products', // 제품 이미지 경로
