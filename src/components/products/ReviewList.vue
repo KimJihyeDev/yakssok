@@ -47,8 +47,7 @@
 
 
     <!-- review list start -->
-    <div class="container">
-      <!-- <h2 class="text-center count-zero" :class="{ 'count-check': reviewCount > 0 }">리뷰가 없습니다.</h2> -->
+    <div class="form-group">
       <h2 class="text-center count-zero" :class="{ 'count-check': reviewCount < 1 }">리뷰가 없습니다.</h2>
 
       <!-- 리뷰는 최신순으로 정렬 -->
@@ -74,7 +73,6 @@
                   <button class="float-right btn btn-outline-primary ml-2" @click="isVisible(idx, review.id)"><i
                       class="fa fa-reply"></i> 댓글
                   </button>
-                  리뷰id {{ review.userId}}, id {{ id}}
                   <button class="float-right btn btn-outline-danger ml-2" @click="deleteReview(review.id)"
                     v-if="review.userId === id && getloginState"><i class="fa fa-trash-alt"></i> 삭제
                   </button>
@@ -83,7 +81,7 @@
           </div>
 
           <!-- 댓글 시작 -->
-          <div class="card" v-show="review.isShow">
+          <div class="card form-group " v-show="review.isShow">
             <!-- 로그인 한 상태에서 보여질 댓글 입력폼. -->
             <div class="form-group border" v-if="getloginState">
               <div class="text-center">

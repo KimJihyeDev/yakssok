@@ -15,7 +15,7 @@
                   <h3 class="heading mb-1"><label class="pointer text-black">{{ item.product_name }}</label></h3>
                 </div>
                 <!-- a태그는 글자깨짐 때문에 사용 금지 -->
-                <!-- <div class="wine-actions">
+                <div class="wine-actions">
                   <h3 class="heading-2"><label class="pointer">{{ item.product_name }}</label></h3>
                   <span onclick="return false;"><i class="fa fa-thumbs-up pointer" aria-hidden="true"
                       style="color:lightgray"></i></span>
@@ -23,7 +23,7 @@
                   <span onclick="return false;" style="margin-left:1rem"><i class="fa fa-thumbs-down pointer"
                       aria-hidden="true" style="color:lightgray"></i></span>
                   <span class="price pointer" style="margin-left:0.3rem">0</span>
-                </div> -->
+                </div>
               </div>
             </div>
           </div>
@@ -70,7 +70,7 @@
                 this.products.push(product)
               });
               this.offSet++;
-            } else {
+            } else if(rows.length < 1 && count != 0) {
               alert('마지막 페이지입니다.');
               return false;
             }

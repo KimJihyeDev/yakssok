@@ -47,31 +47,12 @@
                 </div>
                 <!-- carousel end -->
                 
-                <div class="row">
-                    <!-- products list start -->
-                    <div class="col-lg-3 mb-5 col-md-6" v-for="(item,idx) in products"
-                        :key="idx">
-                        <div class="wine_v_1 text-center pb-4">
-                            <router-link :to=" { name: 'detail', params: { id: item.id } }"
-                                class="thumbnail d-block mb-4"><img :src="`${ path }/${ item.product_image }`"
-                                    v-on:load="loaded"  alt="Image" class="img-fluid custom-img">
-                            <div>
-                                <h3 class="heading mb-1"><label class="text-black" style="cursor:pointer;">{{ item.product_name }}</label></h3>
-                            </div>
-                            </router-link>
-
-                            <div class="wine-actions">
-                                <h3 class="heading-2"><a>{{ item.product_name }}</a></h3>
-                                <span class="price" style="margin-left:0.3rem">0</span>
-                                <a onclick="return false;"><i class="fa fa-thumbs-up" aria-hidden="true"
-                                        style="color:lightgray"></i></a>
-                                <a onclick="return false;" style="margin-left:1rem"><i
-                                        class="fa fa-thumbs-down" aria-hidden="true" style="color:lightgray"></i></a>
-                                <span class="price" style="margin-left:0.3rem">0</span>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- products list end -->
+                <div class="row ">
+                    <product  
+                    v-for="item in products" :key="item.id"
+                    :val="item"
+                    :likeCount="like"
+                    />
                 </div>
             </div>
             <div>
@@ -84,7 +65,8 @@
 <script>
 // eslint-disable-next-line no-unused-vars
 import store from '@/store'
-    import { mapState, mapGetters } from 'vuex'
+import { mapState, mapGetters } from 'vuex'
+import Product from './Product'
     /*eslint no-unused-vars: "error"*/
     export default {
         name: 'Main',
@@ -93,23 +75,33 @@ import store from '@/store'
                 users: [],
                 products: [],
                 isLoaded: false,
-                rate: '',
                 offSet: 0,
                 count: 0,
+                like: []
             }
         },
+        components: {
+            product: Product
+        },
         methods: {
-            loaded(){
-                this.isLoaded = true;
-            },
+          
             more() {
                 (async () => {
-                    const response = 
-                        await this.$axios.get(`${ this.url }/products?offSet=${ this.offSet }`);
+                    let response;
+                    const id = store.getters.getId;
+                    console.log('로그인확인!!', id)
+                    if(!id) { // 로그인 되어 있지 않을 때
+                        response = 
+                            await this.$axios.get(`${ this.url }/products?offSet=${ this.offSet }`);
+                    } else { // 로그인 되어 있을 때
+                        response = 
+                            await this.$axios.get(`${ this.url }/products?offSet=${ this.offSet }&id=${ id }`);
+                    }
+
                     console.log(response.data);
                     const { code, message } = response.data;
                     // eslint-disable-next-line no-unused-vars
-                    const { rows, count } = response.data.products;
+                    const { rows, count, like } = response.data.products;
 
                     if(code === 200) {
                         if (rows.length > 0) {
@@ -118,6 +110,7 @@ import store from '@/store'
                             this.products.push(product)
                             });
                             this.offSet++;
+                            this.like = like;
                         } else if(rows.length < 1 && count != 0){
                             alert('마지막 페이지입니다.');
                             return false;
@@ -129,13 +122,24 @@ import store from '@/store'
             }
         },
         created: function () {
+            // 처음 데이터를 불러올 때 
+            // 서버에 현재 사용자 id를 건네줘야 한다
+            // 그 id가 좋아요/싫어요를 한 사용자에 있는지 확인
+            // 있다면 있다고 전해줘야 한다.
             this.more();
+            
+
         },
         computed: {
             ...mapState(['url']),
             ...mapGetters({ path: 'productImagePath' }),
         },
-        
+        beforeRouteEnter(to, from, next) {
+            (async () => {
+                await store.dispatch('auth');
+                next();
+            })();
+        }
     }
 </script>
 <style>
@@ -154,4 +158,8 @@ import store from '@/store'
         width:auto;
         height:400px;
     }
+    /* a태그 처리 */
+    .pointer {
+    cursor: pointer;
+  }
 </style>

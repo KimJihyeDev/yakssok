@@ -10,8 +10,8 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
     // data옵션에 해당하는 state
     state: {
-        // url: 'http://localhost:4000',
-        url: 'https://yakssokback.azurewebsites.net',
+        url: 'http://localhost:4000',
+        // url: 'https://yakssokback.azurewebsites.net',
         id: '', // user테이블의 id(int)
         userId: '', // user_id. 실제 사용자 id
         productImagePath: '/images/products', // 제품 이미지 경로
@@ -27,6 +27,9 @@ const store = new Vuex.Store({
         },
         pictogramPath(state) {
             return state.url + state.pictogramPath;
+        },
+        getSocketId(state) {
+            return state.socketId;
         },
         getloginState(state) {
             return state.isLogin;
@@ -71,8 +74,8 @@ const store = new Vuex.Store({
             state.userId = user_id;
             state.isLogin = true;
         },
-        setSoketId(state, payload) {
-            state.socketId = payload;
+        setSocketId(state, socketId) {
+            state.socketId = socketId;
         },
         loginState(state, token) {
             // 라우트에서 로그인 확인용
@@ -121,7 +124,7 @@ const store = new Vuex.Store({
             // 단순히 토큰의 유무만 확인(로그인, 로그아웃 출력용)
             const token = localStorage.getItem('YAKSSOK-TOKEN');
             return commit('loginState', token);
-        }
+        },
     }
 })
 

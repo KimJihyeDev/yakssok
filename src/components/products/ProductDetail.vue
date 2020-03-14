@@ -3,7 +3,7 @@
     <div class="ml-5">
       <p class="col-md-6" v-if="isLoaded"> 카테고리 >
         {{ product.parent_category | parent_category }}
-        <span v-if="child_category"> > </span> {{ child_category }} 
+        <span v-if="child_category"> > </span> {{ child_category }}
       </p>
     </div>
 
@@ -11,7 +11,8 @@
       <div class="row">
         <div class="col-lg-6">
           <div class="owl-style" style="text-align:center">
-            <img :src="`${ productPath }`" v-if="isLoaded" alt="Image" class="img-fluid" style="width:60%;height:60%;">
+            <img :src="`${ productPath }`" @load="loaded" v-show="isLoaded" alt="Image" class="img-fluid"
+              style="width:60%;height:60%;">
           </div>
         </div>
         <div class="col-lg-5 ml-auto">
@@ -30,51 +31,52 @@
         </div>
       </div>
 
-      <div class="row border col-12 mt-5">
-        <!-- 왼쪽 정렬 시작 -->
-        <div class="col-md-12">
-          <h2 class="h3 mb-3 text-black font-heading-serif mt-4">제품상세</h2>
-          <hr>
-        </div>
-        <div class="col-md-6 mb-5 mb-md-0">
-
-          <div>
-            <div class="col-lg-12">
-              <strong class="headings">제품설명</strong>
-              <p>{{ product.product_desc }}</p>
-            </div>
-
-
-            <div class="col-lg-12">
-              <div style=" margin-top:1em;">
-                <strong class="headings">복용법</strong>
-                <p> {{ product.suggested_use }} </p>
-              </div>
-              <div style=" margin-top:1em; margin-botom:0px;">
-                <strong class="headings">기타 성분</strong>
-                <p> {{ product.other_ingredients }} </p>
-              </div>
-              <div style=" margin-top:1em; margin-botom:0px;">
-                <strong class="headings">주의 사항</strong>
-                <p> {{ product.warnings }} </p>
-              </div>
-
-              <!-- Pictogram  -->
-              <div>
-                <img :src="`${ pictogramPath }/${ item.image_path }`" v-for="item in product.pictograms" :key="item.id"
-                  style="width:80px;">
-              </div>
-            </div>
-
+      <div class="container border col-12 mt-5 justify-content-center">
+        <div class="row">
+          <!-- 왼쪽 정렬 시작 -->
+          <div class="col-md-12">
+            <h2 class="h3 mb-3 text-black font-heading-serif mt-4">제품상세</h2>
+            <hr>
           </div>
-        </div>
-        <!-- 왼쪽 정렬 끝 -->
+          <div class="col-md-6 mb-5 mb-md-0">
+
+            <div>
+              <div class="col-lg-12">
+                <strong class="headings">제품설명</strong>
+                <p>{{ product.product_desc }}</p>
+              </div>
 
 
-        <!-- 오른쪽 정렬 시작 -->
-        <div class="col-md-6">
-          <div class="row mb-5">
-            <div class="col-md-12">
+              <div class="col-lg-12">
+                <div style=" margin-top:1em;">
+                  <strong class="headings">복용법</strong>
+                  <p> {{ product.suggested_use }} </p>
+                </div>
+                <div style=" margin-top:1em; margin-botom:0px;">
+                  <strong class="headings">기타 성분</strong>
+                  <p> {{ product.other_ingredients }} </p>
+                </div>
+                <div style=" margin-top:1em; margin-botom:0px;">
+                  <strong class="headings">주의 사항</strong>
+                  <p> {{ product.warnings }} </p>
+                </div>
+
+                <!-- Pictogram  -->
+                <div>
+                  <img :src="`${ pictogramPath }/${ item.image_path }`" v-for="item in product.pictograms"
+                    :key="item.id" style="width:80px;">
+                </div>
+              </div>
+
+            </div>
+          </div>
+          <!-- 왼쪽 정렬 끝 -->
+
+
+          <!-- 오른쪽 정렬 시작 -->
+          <div class="col-md-6">
+            <div class="row mb-5">
+              <div class="col-md-12">
                 <table class="table con-log-5">
                   <tr class="teble-color">
                     <th class="in-table" colspan="2"><strong>영양성분표</strong></th>
@@ -110,18 +112,15 @@
                     <td>&nbsp;</td>
                   </tr>
                 </table>
+              </div>
             </div>
           </div>
-        </div>
-        <!-- 오른쪽 정렬 끝 -->
+          <!-- 오른쪽 정렬 끝 -->
 
-        <!-- 리뷰 컴포넌트 -->
-        <reviewList 
-        :key="componentKey" 
-        @review-event="forceRerender"
-        />
+          <!-- 리뷰 컴포넌트 -->
+          <reviewList :key="componentKey" @review-event="forceRerender" />
+        </div>
       </div>
-      
     </div>
   </div>
 </template>
@@ -141,6 +140,9 @@
       }
     },
     methods: {
+      loaded() {
+        this.isLoaded = true;
+      },
       forceRerender() {
         // 리뷰 컴포넌트 재 랜더링 처리
         this.componentKey += 1
@@ -167,9 +169,6 @@
         }
       }
       )();
-    },
-    mounted() {
-      this.isLoaded = true;
     },
     beforeRouteEnter(to, from, next) {
       // 로그인된 상태에서 자기가 쓴 글인지 확인하려면 id값을 알아야 한다.
