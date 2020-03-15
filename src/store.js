@@ -2,7 +2,6 @@ import 'babel-polyfill' // 브라우저 하위버전 지원을 위한 babel-poly
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
-// import io from 'socket.io-client';
 
 // 플러그인 등록
 Vue.use(Vuex);
@@ -10,8 +9,8 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
     // data옵션에 해당하는 state
     state: {
-        url: 'http://localhost:4000',
-        // url: 'https://yakssokback.azurewebsites.net',
+        // url: 'http://localhost:4000',
+        url: 'https://yakssokback.azurewebsites.net',
         id: '', // user테이블의 id(int)
         userId: '', // user_id. 실제 사용자 id
         productImagePath: '/images/products', // 제품 이미지 경로
@@ -104,17 +103,6 @@ const store = new Vuex.Store({
                         // 토큰이 없거나 유효하지 않은 경우이므로 로그아웃 처리
                         commit('logout');
                     }
-
-                    // 채팅 소켓 연결(나중에 사용 예정)
-                    // const chatSocket = io(`${store.state.url}/chat`);
-
-                    // chatSocket.emit('setUser', socket_id, id);
-                    // 채팅방 가입
-                    //  chatSocket.on('join', (message) => {
-                    //     console.log('채팅방에 가입')
-                    //     console.log(message)
-                    //     chatSocket.emit('hi', '채팅가입했어요');
-                    // })
                 } catch (err) {
                     console.log(err);
                 }
