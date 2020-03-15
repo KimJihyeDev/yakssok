@@ -1,24 +1,25 @@
 <template>
-    <div class="col-lg-6 mx-auto p-4"
-        style="border:1px solid lightgray;margin-top:8em;margin-bottom:8em;height:100%;padding-top:2rem;padding-bottom:2rem;">
-        <form class="px-4 py-3">
-            <div class="form-group">
-                <span class="font-weight-bold" style="font-size:2rem;">비밀번호 재설정</span>
-                <hr class="solid">
-                <label for="exampleDropdownFormEmail1">비밀번호</label>
-                <input type="password" class="form-control" ref="pwd" v-model="user.pwd" placeholder="비밀번호를 입력해주세요." 
-                    @keyup.enter="resetPassword">
+    <div>
+        <div class="col-lg-6 mx-auto p-4">
+            <form class="px-4 py-3">
+                <div class="form-group">
+                    <span class="font-weight-bold h2">비밀번호 재설정</span>
+                    <hr class="solid">
+                    <label for="exampleDropdownFormEmail1">비밀번호</label>
+                    <input type="password" class="form-control" ref="pwd" v-model="user.pwd" placeholder="비밀번호를 입력해주세요." 
+                        @keyup.enter="resetPassword">
+                </div>
+                <div class="form-group">
+                    <label for="exampleDropdownFormPassword1">비밀번호 재입력</label>
+                    <input type="password" class="form-control" ref="confirmPwd" v-model="confirmPwd" placeholder="비밀번호를 다시 입력해주세요." 
+                        @keyup.enter="resetPassword">
+                </div>
+                <button type="button" class="btn btn-primary btn-lg btn-block" @click="resetPassword">비밀번호 재설정</button>
+            </form>
+            <div class="dropdown-divider"></div>
+            <div class="alert alert-danger text-center mt-3" role="alert" v-if="errors">
+                {{ message }}
             </div>
-            <div class="form-group">
-                <label for="exampleDropdownFormPassword1">비밀번호 재입력</label>
-                <input type="password" class="form-control" ref="confirmPwd" v-model="confirmPwd" placeholder="비밀번호를 다시 입력해주세요." 
-                    @keyup.enter="resetPassword">
-            </div>
-            <button type="button" class="btn btn-primary btn-lg btn-block" @click="resetPassword">비밀번호 재설정</button>
-        </form>
-        <div class="dropdown-divider"></div>
-        <div class="alert alert-danger text-center" role="alert" v-if="errors" style="margin-top:1rem;">
-            {{ message }}
         </div>
     </div>
 </template>
@@ -140,8 +141,3 @@ import { mapState } from 'vuex'
     }
   }
 </script>
-<style>
-    .margin-control {
-        margin-right: 0px;
-    }
-</style>

@@ -54,7 +54,7 @@
               <button class="btn btn-danger btn-sm rounded px-4" type="button" id="button-addon2"
                       @click="deleteAccount">회원 탈퇴</button>
             </div>
-            <div class="col-md-12 alert alert-danger text-center" role="alert" v-if="errors" style="margin-top:1rem;">
+            <div class="col-md-12 alert alert-danger text-center mt-3" role="alert" v-if="errors">
                 {{ message }}
             </div>
           </div>

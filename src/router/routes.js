@@ -73,11 +73,6 @@ const routes = [
         name: 'about',
         component: () => import('@/components/About.vue')
     },
-    {
-        path: '/chat',
-        name: 'chat',
-        component: () => import('@/components/Chat.vue')
-    },
 ]
 
 const router = new VueRouter({

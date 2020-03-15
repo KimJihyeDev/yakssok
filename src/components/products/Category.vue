@@ -5,17 +5,17 @@
         <div class="container">
           <div class="row">
             <!-- 상품리스트 시작 -->
-            <div class="col-lg-3 mb-5 col-md-6" style="margin-top:0px;" v-for="(item,idx) in products" :key="idx">
+            <div class="col-lg-3 mb-5 col-md-6" v-for="(item,idx) in products" :key="idx">
               <div class="wine_v_1 text-center pb-4">
                 <router-link :to="`/product/detail/${ item.id }`" class="thumbnail d-block mb-4"><img
                     :src="`${ productPath }/${item.product_image}`" v-on:load="loaded" alt="Image"
                     class="img-fluid custom-img">
-                </router-link>
                 <div>
                   <h3 class="heading mb-1"><label class="pointer text-black">{{ item.product_name }}</label></h3>
                 </div>
+                </router-link>
                 <!-- a태그는 글자깨짐 때문에 사용 금지 -->
-                <div class="wine-actions">
+                <!-- <div class="wine-actions">
                   <h3 class="heading-2"><label class="pointer">{{ item.product_name }}</label></h3>
                   <span onclick="return false;"><i class="fa fa-thumbs-up pointer" aria-hidden="true"
                       style="color:lightgray"></i></span>
@@ -23,7 +23,7 @@
                   <span onclick="return false;" style="margin-left:1rem"><i class="fa fa-thumbs-down pointer"
                       aria-hidden="true" style="color:lightgray"></i></span>
                   <span class="price pointer" style="margin-left:0.3rem">0</span>
-                </div>
+                </div> -->
               </div>
             </div>
           </div>

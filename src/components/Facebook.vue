@@ -1,6 +1,6 @@
 
 <template>
-    <div style="margin:200px;">
+    <div class="site-section">
         <button type="button"  v-on:click="checkLoginState"  class="btn btn-info block full-width m-b">Facebook</button>
     </div>    
 </template>
@@ -28,10 +28,6 @@
                     var meURL = '/me?fields=id,name,email,picture';
 
                     FB.api(meURL, function (response) {
-                        // $("#hidLoginType").val("F");
-                        // $("#hidSNSEmail").val(response.email);
-                        // $("#hidSNSName").val(response.name);
-                        // $("#hidSNSImgURL").val(response.picture.data.url);
 
                         console.log(response);
                         console.log('id:' + response.id);
@@ -41,13 +37,11 @@
                 
                         if (response.email == null) {
                             alert("이메일 주소 정보가 전달되지 않아 로그인이 불가합니다.");
-                            //location.href = "/member/login";
                         } 
                         else 
                         {
                             
                             //사용자 시스템 회원가입 및 로그인 처리
-                            //$("#snsLoginForm").submit();
                         }
                     }, { scope: 'email', return_scopes: true });
 
@@ -83,7 +77,6 @@
                                     location.href = "/member/login";
                                 } else {
                                     //사용자 시스템 회원가입 및 로그인 처리
-                                    //$("#snsLoginForm").submit();
                                 }
 
                             });
@@ -92,7 +85,6 @@
                         else 
                         {
                             console.log('User cancelled login or did not fully authorize.');
-                            //location.href = "/home/main";
                         }
                     }, { scope: 'email', return_scopes: true });
                 }

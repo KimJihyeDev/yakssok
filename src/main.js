@@ -22,20 +22,17 @@ Vue.config.productionTip = false;
 
 Vue.prototype.$store = store;
 
-// 로그인 후 소켓연결(폴링 사용x)
+// 로그인 후 소켓연결
 // const productSocket = io(`${ store.state.url }/product`, { transports: ['websocket'] });
 const productSocket = io(`${ store.state.url }/product`);
 
 Vue.prototype.$productSocket = productSocket;
 
-// productSocket.on('welcome',  (socketId) => {
-//   console.log('서버에서 받은소켓id', socketId);
-//   store.commit('setSocketId', socketId);
-// });
-// productSocket.on('increase', (product) => {
-//   console.log('증가발생', product);
-// })
 
+productSocket.on('welcome',  (socketId) => {
+  console.log('서버에서 받은소켓id', socketId);
+  store.commit('setSocketId', socketId);
+});
 
 // Vue객체가 만들어지기 전에 실행(컴포넌트가 아니라 Vue객체)
 // 아래 코드는 어느 페이지에서 시작하든 App이 시작시 반드시 거친다

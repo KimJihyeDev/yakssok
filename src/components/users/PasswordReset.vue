@@ -11,9 +11,13 @@
                   잘못된 비밀번호 재설정 링크를 클릭한 것 같습니다. 다시 시도하십시오.
                 </label>
                 <label for="c_lname" class="text-black font-weight-bold">회원가입시 입력한 이메일 주소로
-                    새 비밀번호 설정 링크가 전송됩니다.</label>
+                    새 비밀번호 설정 링크가 전송됩니다.
+                </label>
+                <label for="c_lname">
+                    (테스트를 위해 링크는 유효시간을 1분으로 설정해놓았습니다)
+                </label>
                 <div class="input-group">
-                  <input type="text" class="form-control margin-control" id="c_code" placeholder="이메일 주소를 입력해 주세요"
+                  <input type="text" class="form-control mr-0" id="c_code" placeholder="이메일 주소를 입력해 주세요"
                     aria-label="Coupon Code" aria-describedby="button-addon2" ref="email" v-model="user.email"
                     maxlength="50" @keyup.enter="resetPassword">
                   <div class="input-group-append">
@@ -23,7 +27,7 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-12 alert alert-danger text-center" role="alert" v-if="errors" style="margin-top:1rem;">
+            <div class="col-md-12 alert alert-danger text-center mt-2" role="alert" v-if="errors">
                 {{ message }}
             </div>
           </div>
@@ -109,8 +113,3 @@ import { mapState } from 'vuex'
     }
   }
 </script>
-<style>
-    .margin-control {
-        margin-right: 0px;
-    }
-</style>

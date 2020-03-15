@@ -1,7 +1,6 @@
 <template>
     <div class="container">
         <div class="site-section mt-5">
-            <div class="container">
                 <!-- carousel start -->
                 <div id="carouselExampleCaptions" class="carousel slide" data-ride="carousel">
                     <ol class="carousel-indicators">
@@ -47,6 +46,7 @@
                 </div>
                 <!-- carousel end -->
                 
+                <!-- 상품 리스트 -->
                 <div class="row ">
                     <product  
                     v-for="item in products" :key="item.id"
@@ -54,7 +54,6 @@
                     :likeCount="like"
                     />
                 </div>
-            </div>
             <div>
                 <button type="button" class="btn btn-primary btn-lg btn-block" @click="more" v-if="count > 12">더보기</button>
             </div>
@@ -66,7 +65,7 @@
 // eslint-disable-next-line no-unused-vars
 import store from '@/store'
 import { mapState, mapGetters } from 'vuex'
-import Product from './Product'
+import Product from './products/Product'
     /*eslint no-unused-vars: "error"*/
     export default {
         name: 'Main',
@@ -84,7 +83,6 @@ import Product from './Product'
             product: Product
         },
         methods: {
-          
             more() {
                 (async () => {
                     let response;
@@ -127,8 +125,6 @@ import Product from './Product'
             // 그 id가 좋아요/싫어요를 한 사용자에 있는지 확인
             // 있다면 있다고 전해줘야 한다.
             this.more();
-            
-
         },
         computed: {
             ...mapState(['url']),
@@ -143,23 +139,9 @@ import Product from './Product'
     }
 </script>
 <style>
-    .custom-img {
-        padding: 20%;
-    }
-
-    /* carousel 사이즈 조절 */
-    /* .carousel-item img {
-        width: auto;
-        height: 500px;
-    } */
-
     /* 상품 리스트 이미지 조절 */
     .wine_v_1 img {
         width:auto;
         height:400px;
     }
-    /* a태그 처리 */
-    .pointer {
-    cursor: pointer;
-  }
 </style>

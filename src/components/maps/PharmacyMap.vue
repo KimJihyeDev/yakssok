@@ -3,11 +3,12 @@
         <div class="container">
             <div class="form-group row justify-content-center">
                 <span class="text-danger">검색은 국내에 한해서만 가능합니다.</span>
-                <input class="form-control col-md-10" @keyup.enter="searchPlace" v-model="keyword" placeholder="장소를 입력해 주세요.">
+                <input class="form-control col-md-10 mr-0" @keyup.enter="searchPlace" v-model="keyword" placeholder="장소를 입력해 주세요.">
                 <button class="btn btn-primary col-md-1" @click="searchPlace">검색</button>
             </div>
             <div class="map_wrap">
                 <div id="map" class="map-style"></div>
+                
                 <!-- 카테고리 선택 마커(보이지 않도록 처리) -->
                 <ul id="category" v-show="false">
                     <li id="PM9" data-order="2">

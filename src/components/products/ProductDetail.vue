@@ -10,7 +10,7 @@
     <div class="container">
       <div class="row">
         <div class="col-lg-6">
-          <div class="owl-style" style="text-align:center">
+          <div class="owl-style text-center">
             <img :src="`${ productPath }`" @load="loaded" v-show="isLoaded" alt="Image" class="img-fluid"
               style="width:60%;height:60%;">
           </div>
@@ -18,21 +18,12 @@
         <div class="col-lg-5 ml-auto">
           <h3 class="text-primary">{{ product.product_name }}</h3>
           <h3>제조사: Now Foods</h3>
-          <!-- <h6>좋아요 위치</h6>
-             <h2><a href="#" onclick="return false;"><i class="fa fa-thumbs-up" aria-hidden="true"
-                   style="color:lightgray"></i></a>
-               <span class="price" style="margin-left:0.3rem">0</span>
-               <a href="#" onclick="return false;" style="margin-left:1rem"><i class="fa fa-thumbs-down"
-                   aria-hidden="true" style="color:lightgray"></i></a>
-               <span class="price" style="margin-left:0.3rem">0</span>
-             </h2> -->
-          <!-- <h6>해시태그 위치</h6> -->
-          <!-- <input type="button" value="#noeggs" class="btn"> -->
         </div>
       </div>
 
       <div class="container border col-12 mt-5 justify-content-center">
         <div class="row">
+
           <!-- 왼쪽 정렬 시작 -->
           <div class="col-md-12">
             <h2 class="h3 mb-3 text-black font-heading-serif mt-4">제품상세</h2>
@@ -41,23 +32,22 @@
           <div class="col-md-6 mb-5 mb-md-0">
 
             <div>
-              <div class="col-lg-12">
-                <strong class="headings">제품설명</strong>
+              <div class="col-lg-12 mt-2">
+                <strong class="h5 font-weight-bold headings">제품설명</strong>
                 <p>{{ product.product_desc }}</p>
               </div>
 
-
               <div class="col-lg-12">
-                <div style=" margin-top:1em;">
-                  <strong class="headings">복용법</strong>
+                <div class="mt-2">
+                  <strong class="h5 font-weight-bold headings ">복용법</strong>
                   <p> {{ product.suggested_use }} </p>
                 </div>
-                <div style=" margin-top:1em; margin-botom:0px;">
-                  <strong class="headings">기타 성분</strong>
+                <div class="mt-2">
+                  <strong class="h5 font-weight-bold headings">기타 성분</strong>
                   <p> {{ product.other_ingredients }} </p>
                 </div>
-                <div style=" margin-top:1em; margin-botom:0px;">
-                  <strong class="headings">주의 사항</strong>
+                <div class="mt-2">
+                  <strong class="h5 font-weight-bold headings">주의 사항</strong>
                   <p> {{ product.warnings }} </p>
                 </div>
 
@@ -71,7 +61,6 @@
             </div>
           </div>
           <!-- 왼쪽 정렬 끝 -->
-
 
           <!-- 오른쪽 정렬 시작 -->
           <div class="col-md-6">
@@ -155,7 +144,7 @@
       (async () => {
         try {
           const result
-            = await this.$axios.get(`${this.url}/products/${this.$route.params.id}`)
+            = await this.$axios.get(`${ this.url }/products/${ this.$route.params.id }`)
           console.log('단일 제품 결과', result);
           const { code, message, product } = result.data;
 
@@ -202,7 +191,7 @@
       productPath() {
         // created가 실행되기 전에 먼제 이미지 경로를 읽어들인다(콘솔 확인결과)
         // imagepath가 undefined로 나오지만 출력에는 이상 없음.
-        const path = `${this.productImagePath}/${this.product.product_image}`;
+        const path = `${ this.productImagePath }/${ this.product.product_image }`;
         return path;
       },
     }
@@ -210,19 +199,13 @@
 </script>
 
 <style>
-  .product {
-    margin-top: 0px !important;
-  }
-
   .table td {
     padding: 0.2rem;
   }
 
   /* 폰트 스타일 */
   .headings {
-    font-weight: 600;
     color: #3d3935;
-    font-size: 18px;
   }
 
   /* 테이블 폰트 */
@@ -247,47 +230,4 @@
     margin-left: 4rem;
   }
 
-  /* star rating */
-
-  /* @import url(//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.css); */
-
-  h1[alt="Simple"] {
-    color: white;
-  }
-
-  a[href],
-  a[href]:hover {
-    color: grey;
-    font-size: 0.5em;
-    text-decoration: none
-  }
-
-  .starrating>input {
-    display: none;
-  }
-
-  /* Remove radio buttons */
-
-  .starrating>label:before {
-    content: "\f005";
-    /* Star */
-    margin: 2px;
-    font-size: 2em;
-    font-family: FontAwesome;
-    display: inline-block;
-  }
-
-  .starrating>label {
-    color: lightgray;
-    /* Start color when not clicked */
-  }
-
-  .starrating>input:checked~label {
-    color: orange;
-  }
-
-  /* Set yellow color when star checked */
-  .starrating>input:hover~label {
-    color: orange;
-  }
 </style>
