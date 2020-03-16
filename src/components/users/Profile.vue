@@ -9,10 +9,12 @@
               <label for="c_country" class="text-black">사용자 ID </label>
               <input type="text" class="form-control" :value="`${ this.userId }`" disabled>
             </div>
+
             <!-- 비밀번호 변경 -->
             <div class="form-group row">
               <div class="col-md-12">
                 <label for="c_lname" class="text-black">비밀번호 변경</label>
+
                 <div class="input-group">
                   <input type="password" class="form-control" placeholder="현재 비밀번호를 입력해 주세요"
                     aria-label="Coupon Code" aria-describedby="button-addon2" ref="currentPwd" v-model="newProfile.currentPwd"
@@ -27,6 +29,8 @@
                 </div>
               </div>
             </div>
+
+            <!-- 현재 사용 중인 이메일 -->
             <div class="form-group row">
               <div class="col-md-12">
                 <label for="c_fname" class="text-black">이메일</label>
@@ -34,6 +38,7 @@
                   disabled>
               </div>
             </div>
+
             <!-- 이메일 변경  -->
             <div class="form-group row">
               <div class="col-md-12">
@@ -207,9 +212,6 @@ import { mapState } from 'vuex'
         })();
       },
       deleteAccount() {
-        // confirm으로 확인
-        // 맞다면 토큰 유효성 확인
-        // 그 후에 서버에 탈퇴 요청 보내기
         const isDeleteAccount = 
           confirm('탈퇴하시면 계정을 복구하실 수 없습니다. 정말 탈퇴하시겠습니까?');
         if(!isDeleteAccount) return false;

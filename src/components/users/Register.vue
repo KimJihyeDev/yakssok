@@ -4,26 +4,31 @@
             <form class="px-4 py-3">
                 <span class="font-weight-bold">회원가입</span>
                 <hr class="solid">
+                
                 <div class="form-group">
                     <label for="exampleDropdownFormEmail1">아이디<span class="text-danger">*</span></label>
                     <input type="text" class="form-control" ref="id" v-model="user.user_id" maxlength="8" 
                         placeholder="2자 이상 8자 이하의 영문 또는 숫자만 입력해주세요." @keyup.enter="register">
                 </div>
+
                 <div class="form-group">
                     <label for="exampleDropdownFormEmail1">이메일<span class="text-danger">*</span></label>
                     <input type="email" class="form-control" ref="email" v-model="user.email" placeholder="email@example.com"
                         @keyup.enter="register">
                 </div>
+
                 <div class="form-group">
                     <label for="exampleDropdownFormPassword1">비밀번호<span class="text-danger">*</span></label>
                     <input type="password" class="form-control" ref="pwd" v-model="user.user_pwd" placeholder="비밀번호를 입력해 주세요."
                         @keyup.enter="register">
                 </div>
+
                 <div class="form-group">
                     <label for="exampleDropdownFormPassword1">비밀번호 확인<span class="text-danger">*</span></label>
                     <input type="password" class="form-control" ref="confirm_pwd" v-model="confirm_pwd" placeholder="비밀번호를 다시 입력해 주세요."
                         @keyup.enter="register">
                 </div>
+
                 <hr class="solid">
                 <button type="button" class="btn btn-primary btn-lg btn-block" @click="register">회원가입</button>
             </form>

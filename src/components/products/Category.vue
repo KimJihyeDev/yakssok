@@ -1,9 +1,10 @@
 <template>
     <div class="container">
       <div class="site-section mt-5">
-            <label v-if="isLoaded">총 {{ count }}개의 제품이 등록되어 있습니다.</label>
+        <label class="h5" v-if="isLoaded">총 {{ count }}개의 제품이 등록되어 있습니다.</label>
         <div class="container">
           <div class="row">
+
             <!-- 상품리스트 시작 -->
             <div class="col-lg-3 mb-5 col-md-6" v-for="(item,idx) in products" :key="idx">
               <div class="wine_v_1 text-center pb-4">
@@ -14,16 +15,6 @@
                   <h3 class="heading mb-1"><label class="pointer text-black">{{ item.product_name }}</label></h3>
                 </div>
                 </router-link>
-                <!-- a태그는 글자깨짐 때문에 사용 금지 -->
-                <!-- <div class="wine-actions">
-                  <h3 class="heading-2"><label class="pointer">{{ item.product_name }}</label></h3>
-                  <span onclick="return false;"><i class="fa fa-thumbs-up pointer" aria-hidden="true"
-                      style="color:lightgray"></i></span>
-                  <span class="price pointer" style="margin-left:0.3rem">0</span>
-                  <span onclick="return false;" style="margin-left:1rem"><i class="fa fa-thumbs-down pointer"
-                      aria-hidden="true" style="color:lightgray"></i></span>
-                  <span class="price pointer" style="margin-left:0.3rem">0</span>
-                </div> -->
               </div>
             </div>
           </div>
@@ -50,7 +41,7 @@
     },
     methods: {
       loaded() {
-        // 화면 로드가 끝난 후에 이미지 보여주기(로드 전 이미지 보이는걸 방지)
+        // 화면 로드가 끝난 후에 이미지 보여주기(로드 전 이미지가 보이는걸 방지)
         this.isLoaded = true;
       },
       more() { 
@@ -90,10 +81,6 @@
   }
 </script>
 <style>
-  .custom-img {
-    padding: 20%;
-  }
-
   /* 상품 리스트 이미지 조절 */
   .wine_v_1 img {
     width: auto;

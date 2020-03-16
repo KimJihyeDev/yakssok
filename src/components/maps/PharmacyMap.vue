@@ -50,23 +50,31 @@
                         level: this.level // 지도의 확대 레벨
                     };
                 this.center = mapOption.center;
+
                 // 지도를 생성합니다    
                 var map = new kakao.maps.Map(mapContainer, mapOption);
                 this.map = map;
+
                 // 장소 검색 객체를 생성합니다
                 var ps = new kakao.maps.services.Places(map);
+
                 // 지도에 idle 이벤트를 등록합니다
                 kakao.maps.event.addListener(map, 'idle', searchPlaces);
+
                 // 커스텀 오버레이의 컨텐츠 노드에 css class를 추가합니다 
                 contentNode.className = 'placeinfo_wrap';
+
                 // 커스텀 오버레이의 컨텐츠 노드에 mousedown, touchstart 이벤트가 발생했을때
                 // 지도 객체에 이벤트가 전달되지 않도록 이벤트 핸들러로 kakao.maps.event.preventMap 메소드를 등록합니다 
                 addEventHandle(contentNode, 'mousedown', kakao.maps.event.preventMap);
                 addEventHandle(contentNode, 'touchstart', kakao.maps.event.preventMap);
-                // 커스텀 오버레이 컨텐츠를 설정합니다
+               
+               // 커스텀 오버레이 컨텐츠를 설정합니다
                 placeOverlay.setContent(contentNode);
+
                 // 각 카테고리에 클릭 이벤트를 등록합니다
                 addCategoryClickEvent();
+
                 // 엘리먼트에 이벤트 핸들러를 등록하는 함수입니다
                 function addEventHandle(target, type, callback) {
                     if (target.addEventListener) {
@@ -75,6 +83,7 @@
                         target.attachEvent('on' + type, callback);
                     }
                 }
+
                 // 카테고리 검색을 요청하는 함수입니다
                 function searchPlaces() {
                     if (!currCategory) {
@@ -86,6 +95,7 @@
                     removeMarker();
                     ps.categorySearch(currCategory, placesSearchCB, { useMapBounds: true });
                 }
+
                 // 페이지가 처음 로딩되었을 때 약국이 표시되도록 호출
                 searchPlaces();
 
@@ -100,6 +110,7 @@
                         // 에러로 인해 검색결과가 나오지 않은 경우 해야할 처리가 있다면 이곳에 작성해 주세요
                     }
                 }
+
                 // 지도에 마커를 표출하는 함수입니다
                 function displayPlaces(places) {
                     // 몇번째 카테고리가 선택되어 있는지 얻어옵니다
@@ -135,6 +146,7 @@
                     markers.push(marker);  // 배열에 생성된 마커를 추가합니다
                     return marker;
                 }
+
                 // 지도 위에 표시되고 있는 마커를 모두 제거합니다
                 function removeMarker() {
                     for (var i = 0; i < markers.length; i++) {
@@ -142,6 +154,7 @@
                     }
                     markers = [];
                 }
+
                 // 클릭한 마커에 대한 장소 상세정보를 커스텀 오버레이로 표시하는 함수입니다
                 function displayPlaceInfo(place) {
                     var content = '<div class="placeinfo">' +
@@ -159,6 +172,7 @@
                     placeOverlay.setPosition(new kakao.maps.LatLng(place.y, place.x));
                     placeOverlay.setMap(map);
                 }
+
                 // 각 카테고리에 클릭 이벤트를 등록합니다
                 function addCategoryClickEvent() {
                     var category = document.getElementById('category'),
@@ -167,6 +181,7 @@
                         children[i].onclick = onClickCategory;
                     }
                 }
+
                 // 카테고리를 클릭했을 때 호출되는 함수입니다
                 function onClickCategory() {
                     var id = this.id,
@@ -182,6 +197,7 @@
                         searchPlaces();
                     }
                 }
+
                 // 클릭된 카테고리에만 클릭된 스타일을 적용하는 함수입니다
                 function changeCategoryClass(el) {
                     var category = document.getElementById('category'),
@@ -204,11 +220,12 @@
 
                     if (status === kakao.maps.services.Status.OK) {
                         console.log(result);
-                        console.log('x=' + result[0].x)
-                        console.log('y=' + result[0].y)
+                        console.log('x=' + result[0].x);
+                        console.log('y=' + result[0].y);
+
                         // x=위도, y=경도
-                        let lat = result[0].y;
-                        let lon = result[0].x;
+                        const lat = result[0].y;
+                        const lon = result[0].x;
 
                         // 버튼을 클릭하면 아래 배열의 좌표들이 모두 보이게 지도 범위를 재설정합니다 
                         var points = [
@@ -223,9 +240,11 @@
                             // LatLngBounds 객체에 좌표를 추가합니다
                             bounds.extend(points[i]);
                         }
+
                         // LatLngBounds 객체에 추가된 좌표들을 기준으로 지도의 범위를 재설정합니다
                         // 이때 지도의 중심좌표와 레벨이 변경될 수 있습니다
                         component.map.setBounds(bounds);
+
                         // 검색 후 지도의 레벨이 카카오에서 설정한 초기 레벨(2)로 변경되므로
                         // 지도의 레벨을 현재 지도의 레벨과 같게 재설정해준다.
                         component.map.setLevel(component.level);
@@ -234,7 +253,7 @@
             }
         },
         mounted: function () {
-            this.createMap()
+            this.createMap();
         }
     }
 </script>

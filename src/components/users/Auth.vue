@@ -2,6 +2,7 @@
     <div>
         <div class="col-lg-6 mx-auto p-4">
             <form class="px-4 py-3">
+
                 <div class="form-group">
                     <span class="font-weight-bold h2">비밀번호 재설정</span>
                     <hr class="solid">
@@ -9,11 +10,13 @@
                     <input type="password" class="form-control" ref="pwd" v-model="user.pwd" placeholder="비밀번호를 입력해주세요." 
                         @keyup.enter="resetPassword">
                 </div>
+
                 <div class="form-group">
                     <label for="exampleDropdownFormPassword1">비밀번호 재입력</label>
                     <input type="password" class="form-control" ref="confirmPwd" v-model="confirmPwd" placeholder="비밀번호를 다시 입력해주세요." 
                         @keyup.enter="resetPassword">
                 </div>
+
                 <button type="button" class="btn btn-primary btn-lg btn-block" @click="resetPassword">비밀번호 재설정</button>
             </form>
             <div class="dropdown-divider"></div>
@@ -75,14 +78,12 @@ import { mapState } from 'vuex'
             return true;
         },
         resetPassword() {
-            // console.log(this.$refs.confirmPwd.value)
             const check = this.checkForm();
             if(!check) return false;
             else {
                 this.errors = false;
                 this.message = false;
             }
-            console.log('다통과');
 
             const config = { headers: { authorization: this.token }};
             (async () => {
@@ -113,7 +114,7 @@ import { mapState } from 'vuex'
         console.log('파라미터', token);
         this.token = token;
         // 서버에 토큰 인증 요청 
-        // 인증 성공하면 그대로 비번설정 진행
+        // 인증 성공하면 그대로 비밀번호 재설정으로 진행
         // 실패하면 리다이렉트(resetpwd로)
         const config = { headers: { authorization: token }};
        (async () => {
@@ -122,7 +123,7 @@ import { mapState } from 'vuex'
                     await this.$axios.get(`${ this.url }/users/authToken`, config);
 
                 const { code, message } = respnase.data;
-                console.log('토큰 인증결과 코드', code);
+                
                 if(code !== 200) this.$router.push(
                     { name: 'passwordreset', query: { token: 'Expired' }}
                 );

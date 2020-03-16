@@ -34,15 +34,12 @@ productSocket.on('welcome',  (socketId) => {
   store.commit('setSocketId', socketId);
 });
 
-// Vue객체가 만들어지기 전에 실행(컴포넌트가 아니라 Vue객체)
-// 아래 코드는 어느 페이지에서 시작하든 App이 시작시 반드시 거친다
 new Vue({
-  store, // Vue 객체에 직접 정의해 줄 경우 컴포넌트에서 import 할 필요가 없다.
+  store, 
   router,
   // 앱이 시작할 때마다 유저 id알아오기(웹소켓 연결)
-  beforeCreate() { // beforeCreate인데도 this사용가능
+  beforeCreate() { 
     productSocket.on('welcome',  (socketId) => {
-      console.log('서버에서 받은소켓id', socketId);
       store.commit('setSocketId', socketId);
     });
   },

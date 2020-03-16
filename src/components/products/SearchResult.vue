@@ -5,8 +5,8 @@
         <div class="text-center">
           <h2 v-if="resultMessage">{{ resultMessage }}</h2>
         </div>
+          <p class="h5" v-if="!resultMessage">{{ serchMessage }}</p>
         <div class="row">
-          
           <!-- 상품리스트 시작 -->
           <div class="col-lg-3 mb-5 col-md-6" v-for="(item,idx) in searchResult" :key="idx">
               <div class="wine_v_1 text-center pb-4">
@@ -17,16 +17,6 @@
                 <div>
                   <h3 class="heading mb-1"><label class="pointer text-black">{{ item.product_name }}</label></h3>
                 </div>
-                <!-- a태그는 글자깨짐 때문에 사용 금지 -->
-                <!-- <div class="wine-actions">
-                  <h3 class="heading-2"><label class="pointer">{{ item.product_name }}</label></h3>
-                  <span onclick="return false;"><i class="fa fa-thumbs-up pointer" aria-hidden="true"
-                      style="color:lightgray"></i></span>
-                  <span class="price pointer" style="margin-left:0.3rem">0</span>
-                  <span onclick="return false;" style="margin-left:1rem"><i class="fa fa-thumbs-down pointer"
-                      aria-hidden="true" style="color:lightgray"></i></span>
-                  <span class="price pointer" style="margin-left:0.3rem">0</span>
-                </div> -->
               </div>
             </div>
         </div>
@@ -45,9 +35,11 @@
     name: 'search',
     data() {
       return {
-        resultMessage: '', //
+        resultMessage: '', 
         searchResult: [],
         isLoaded: false,
+        count: '',
+        serchMessage: ''
       }
     },
     methods: {
@@ -71,11 +63,16 @@
           const { code, message, result } = response.data;
 
           if (code === 200) {
-            this.searchResult = result;
+            const { count, rows } = result;
+            this.searchResult = rows;
+            this.count = count;
             // 검색결과가 없으면 []이 온다. 빈배열은 false가 아니다
             // length가 0인지로 판단해야 한다.
-            if (this.searchResult.length < 1)
-              this.resultMessage = '검색결과가 없습니다';
+            // if (this.count < 1)
+            this.count < 1
+              ? this.resultMessage = '검색결과가 없습니다'
+              : this.serchMessage = `총 ${ this.count }개의 검색 결과가 있습니다`
+
           } else {
             alert(message);
           }

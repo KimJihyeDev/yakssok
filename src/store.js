@@ -1,4 +1,4 @@
-import 'babel-polyfill' // 브라우저 하위버전 지원을 위한 babel-polyfill
+import 'babel-polyfill' // 하위버전의 브라우저 지원을 위한 babel-polyfill
 import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
@@ -7,10 +7,10 @@ import axios from 'axios'
 Vue.use(Vuex);
 
 const store = new Vuex.Store({
-    // data옵션에 해당하는 state
+
     state: {
-        // url: 'http://localhost:4000',
-        url: 'https://yakssokback.azurewebsites.net',
+        url: 'http://localhost:4000',
+        // url: 'https://yakssokback.azurewebsites.net',
         id: '', // user테이블의 id(int)
         userId: '', // user_id. 실제 사용자 id
         productImagePath: '/images/products', // 제품 이미지 경로
@@ -20,7 +20,7 @@ const store = new Vuex.Store({
         errorMessage: '', // 로그인 에러 메시지
         socketId: ''
     },
-    getters: { // state의 데이터를 읽어주는 getter, computed와도 비슷(고로 return 필수?)
+    getters: { // state의 데이터를 읽어주는 getters. computed와도 비슷
         productImagePath(state) {
             return state.url + state.productImagePath;
         },
@@ -67,8 +67,6 @@ const store = new Vuex.Store({
             state.userId = '';
         },
         auth(state, { id, user_id }) {
-            console.log('mutations에서 id, user_id확인', id, user_id)
-            // 토큰 유효성 확인 후
             state.id = id; // id(DB의 user 식별 id)
             state.userId = user_id;
             state.isLogin = true;
@@ -88,7 +86,6 @@ const store = new Vuex.Store({
         auth({ state, commit }) {
             const token = localStorage.getItem('YAKSSOK-TOKEN');
             // 서버에 토큰 유효성을 검사받는다.
-            // 토큰 없으면 서버에서 401에러(유효x) 처리되므로 따로 처리x
             return (async () => {
                 try {
                     const config = { headers: { authorization: token } }

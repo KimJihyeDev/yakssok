@@ -105,6 +105,7 @@ import { mapGetters, mapState } from 'vuex'
         console.log(this.search);
         if(this.search){
           this.$router.push({ name: 'search' , query: { keyword: this.search }})
+          this.search = '';
         } else {
           return false;
         }

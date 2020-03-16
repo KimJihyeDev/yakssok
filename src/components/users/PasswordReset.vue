@@ -6,6 +6,7 @@
           <h2 class="h3 mb-3 text-black font-heading-serif">새 비밀번호 설정</h2>
           <div class="p-3 p-lg-5 border">
             <div class="form-group row">
+
               <div class="col-md-12">
                 <label for="c_lname" class="text-danger font-weight-bold" v-if="token">
                   잘못된 비밀번호 재설정 링크를 클릭한 것 같습니다. 다시 시도하십시오.
@@ -16,6 +17,7 @@
                 <label for="c_lname">
                     (테스트를 위해 링크는 유효시간을 1분으로 설정해놓았습니다)
                 </label>
+
                 <div class="input-group">
                   <input type="text" class="form-control mr-0" id="c_code" placeholder="이메일 주소를 입력해 주세요"
                     aria-label="Coupon Code" aria-describedby="button-addon2" ref="email" v-model="user.email"
@@ -25,6 +27,7 @@
                       @click="resetPassword">전송</button>
                   </div>
                 </div>
+
               </div>
             </div>
             <div class="col-md-12 alert alert-danger text-center mt-2" role="alert" v-if="errors">
@@ -105,7 +108,6 @@ import { mapState } from 'vuex'
     },
     created(){
       const token = this.$route.query.token;
-      console.log('쿼리', token)
       if(token) {
         // 토큰이 있다면 경고 메시지를 출력한다(상단에)
         this.token = true;

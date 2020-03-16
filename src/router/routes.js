@@ -77,7 +77,6 @@ const routes = [
 
 const router = new VueRouter({
     mode: 'history',
-    // base: process.env.BASE_URL,
     scrollBehavior() {
         return { x: 0, y: 0 }
     },
@@ -106,7 +105,6 @@ router.beforeEach((to, from, next) => {
         // 인증이 불필요한 페이지
         store.dispatch('loginState')
         .then(
-            console.log('beforeEach에서 로그인 여부 확인', store.getters.getloginState), 
             next()
         );
     }
