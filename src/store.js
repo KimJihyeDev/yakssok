@@ -56,7 +56,6 @@ const store = new Vuex.Store({
             state.id = id;
         },
         loginError(state, payload) {
-            console.log(payload.data.message)
             state.isError = true;
             state.errorMessage = payload.data.message;
         },
@@ -101,6 +100,7 @@ const store = new Vuex.Store({
                         commit('logout');
                     }
                 } catch (err) {
+                    alert('에러가 발생했습니다. 다시 시도해 주세요');
                     console.log(err);
                 }
             })();
