@@ -1,8 +1,8 @@
 <template>
     <div class="col-lg-3 mb-5 col-md-6">
         <div class="wine_v_1 text-center pb-4">
-            <router-link :to=" { name: 'detail', params: { id: val.id } }" class="thumbnail d-block mb-4"><img
-                    :src="`${ path }/${ val.product_image }`" v-on:load="loaded" alt="Image"
+            <router-link :to=" { name: 'detail', params: { id: val.id } }" class="thumbnail d-block mb-4">
+                <img :src="`${ path }/${ val.product_image }`" v-on:load="loaded" alt="Image"
                     class="img-fluid custom-img">
             <div>
                 <h3 class="heading mb-1">
@@ -56,7 +56,6 @@ export default {
                     } 
 
                     if(id) {
-                        console.log( socketId, id, productId)
                         this.disliked
                             ? alert('이미 좋아요/싫어요를 하셨습니다.')
                             : this.$productSocket.emit('like', socketId, id, productId)

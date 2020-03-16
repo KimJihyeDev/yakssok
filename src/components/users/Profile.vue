@@ -102,12 +102,11 @@ import { mapState } from 'vuex'
           try {
             // 토큰은 라우트에서 확인 했으니 id로 프로필 조회
               const id = store.getters.getId;
-              console.log('created에서 id 확인', id);
               const result = await axios.post(`${ store.state.url }/users/profile`, { id });
-              const { code, message, email }= result.data;
-              console.log('프로필 요청결과', result);
+              const { code, message, user }= result.data;
+              
               if(code === 200) {
-                this.currentEmail = email;
+                this.currentEmail = user.email;
               } else {
                 alert(message);
               }
@@ -158,6 +157,7 @@ import { mapState } from 'vuex'
                 await this.$axios.patch(`${ this.url }/users/modify/${ this.id }?type=e`, this.newProfile);
 
             const { code, message } = response.data;
+
             if(code === 200) {
               alert(message);
               this.newProfile.email = '';

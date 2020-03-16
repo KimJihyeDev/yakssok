@@ -93,13 +93,6 @@
                     <td>{{ ingredient.per_serving }}</td>
                     <td colspan="2">{{ ingredient.daily_value }}<span v-if="ingredient.daily_value">%</span></td>
                   </tr>
-                  <tr>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                    <td>&nbsp;</td>
-                  </tr>
                 </table>
               </div>
             </div>
