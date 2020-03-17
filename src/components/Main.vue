@@ -19,7 +19,7 @@
                     </div>
                     <div class="carousel-item">
                         <router-link :to="{ name: 'category', params: { parent_id: 2, child_id: 1 }}">
-                            <img src="/assets/images/pets.PNG" class="d-block w-100" alt="...">
+                            <img src="/assets/images/pets.png" class="d-block w-100" alt="...">
                         </router-link>
                         <div class="carousel-caption d-none d-md-block">
                         </div>
