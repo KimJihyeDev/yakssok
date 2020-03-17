@@ -59,7 +59,6 @@
           const keyword = this.$route.query.keyword;
           const response
             = await this.$axios.get(`${this.url}/products/search?keyword=${ keyword }`);
-          console.log('검색결과', response);
           const { code, message, result } = response.data;
 
           if (code === 200) {

@@ -138,7 +138,6 @@
         try {
           const result
             = await this.$axios.get(`${ this.url }/products/${ this.$route.params.id }`)
-          console.log('단일 제품 결과', result);
           const { code, message, product } = result.data;
 
           if (code === 200) {

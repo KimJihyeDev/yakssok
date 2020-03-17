@@ -111,8 +111,8 @@ import { mapState } from 'vuex'
     },
     created() {
         const token = this.$route.params.token;
-        console.log('파라미터', token);
         this.token = token;
+        
         // 서버에 토큰 인증 요청 
         // 인증 성공하면 그대로 비밀번호 재설정으로 진행
         // 실패하면 리다이렉트(resetpwd로)

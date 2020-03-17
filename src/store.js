@@ -9,8 +9,8 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
 
     state: {
-        url: 'http://localhost:4000',
-        // url: 'https://yakssokback.azurewebsites.net',
+        // url: 'http://localhost:4000',
+        url: 'https://yakssokback.azurewebsites.net',
         id: '', // user테이블의 id(int)
         userId: '', // user_id. 실제 사용자 id
         productImagePath: '/images/products', // 제품 이미지 경로

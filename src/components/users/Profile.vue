@@ -195,8 +195,8 @@ import { mapState } from 'vuex'
 
             const response = 
               await this.$axios.patch(`${ this.url }/users/modify/${ this.id }?type=p`, this.newProfile);
-            console.log(response);
             const { code, message } = response.data;
+            
             if(code === 200) {
               this.newProfile.currentPwd = '';
               this.newProfile.pwd = '';

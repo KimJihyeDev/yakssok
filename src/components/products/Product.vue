@@ -12,7 +12,6 @@
             <!-- a태그는 글자깨짐 때문에 사용 금지 -->
             <div class="wine-actions">
                 <div>
-                    확인:{{val.like}}
                     <h3 class="heading-2"><label class="pointer">{{ val.product_name }}</label></h3>
                     <span onclick="return false;" @click="like(val.id)">
                         <i class="far fa-thumbs-up pointer" :class="{ like: liked }" aria-hidden="true"></i>
@@ -110,7 +109,6 @@ export default {
 
         // 싫어요 증가 이벤트
         this.$productSocket.on('dislikeIncrease', (productId, dislike_count, userId) => {
-            console.log('싫어요증가발생', productId, dislike_count);
             if(this.val.id == productId) this.val.dislike_count  = dislike_count;
             if(id === userId && productId === this.val.id) this.disliked = true;
         });
@@ -119,16 +117,12 @@ export default {
         this.$productSocket.on('dislikeDecrease', (productId, dislike_count, userId) => {
             if(this.val.id === productId) this.val.dislike_count  = dislike_count;
             if(id === userId && productId === this.val.id) this.disliked = false;
-            console.log('확인!!!', id, userId, this.selected );
         });
     },
     computed: {
             ...mapState(['url']),
             ...mapGetters({ path: 'productImagePath' }),
     },
-    destroyed() {
-        console.log('뷰객체 파괴')
-    }
 }
 </script>
 

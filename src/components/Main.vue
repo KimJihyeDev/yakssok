@@ -82,7 +82,7 @@
                 (async () => {
                     let response;
                     const id = store.getters.getId;
-                    console.log('로그인확인!!', id)
+                    
                     if (!id) { // 로그인 되어 있지 않을 때
                         response =
                             await this.$axios.get(`${this.url}/products?offSet=${this.offSet}`);

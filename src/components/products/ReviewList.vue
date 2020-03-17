@@ -224,19 +224,16 @@
           if(!auth) return false;
 
           // 토큰이 만료되었다면 로그아웃처리가 된다
-            console.log('reviw:글 작성시 id확인', this.id);
             this.review.userId = this.id;
 
             const response = 
               await this.$axios.post(`${ this.url }/reviews/`, this.review);
 
-            console.log('review:리뷰 작성 응답', response);
             const { code, message, result } = response.data;
             if (code === 200) {
               const { count, rows } = result;
               this.reviewList = rows;
               this.reviewCount = count;
-              console.log('review:바뀐 리스트 확인', this.reviewList);
               // 댓글 배열 초기화
               // this.commentArr = [];
 
@@ -347,7 +344,6 @@
 
             const response =
               await this.$axios.delete(`${ this.url }/reviews/deleteComment/${ reviewId }/${ commentId }`);
-            console.log(response);
 
             // 삭제했으면 새로 댓글 리스트를 받아온다.
             const { code, message, result } = response.data;
