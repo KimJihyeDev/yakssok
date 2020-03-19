@@ -1,10 +1,12 @@
 
 <template>
-    <div class="site-section">
+    <div class="site-section" id="fb-root">
         <button type="button"  v-on:click="checkLoginState"  class="btn btn-info block full-width m-b">Facebook</button>
-    </div>    
+        <div class="fb-login-button" data-width="" data-size="" data-button-type="" data-layout="" data-auto-logout-link="" data-use-continue-as=""></div>
+    </div>
 </template>
 
+<script async defer crossorigin="anonymous" src="https://connect.facebook.net/ko_KR/sdk.js#xfbml=1&version=v6.0"></script>
 <script>
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
@@ -17,8 +19,6 @@
                 // 이미 페이스북에 로그인 된 상태인경우
                 if (response.status == 'connected') {
                     
-                    //alert("connected");
-
                     var token = response.authResponse.accessToken;
                     var fbUserID = response.authResponse.userID;
                     console.log("Token:" + token);
@@ -46,10 +46,7 @@
                     }, { scope: 'email', return_scopes: true });
 
                 } 
-                else 
-                {
-
-                    //alert("not yet connected");
+                else {
 
                     //페북 비로그인상태이거나 TTD 미가입자인경우 로그인유도 후 데이터처리
                     FB.login(function (response) {
@@ -99,23 +96,34 @@
       },
 
       created: function() {
-        // 페이스북 인증 초기설정  
+        // 페이스북 인증 초기화 
         window.fbAsyncInit = function() {
         FB.init({
             appId      : '2529159693995093',
             xfbml      : true,
-            version    : 'v2.7'
+            version    : 'v6.0'
         });
 
-        // FB.getLoginStatus(function(response) {
-        //     console.log(response);
-        // });
+        // 사용자의 페이스북 로그인 여부를 알아낸다
+        // 로그인 되어있을 경우에는 엑세스 토큰을 가져오고, status: "connected"
+        // 로그인 되어있지 않을 경우에는 status: "not_authorized"
+        FB.getLoginStatus(function(response) {
+            console.log(`getloginstatus의 콜백`, response);
+            // 로그인 여부에 따라 행동을 분기
+            if(response.status === 'connected') {
+                console.log('페북로그인 중');
+                // 로그인 되어 있는 상태이므로 store에서 로그인 상태로 해 놓기
+            } else {
+                console.log('페북 로그인x')
+                // 로그인 안 되어 있는 상태이므로 store에서 로그아웃 상태로 해 놓기
+            }
+        });
 
     };
-
+        // 페이스북 SDK 로드
         (function(d, s, id){
         var js, fjs = d.getElementsByTagName(s)[0];
-        alert('js='+js);
+        // alert('js='+js);
         console.log('fjs='+fjs);
         if (d.getElementById(id)) {return;}
         js = d.createElement(s); js.id = id;
@@ -127,5 +135,6 @@
 
 
   }
+//   fb.logout(콜백)
 
 </script>
