@@ -1,5 +1,6 @@
 
 <template>
+<!-- 페이스북 로그인 테스트용 컴포넌트 -->
     <div class="site-section" id="fb-root">
         <button type="button"  v-on:click="checkLoginState"  class="btn btn-info block full-width m-b">Facebook</button>
         <div class="fb-login-button" data-width="" data-size="" data-button-type="" data-layout="" data-auto-logout-link="" data-use-continue-as=""></div>
@@ -135,6 +136,5 @@
 
 
   }
-//   fb.logout(콜백)
 
 </script>
