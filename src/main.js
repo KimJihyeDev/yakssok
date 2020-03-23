@@ -12,7 +12,6 @@ VueRouter.prototype.push = function push(location) {
   return originalPush.call(this, location).catch(err => err)
 }
 
-console.log('main.js파일')
 
 Vue.use(VueRouter);
 // axios 추가(전역변수로 사용)
@@ -30,7 +29,6 @@ Vue.prototype.$productSocket = productSocket;
 
 
 productSocket.on('welcome',  (socketId) => {
-  console.log('서버에서 받은소켓id', socketId);
   store.commit('setSocketId', socketId);
 });
 
