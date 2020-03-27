@@ -20,11 +20,6 @@ const routes = [
         component: () => import('@/components/maps/PharmacyMap.vue'),
     },
     {
-        path: '/facebook',
-        name: 'facebook',
-        component: () => import('@/components/Facebook.vue')
-    },
-    {
         path: '/product/detail/:id(\\d+)',
         name: 'detail',
         props: true,
