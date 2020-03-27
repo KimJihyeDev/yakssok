@@ -5,10 +5,11 @@
   <title>약쏙</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="shortcut icon" type="image/png" href="/YAKSSOK.png"/>
+  <link rel="shortcut icon" type="image/png" href="/YAKSSOK.png" />
 
-  
-  <link href="https://fonts.googleapis.com/css?family=Cinzel:400,700|Montserrat:400,700|Roboto&display=swap" rel="stylesheet"> 
+
+  <link href="https://fonts.googleapis.com/css?family=Cinzel:400,700|Montserrat:400,700|Roboto&display=swap"
+    rel="stylesheet">
 
   <link rel="stylesheet" href="<%= BASE_URL %>assets/fonts/icomoon/style.css">
 
@@ -46,9 +47,12 @@
   <div id="app" v-cloak></div>
 
   <!-- loader -->
-  <div id="loader" class="show fullscreen"><svg class="circular" width="48px" height="48px"><circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee"/><circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10" stroke="#ff5e15"/></svg></div>
-   
-  
+  <div id="loader" class="show fullscreen"><svg class="circular" width="48px" height="48px">
+      <circle class="path-bg" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke="#eeeeee" />
+      <circle class="path" cx="24" cy="24" r="22" fill="none" stroke-width="4" stroke-miterlimit="10"
+        stroke="#ff5e15" /></svg></div>
+
+
 
   <script src="<%= BASE_URL %>assets/js/jquery-3.3.1.min.js"></script>
   <script src="<%= BASE_URL %>assets/js/jquery-migrate-3.0.1.min.js"></script>
@@ -66,7 +70,18 @@
   <script src="<%= BASE_URL %>assets/js/jquery.mb.YTPlayer.min.js"></script>
   <script src="<%= BASE_URL %>assets/js/main.js"></script>
   <!-- kakao map api -->
-  <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b6a38973f97fc6822441d767192a223f&libraries=services,clusterer,drawing"></script>
+  <script type="text/javascript"
+    src="//dapi.kakao.com/v2/maps/sdk.js?appkey=b6a38973f97fc6822441d767192a223f&libraries=services,clusterer,drawing"></script>
+  <!-- Global site tag (gtag.js) - Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-161843686-1"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
+
+    gtag('config', 'UA-161843686-1');
+  </script>
+
 </body>
 
 </html>
